@@ -3,15 +3,26 @@
 # Sets up environment variables and ensures daily note exists
 
 # Set vault path (defaults to current directory)
-export VAULT_PATH="${VAULT_PATH:-$(pwd)}"
+VAULT_PATH="${VAULT_PATH:-$(pwd)}"
 
 # Date variables for daily operations
-export TODAY=$(date +%Y-%m-%d)
-export YESTERDAY=$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d)
-export CURRENT_WEEK=$(date +%Y-W%V)
+TODAY=$(date +%Y-%m-%d)
+YESTERDAY=$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d)
+CURRENT_WEEK=$(date +%Y-W%V)
 
 # Daily note path
-export DAILY_NOTE="$VAULT_PATH/brain/notes/daily/$TODAY.md"
+DAILY_NOTE="$VAULT_PATH/brain/notes/daily/$TODAY.md"
+
+# Persist environment variables for all subsequent Bash commands
+if [ -n "$CLAUDE_ENV_FILE" ]; then
+  cat >> "$CLAUDE_ENV_FILE" << EOF
+export VAULT_PATH="$VAULT_PATH"
+export TODAY="$TODAY"
+export YESTERDAY="$YESTERDAY"
+export CURRENT_WEEK="$CURRENT_WEEK"
+export DAILY_NOTE="$DAILY_NOTE"
+EOF
+fi
 
 # Verify vault structure (check for CLAUDE.md at root)
 if [ ! -f "$VAULT_PATH/CLAUDE.md" ]; then

@@ -1,0 +1,31 @@
+# Environment secrets
+.env
+
+# Claude Code runtime
+.claude/settings.local.json
+
+# Skill outputs and secrets
+.claude/skills/*/output/
+.claude/skills/*/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node (if using any JS tools)
+node_modules/
+
+# Obsidian (if vault root doubles as repo)
+.obsidian/workspace.json
+.obsidian/workspaces.json

@@ -1,0 +1,341 @@
+# Inbox Schema - Universal Task Capture
+# Location: brain/inbox/YYYY-MM-DD-{slug}.md
+# Created by: call classifier, email agent, recurring tasks, manual
+
+schema_version: 1.2.0
+changelog:
+  - version: 1.2.0
+    date: 2025-12-28
+    changes: Added confidence field for email-sourced items (high/medium/low)
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Renamed output → result (generic link to any file produced by task)
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: inbox
+description: Universal capture point for all non-code tasks (code tasks go to Linear)
+location: brain/inbox/
+filename_pattern: "YYYY-MM-DD-{slug}.md"
+created_by: call classifier, email agent, recurring task system, manual capture
+
+purpose: |
+  The inbox is where all actionable work enters the system:
+  - Tasks extracted from calls (call classifier)
+  - Action items from emails (weekly email agent)
+  - Recurring tasks (templates that spawn items)
+  - Manual captures (quick notes, ideas that need action)
+
+  Items persist with status changes. Daily notes query the inbox
+  to show what needs attention today.
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date captured
+
+    title:
+      type: string
+      description: Clear, actionable task title
+
+    status:
+      type: enum
+      values: [backlog, in_progress, done, cancelled]
+      default: backlog
+      description: |
+        - backlog: Captured but not started
+        - in_progress: Actively working on
+        - done: Completed
+        - cancelled: Won't do (keep for history)
+
+    source:
+      type: enum
+      values: [call, email, recurring, manual]
+      description: Where this task originated
+      extensible: true  # Add new sources as needed
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "inbox"
+        - "source/{source}"
+      optional_patterns:
+        - "status/{status}"
+        - "urgency/{level}"
+        - "client/{slug}"
+        - "project/{slug}"
+
+  optional:
+    urgency:
+      type: enum
+      values: [critical, high, normal, low]
+      default: normal
+      description: |
+        - critical: Drop everything, do today
+        - high: Do this week
+        - normal: Do when time allows
+        - low: Nice to have
+
+    due_date:
+      type: date
+      format: YYYY-MM-DD
+      description: When this needs to be done by
+
+    # Relationships
+    entity:
+      type: wikilink
+      target: entities/
+      description: Person or company this relates to
+
+    result:
+      type: wikilink
+      description: File produced by completing this task (call, output, trace, etc.)
+
+    trace:
+      type: wikilink
+      target: traces/
+      description: Decision trace if task involved decisions worth recording
+
+    # Source-specific references
+    source_ref:
+      type: string
+      description: |
+        Reference to the source item:
+        - For call: wikilink to call file
+        - For email: Gmail message ID or thread ID
+        - For recurring: template name
+        - For manual: null
+
+    source_url:
+      type: url
+      description: External URL to source (Gmail link, etc.)
+
+    # Recurring task fields
+    recurrence:
+      type: object
+      description: For recurring tasks - defines the pattern
+      properties:
+        frequency:
+          type: enum
+          values: [daily, weekly, monthly, quarterly]
+        day_of_week:
+          type: integer
+          range: [0, 6]  # 0=Sunday, 6=Saturday
+        day_of_month:
+          type: integer
+          range: [1, 31]
+        template:
+          type: string
+          description: Name of the recurring task template
+
+    # Completion tracking
+    completed_date:
+      type: date
+      format: YYYY-MM-DD
+      description: When marked done (auto-set on status change to done)
+
+    # Confidence scoring (for automated items)
+    confidence:
+      type: enum
+      values: [high, medium, low]
+      description: |
+        How confident the automation is that this needs action:
+        - high: Direct request, clear deadline, explicit question
+        - medium: Implied action, FYI that might need response
+        - low: Possibly actionable, unclear
+        Used by /today to route: high → tasks, medium/low → triage
+
+    # Automation metadata
+    automated:
+      type: boolean
+      default: false
+      description: Whether captured by automation vs manual entry
+
+body_sections:
+  - name: description
+    heading: "## Description"
+    required: false
+    description: Task details, context, any relevant information
+
+  - name: notes
+    heading: "## Notes"
+    required: false
+    description: Progress notes, blockers, updates as work happens
+
+  - name: outcome
+    heading: "## Outcome"
+    required: false
+    description: What was the result? Filled when marking done.
+
+# =============================================================================
+# EXAMPLES BY SOURCE
+# =============================================================================
+
+example_call: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-27
+  title: Send AI strategy proposal to Todd
+  status: backlog
+  source: call
+  urgency: high
+  due_date: 2025-12-30
+  entity: "[[entities/todd-ablowitz]]"
+  source_ref: "[[calls/2025-12-27-todd-strategy]]"
+  automated: true
+  tags: [date/2025-12-27, inbox, source/call, urgency/high, client/double-diamond]
+  ---
+
+  # Send AI strategy proposal to Todd
+
+  ## Description
+  Follow up from strategy call. Todd needs proposal by EOY for board review.
+
+  Action item extracted from call: "Send proposal by Friday"
+
+  ## Notes
+  *In progress*
+
+  ## Outcome
+  *Pending*
+
+example_email: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-27
+  title: Review contract changes from Sarah
+  status: backlog
+  source: email
+  urgency: normal
+  entity: "[[entities/sarah-chen]]"
+  source_ref: "msg:18f2a3b4c5d6e7f8"
+  source_url: "https://mail.google.com/mail/u/0/#inbox/18f2a3b4c5d6e7f8"
+  automated: true
+  tags: [date/2025-12-27, inbox, source/email, client/acme-corp]
+  ---
+
+  # Review contract changes from Sarah
+
+  ## Description
+  Email from Sarah on 2025-12-26 requesting review of updated contract terms.
+
+  Key points:
+  - Payment terms changed to net-45
+  - Scope section updated
+  - Need response by Jan 3
+
+  ## Notes
+  *Not started*
+
+  ## Outcome
+  *Pending*
+
+example_recurring: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-27
+  title: Weekly client status review
+  status: backlog
+  source: recurring
+  urgency: normal
+  recurrence:
+    frequency: weekly
+    day_of_week: 5  # Friday
+    template: weekly-client-review
+  automated: true
+  tags: [date/2025-12-27, inbox, source/recurring]
+  ---
+
+  # Weekly client status review
+
+  ## Description
+  Review all active client projects. Check:
+  - Linear project progress
+  - Outstanding deliverables
+  - Upcoming deadlines
+  - Any blocked items
+
+  ## Notes
+  *Not started*
+
+  ## Outcome
+  *Pending*
+
+example_manual: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-27
+  title: Research competitor pricing models
+  status: backlog
+  source: manual
+  urgency: low
+  automated: false
+  tags: [date/2025-12-27, inbox, source/manual, topic/sales]
+  ---
+
+  # Research competitor pricing models
+
+  ## Description
+  Idea from morning walk - should look at how other AI consultancies
+  structure their pricing. Might inform Q1 pricing changes.
+
+  ## Notes
+  *Not started*
+
+  ## Outcome
+  *Pending*
+
+# =============================================================================
+# DATAVIEW QUERIES
+# =============================================================================
+
+queries:
+  all_active: |
+    ```dataview
+    TABLE title, urgency, entity, due_date
+    FROM "brain/inbox"
+    WHERE status != "done" AND status != "cancelled"
+    SORT urgency ASC, due_date ASC
+    ```
+
+  today_focus: |
+    ```dataview
+    TABLE title, urgency, entity
+    FROM "brain/inbox"
+    WHERE status = "in_progress" OR (urgency = "critical" AND status = "backlog")
+    SORT urgency ASC
+    ```
+
+  overdue: |
+    ```dataview
+    TABLE title, entity, due_date
+    FROM "brain/inbox"
+    WHERE status = "backlog" AND due_date < date(today)
+    SORT due_date ASC
+    ```
+
+  by_client: |
+    ```dataview
+    TABLE title, status, urgency, due_date
+    FROM "brain/inbox"
+    WHERE contains(file.outlinks, [[entities/CLIENT-SLUG]])
+    SORT due_date ASC
+    ```
+
+  completed_this_week: |
+    ```dataview
+    LIST
+    FROM "brain/inbox"
+    WHERE status = "done" AND completed_date >= date(today) - dur(7 days)
+    SORT completed_date DESC
+    ```

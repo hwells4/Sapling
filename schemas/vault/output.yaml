@@ -1,0 +1,164 @@
+# Output Schema - Deliverables Created by System
+# Location: brain/outputs/YYYY-MM-DD-{slug}.md
+# Created by: /task command
+
+schema_version: 1.1.0
+changelog:
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Added person/{slug} and company/{slug} to optional tag patterns
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: output
+description: Any deliverable created by the system (posts, proposals, scripts, etc.)
+location: brain/outputs/
+filename_pattern: "YYYY-MM-DD-{slug}.md"
+created_by: /task command
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date created
+
+    type:
+      type: string
+      description: Output type - extensible, not limited to predefined list
+      examples:
+        - linkedin-post
+        - email
+        - proposal
+        - prd
+        - script
+        - article
+        - client-update
+        - job-posting
+        - resume
+        - research
+        - youtube-script
+        - tweet
+        - newsletter
+
+    status:
+      type: enum
+      values: [draft, review, published, sent, archived]
+      description: Current state of the output
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "output"
+        - "output/{type}"
+        - "status/{status}"
+      optional_patterns:
+        - "client/{slug}"
+        - "topic/{topic}"
+        - "person/{slug}"
+        - "company/{slug}"
+
+  optional:
+    people:
+      type: array
+      items: wikilink
+      target: entities/
+      description: People this output is for/about
+
+    companies:
+      type: array
+      items: wikilink
+      target: entities/
+      description: Companies this output is for/about
+
+    projects:
+      type: array
+      items: wikilink
+      description: Related projects
+
+    hypothesis:
+      type: wikilink
+      target: hypotheses/
+      description: Hypothesis being tested by this output
+
+    trace:
+      type: wikilink
+      target: traces/
+      description: Decision trace from creation process
+
+    task_ref:
+      type: wikilink
+      description: Link to originating task in daily note (e.g., [[notes/daily/2025-12-27#^task-abc]])
+
+    published_url:
+      type: url
+      description: URL where output was published (if applicable)
+
+    published_at:
+      type: datetime
+      description: When the output was published
+
+body_sections:
+  - name: content
+    heading: "# {Title}"
+    required: true
+    description: The actual deliverable content
+
+  - name: hypothesis_link
+    heading: "## Hypothesis"
+    required: false
+    description: Link to hypothesis being tested
+    format: "Testing: [[hypotheses/{slug}]]"
+
+  - name: outcome
+    heading: "## Outcome"
+    required: false
+    description: Results after publishing (filled during retrospective)
+    format: |
+      - **Published:** {date or null}
+      - **Engagement:** {metrics or null}
+      - **Hypothesis result:** {pending|confirmed|falsified}
+
+example: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-12-27
+  type: linkedin-post
+  status: draft
+  people: ["[[entities/todd-ablowitz]]"]
+  companies: ["[[entities/double-diamond]]"]
+  projects: []
+  hypothesis: "[[hypotheses/2025-12-27-short-posts-engagement]]"
+  trace: "[[traces/2025-12-27-linkedin-vibe-coding]]"
+  task_ref: "[[notes/daily/2025-12-27#^task-abc]]"
+  published_url: null
+  tags:
+    - date/2025-12-27
+    - output
+    - output/linkedin-post
+    - status/draft
+    - person/todd-ablowitz
+    - company/double-diamond
+  ---
+
+  # Vibe Coding and Executive Buy-In
+
+  {{content}}
+
+  ---
+
+  ## Hypothesis
+  Testing: [[hypotheses/2025-12-27-short-posts-engagement]]
+
+  ## Outcome
+  - **Published:** null
+  - **Engagement:** null
+  - **Hypothesis result:** pending

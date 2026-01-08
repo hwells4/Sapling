@@ -1,0 +1,169 @@
+# Entity Schema - People and Companies
+# Location: brain/entities/{slug}.md
+
+schema_version: 1.1.0
+changelog:
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Added self-reference tag requirement (person/{slug} or company/{slug})
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: entity
+description: People and companies you interact with
+location: brain/entities/
+filename_pattern: "{slug}.md"
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file (enables migration)
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date entity was created/added
+
+    type:
+      type: enum
+      values: [person, company]
+      description: Entity type
+
+    status:
+      type: enum
+      values: [client, partner, prospect, churned, internal]
+      description: Relationship status
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "entity"
+        - "{person|company}"
+        - "person/{slug} OR company/{slug}"  # Self-reference tag enables entity-centric queries
+      optional_patterns:
+        - "client/{company-slug}"
+
+  optional:
+    # For people
+    company:
+      type: wikilink
+      target: entities/
+      description: Company they work for (for people)
+
+    role:
+      type: string
+      description: Job title/role
+
+    email:
+      type: email
+      description: Primary email address
+
+    phone:
+      type: string
+      description: Phone number
+
+    # For companies
+    domain:
+      type: string
+      description: Company domain for email matching (for companies)
+
+    # Integrations
+    linear_project:
+      type: string
+      description: Linear project ID if applicable
+
+    attio_id:
+      type: string
+      description: Attio record ID if synced
+
+body_sections:
+  - name: quick_facts
+    heading: "## Quick Facts"
+    required: true
+    description: Key information at a glance
+
+  - name: communication_style
+    heading: "## Communication Style"
+    required: true
+    description: How to communicate with this entity
+    subsections:
+      - "**Tone:**"
+      - "**Format:**"
+      - "**Frequency:**"
+
+  - name: working_preferences
+    heading: "## Working Preferences"
+    required: false
+    description: How they like to work
+
+  - name: key_context
+    heading: "## Key Context"
+    required: true
+    description: Important background information
+
+  - name: relationship_notes
+    heading: "## Relationship Notes"
+    required: false
+    description: Running log of important interactions (date-prefixed bullets)
+
+  - name: email_reference
+    heading: "## Email Reference"
+    required: false
+    description: Key email templates with 1-line summaries and Gmail query hints
+    format: |
+      ### {Email Type} ({date})
+      One-line summary of the email style/purpose.
+      → Query Gmail for full: `{gmail query}`
+
+example: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-09-15
+  type: person
+  status: client
+  company: "[[entities/double-diamond]]"
+  role: CEO
+  email: todd@example.com
+  phone: 555-123-4567
+  linear_project: DD-AI
+  tags:
+    - date/2025-09-15
+    - entity
+    - person
+    - person/todd-ablowitz  # Self-reference for entity-centric queries
+    - client/double-diamond
+  ---
+
+  # Todd Ablowitz
+
+  ## Quick Facts
+  - CEO of [[entities/double-diamond|Double Diamond 2.0]]
+  - Based in Chicago
+
+  ## Communication Style
+  - **Tone:** Direct, no fluff
+  - **Format:** Bullet points over paragraphs
+  - **Frequency:** Weekly updates preferred
+
+  ## Working Preferences
+  - Loves data and metrics
+  - Prefers async communication
+
+  ## Key Context
+  - Building AI-first payment platform
+  - Previous exit in fintech
+
+  ## Relationship Notes
+  - 2025-12-15: Mentioned Q1 budget constraints
+  - 2025-12-20: Very positive about automation demo
+
+  ## Email Reference
+
+  ### Weekly Update (2025-12-20)
+  Quick summary of weekly progress format. Direct, bullet-focused.
+  → Query Gmail for full: `to:todd@example.com subject:"Weekly Update" after:2025-12-15`

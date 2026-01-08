@@ -1,0 +1,103 @@
+# Agent Chatroom Schema - Multi-agent coordination logs
+# Location: brain/traces/agents/YYYY-MM-DD-{slug}.md
+# Created by: agent-chatroom skill, Task tool
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2025-12-28
+    changes: Initial schema definition
+
+name: chatroom
+description: Coordination logs for multi-agent tasks
+location: brain/traces/agents/
+filename_pattern: "YYYY-MM-DD-{slug}.md"
+created_by: agent-chatroom skill, Task tool orchestrators
+
+purpose: |
+  Chatrooms enable:
+  - Real-time agent coordination during multi-agent tasks
+  - Agents sharing discoveries that affect other agents' work
+  - Post-task review to improve skills and agents
+  - Observability into agent decision-making
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date created
+
+    task:
+      type: string
+      description: Brief description of the multi-agent task
+
+    agents:
+      type: array
+      items: string
+      description: List of agent names participating
+
+    status:
+      type: enum
+      values: [active, completed]
+      description: Whether the chatroom is still active or task is done
+
+  optional:
+    linked_trace:
+      type: path
+      target: brain/traces/
+      description: Related decision trace for this task
+
+    tags:
+      type: array
+      description: Optional categorization tags
+
+body_sections:
+  - name: title
+    heading: "# Agent Chatroom: {task}"
+    required: true
+    description: H1 with task description
+
+  - name: coordination_log
+    heading: "## Coordination Log"
+    required: true
+    description: Where agent posts appear
+
+  - name: agent_post
+    format: |
+      ## [{HH:MM}] {agent-name}
+      {message}
+      → @{target-agent} {optional context}
+    description: Format for individual agent posts
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-28
+  task: Gather context for Acme Corp email
+  agents: [client-loader, linear-status, email-history, voice-context]
+  status: active
+  linked_trace: brain/traces/2025-12-28-acme-update-email.md
+  ---
+
+  # Agent Chatroom: Acme Corp email
+
+  ## Coordination Log
+
+  ## [14:30] orchestrator
+  Starting context gather for Acme Corp email to Sarah.
+  Spawning: client-loader, linear-status, email-history, voice-context
+
+  ## [14:31] linear-status
+  No Linear project found for Acme Corp.
+  → @email-history expand search, we need more activity context
+
+  ## [14:32] email-history
+  Expanding to 30 days. Found heated thread from Dec 20 re: missed deadline.
+  → @orchestrator client may be frustrated - flagging

@@ -26,21 +26,51 @@ Guide new users through Personal OS setup: collect identity/business/voice conte
 5. **Progressive disclosure:** Only load references when needed for specific workflows
 </essential_principles>
 
+<dependencies>
+**Run these checks before anything else. Block onboarding if critical deps missing.**
+
+```bash
+# Beads (required) - task tracking
+which bd >/dev/null 2>&1 || echo "MISSING: bd"
+
+# PyYAML (required) - schema validation
+python3 -c "import yaml" 2>/dev/null || echo "MISSING: pyyaml"
+```
+
+**If Beads missing:**
+> Beads is required for task tracking. Install it with:
+> ```
+> brew tap steveyegge/beads
+> brew install bd
+> ```
+> Then run `/onboard` again.
+
+**If PyYAML missing:**
+> PyYAML is required for schema validation. Install it with:
+> ```
+> pip install pyyaml
+> ```
+> Then run `/onboard` again.
+
+Only proceed if both checks pass.
+</dependencies>
+
 <quick_start>
-1. Check if context files exist → route appropriately
-2. Get their name via AskUserQuestion
-3. Welcome with rundown of what's coming (~3-5 min)
-4. Creature selection (required): Fire egg, Water egg, or Nature egg
-5. Business context (skippable): website URL or quick questions
-6. Role selection (skippable): founder, engineer, designer, etc.
-7. Primary use case (skippable): what they want help with
-8. Writing samples (skippable) → analyze → voice-and-style.md
-9. Image generation setup (optional) → Gemini API key
-10. Generate context files from collected data
-11. Explain how /task, /calibrate, /today work
-12. Show creature + personalized welcome banner
-13. Commit with /commit
-14. Suggest `/today` to start first daily note
+1. **Check dependencies** — block if missing (see `<dependencies>`)
+2. Check if context files exist → route appropriately
+3. Get their name via AskUserQuestion
+4. Welcome with rundown of what's coming (~3-5 min)
+5. Creature selection (required): Fire egg, Water egg, or Nature egg
+6. Business context (skippable): website URL or quick questions
+7. Role selection (skippable): founder, engineer, designer, etc.
+8. Primary use case (skippable): what they want help with
+9. Writing samples (skippable) → analyze → voice-and-style.md
+10. Image generation setup (optional) → Gemini API key
+11. Generate context files from collected data
+12. Explain how /task, /calibrate, /today work
+13. Show creature + personalized welcome banner
+14. Commit with /commit
+15. Suggest `/today` to start first daily note
 </quick_start>
 
 <routing>

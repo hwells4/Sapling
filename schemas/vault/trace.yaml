@@ -1,0 +1,286 @@
+# Trace Schema - Decisions, Hypotheses, and Outcomes
+# Location: brain/traces/YYYY-MM-DD-{slug}.md
+# Created by: /task command, manual
+
+schema_version: 1.2.0
+changelog:
+  - version: 1.2.0
+    date: 2025-12-29
+    changes: Added review_status, importance, target, applied_to fields for /upgrade-os workflow
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Consolidated hypotheses into traces, added type field
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: trace
+description: Learning loop records - decisions made, predictions tested, outcomes observed
+location: brain/traces/
+filename_pattern: "YYYY-MM-DD-{slug}.md"
+created_by: /task command, decision-traces skill, manual
+
+purpose: |
+  Traces capture learning that informs future agent behavior:
+  - DECISIONS: Why choices were made (especially human overrides)
+  - HYPOTHESES: Predictions to test ("I think X will cause Y")
+  - OUTCOMES: What happened, verification of hypotheses
+
+  Over time, this corpus trains better agents and improves prompts.
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.1.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date created
+
+    type:
+      type: enum
+      values: [trace, hypothesis, outcome]
+      description: |
+        - trace: Decision record (why I chose X)
+        - hypothesis: Prediction to test (I think X will cause Y)
+        - outcome: Verification record (X happened, hypothesis confirmed/falsified)
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "trace"
+      optional_patterns:
+        - "client/{slug}"
+        - "domain/{domain}"
+        - "pattern/{pattern}"
+        - "status/{status}"
+
+  optional:
+    today:
+      type: wikilink
+      target: notes/daily/
+      description: Link to the daily note
+
+    task:
+      type: string
+      description: Task being executed (for type: trace)
+
+    output:
+      type: wikilink
+      target: outputs/
+      description: Related output
+
+    related_traces:
+      type: array
+      items: wikilink
+      description: Other traces this relates to (hypothesis -> outcome)
+
+    had_human_override:
+      type: boolean
+      description: Whether human overrode AI (for type: trace)
+
+    # Hypothesis-specific
+    domain:
+      type: enum
+      values: [content, process, client, technical, sales]
+      description: Knowledge domain (for type: hypothesis)
+
+    confidence:
+      type: number
+      range: [0, 1]
+      description: Initial confidence (for type: hypothesis)
+
+    status:
+      type: enum
+      values: [proposed, testing, verified, falsified, inconclusive]
+      description: Hypothesis status
+
+    verified_date:
+      type: date
+      description: When hypothesis was verified/falsified
+
+    # Upgrade workflow fields
+    review_status:
+      type: enum
+      values: [pending, reviewed, applied, skipped]
+      default: pending
+      description: |
+        Status in /upgrade-os workflow:
+        - pending: Not yet analyzed
+        - reviewed: Analyzed, proposals generated
+        - applied: Changes made based on trace
+        - skipped: User declined or no action needed
+
+    importance:
+      type: enum
+      values: [critical, high, medium, low]
+      description: |
+        How important is this issue?
+        - critical: Explicit failure, user frustration ("fucking awful", "complete failure")
+        - high: Human override with clear pattern
+        - medium: Single trace with learning
+        - low: Nice-to-have improvement
+
+    target:
+      type: string
+      description: |
+        What should improve. Flexible format:
+        - skill:{name} (edit existing skill)
+        - skill:new:{name} (create new skill)
+        - claude-md (edit CLAUDE.md)
+        - hook:{name} (edit hook)
+        - schema:{name} (edit schema)
+        - process (can't be codified, just a learning)
+
+    target_skill:
+      type: string
+      description: Legacy field - use target instead. Kept for backwards compatibility.
+
+    target_skills:
+      type: array
+      items: string
+      description: Legacy field - use target instead. Kept for backwards compatibility.
+
+    applied_to:
+      type: array
+      items: string
+      description: Files this trace led to improving (populated after /upgrade-os applies changes)
+
+body_sections:
+  # For type: trace
+  - name: context
+    heading: "## Context"
+    required: true
+    applies_to: [trace]
+    description: What was being done and why
+
+  - name: decisions
+    heading: "## Decisions"
+    required: true
+    applies_to: [trace]
+    format: |
+      ### {Decision Title}
+      **AI proposed:** {what AI suggested}
+      **Chosen:** {what was actually done}
+      **Reasoning:** {why}
+      **Pattern:** #{pattern-tag if applicable}
+
+  # For type: hypothesis
+  - name: prediction
+    heading: "## Prediction"
+    required: true
+    applies_to: [hypothesis]
+    description: What you think will happen
+
+  - name: measurable_outcome
+    heading: "## Measurable Outcome"
+    required: true
+    applies_to: [hypothesis]
+    description: How you'll know if it's true
+
+  - name: falsification
+    heading: "## Falsification Criteria"
+    required: true
+    applies_to: [hypothesis]
+    description: What would prove it wrong
+
+  # For type: outcome
+  - name: result
+    heading: "## Result"
+    required: true
+    applies_to: [outcome]
+    description: What actually happened
+
+  - name: verification
+    heading: "## Verification"
+    required: true
+    applies_to: [outcome]
+    description: Was hypothesis confirmed or falsified?
+
+  # Shared
+  - name: learnings
+    heading: "## Learnings"
+    required: false
+    applies_to: [trace, hypothesis, outcome]
+    description: What should inform future decisions
+
+example_trace: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-12-27
+  type: trace
+  today: "[[notes/daily/2025-12-27]]"
+  task: Write LinkedIn post about vibe coding
+  output: "[[outputs/2025-12-27-vibe-coding]]"
+  had_human_override: true
+  tags: [date/2025-12-27, trace, pattern/narrative-over-data]
+  ---
+
+  # Decision Trace: LinkedIn Vibe Coding Post
+
+  ## Context
+  Creating a LinkedIn post about vibe coding for AI strategy content series.
+
+  ## Decisions
+
+  ### Opening Hook Style
+  **AI proposed:** Open with industry statistics
+  **Chosen:** Personal story about exec buy-in moment
+  **Reasoning:** Audience responds better to narrative than data
+  **Pattern:** #pattern/narrative-over-data
+
+  ## Learnings
+  - User prefers narrative openings for LinkedIn
+
+example_hypothesis: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-12-27
+  type: hypothesis
+  domain: content
+  confidence: 0.7
+  status: testing
+  tags: [date/2025-12-27, trace, domain/content, status/testing]
+  ---
+
+  # Hypothesis: Short Posts Outperform on LinkedIn
+
+  ## Prediction
+  Posts under 150 words get higher engagement than long-form posts.
+
+  ## Measurable Outcome
+  Engagement rate > 4% (vs 2% baseline)
+
+  ## Falsification Criteria
+  If 3+ posts show no significant difference, hypothesis is falsified.
+
+  ## Learnings
+  *To be filled after verification*
+
+example_outcome: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-12-30
+  type: outcome
+  related_traces: ["[[traces/2025-12-27-short-posts-hypothesis]]"]
+  status: verified
+  verified_date: 2025-12-30
+  tags: [date/2025-12-30, trace, domain/content, status/verified]
+  ---
+
+  # Outcome: Short Posts Hypothesis Verified
+
+  ## Result
+  3 short posts averaged 5.2% engagement vs 1.8% for long posts.
+
+  ## Verification
+  Hypothesis VERIFIED. Short posts outperform by 2.9x.
+
+  ## Learnings
+  - Default to <150 words for LinkedIn
+  - Save long-form for newsletter/blog

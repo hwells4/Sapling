@@ -1,0 +1,165 @@
+# Call Schema - Meeting/Call Notes
+# Location: brain/calls/YYYY-MM-DD-{slug}.md
+# Created by: Call Classifier Service
+
+schema_version: 1.1.0
+changelog:
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Added person/, company/, signal/ tags; removed redundant topics field
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: call
+description: Notes from calls and meetings, auto-generated from Granola
+location: brain/calls/
+filename_pattern: "YYYY-MM-DD-{slug}.md"
+created_by: call-classifier-service
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date of the call
+
+    type:
+      type: literal
+      value: call
+      description: Always "call"
+
+    call_id:
+      type: uuid
+      description: Supabase UUID for idempotency
+
+    source:
+      type: enum
+      values: [granola, manual]
+      description: Where the call came from
+
+    classification_type:
+      type: enum
+      values: [client, partner, internal, unknown]
+      description: Type of call based on attendees
+
+    people:
+      type: array
+      items: wikilink
+      target: entities/
+      description: People on the call
+
+    companies:
+      type: array
+      items: wikilink
+      target: entities/
+      description: Companies represented
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "call"
+        - "client/{slug}"
+        - "person/{slug}"
+        - "company/{slug}"
+      optional_patterns:
+        - "topic/{topic}"
+        - "signal/{type}-{value}"
+
+  optional:
+    granola_link:
+      type: url
+      description: Link to Granola meeting
+
+    action_items:
+      type: array
+      items: object
+      description: Extracted action items with owners
+
+body_sections:
+  - name: header
+    required: true
+    description: Title, date, attendees
+    format: |
+      # {Title}
+
+      **Date:** YYYY-MM-DD
+      **Attendees:** {attendee list}
+
+  - name: notes
+    heading: "## Notes"
+    required: true
+    description: Enhanced notes from Granola (preserve as-is)
+
+  - name: ai_analysis
+    heading: "## AI Analysis"
+    required: false
+    description: AI-extracted insights
+    subsections:
+      - heading: "### Action Items"
+        description: Tasks with owners
+      - heading: "### Signals"
+        description: Satisfaction, expansion potential, concerns
+
+  - name: footer
+    required: true
+    format: |
+      ---
+      *Auto-classified by Call Classifier*
+
+example: |
+  ---
+  schema_version: 1.1.0
+  date: 2025-12-27
+  type: call
+  call_id: 550e8400-e29b-41d4-a716-446655440000
+  source: granola
+  classification_type: client
+  people: ["[[entities/todd-ablowitz]]", "[[entities/rhonda-hoopingarner]]"]
+  companies: ["[[entities/double-diamond]]"]
+  tags:
+    - date/2025-12-27
+    - call
+    - client/double-diamond
+    - person/todd-ablowitz
+    - person/rhonda-hoopingarner
+    - company/double-diamond
+    - topic/ai-strategy
+    - signal/satisfaction-high
+    - signal/expansion-high
+  granola_link: https://granola.so/...
+  ---
+
+  # AI Strategy Update - Double Diamond
+
+  **Date:** 2025-12-27
+  **Attendees:** Todd Ablowitz, Rhonda Hoopingarner
+
+  ---
+
+  ## Notes
+
+  {{enhanced_notes from Granola}}
+
+  ---
+
+  ## AI Analysis
+
+  ### Action Items
+  - [ ] Send proposal draft by Friday @harrison
+  - [ ] Review budget numbers @todd
+
+  ### Signals
+  - **Satisfaction:** High
+  - **Expansion potential:** Q2 scope increase discussed
+  - **Concerns:** None raised
+
+  ---
+  *Auto-classified by Call Classifier*

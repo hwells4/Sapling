@@ -1,0 +1,156 @@
+# Weekly Note Schema - Weekly Review and Planning
+# Location: brain/notes/weekly/YYYY-Www.md
+# Created by: /weekly command or manually
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: weekly-note
+description: Weekly review, patterns, and planning
+location: brain/notes/weekly/
+filename_pattern: "YYYY-Www.md"
+created_by: /weekly command
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Monday of the week
+
+    type:
+      type: literal
+      value: weekly
+      description: Always "weekly"
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "weekly"
+
+  optional:
+    year:
+      type: wikilink
+      target: notes/yearly/
+      description: Link to containing yearly note
+
+    quarter:
+      type: wikilink
+      target: notes/quarterly/
+      description: Link to containing quarterly note
+
+    month:
+      type: wikilink
+      target: notes/monthly/
+      description: Link to containing monthly note
+
+body_sections:
+  - name: title
+    heading: "# Week {number} - {date range}"
+    required: true
+
+  - name: week_focus
+    heading: "## Week Focus"
+    required: true
+    description: Primary objective for the week
+
+  - name: daily_links
+    heading: "## Daily Links"
+    required: true
+    description: Links to each day of the week
+    format: |
+      - [[notes/daily/YYYY-MM-DD|Monday]]
+      - [[notes/daily/YYYY-MM-DD|Tuesday]]
+      - [[notes/daily/YYYY-MM-DD|Wednesday]]
+      - [[notes/daily/YYYY-MM-DD|Thursday]]
+      - [[notes/daily/YYYY-MM-DD|Friday]]
+
+  - name: outputs_created
+    heading: "## Outputs Created"
+    required: true
+    description: Dataview query for outputs from this week
+    format: |
+      ```dataview
+      LIST FROM "outputs" WHERE date >= date("YYYY-MM-DD") AND date <= date("YYYY-MM-DD")
+      ```
+
+  - name: hypotheses_to_verify
+    heading: "## Hypotheses to Verify"
+    required: true
+    description: Hypotheses that are ready for verification
+    format: |
+      ```dataview
+      LIST FROM "hypotheses" WHERE status = "testing"
+      ```
+
+  - name: reflection
+    heading: "## Week Reflection"
+    required: true
+    description: End of week reflection
+    subsections:
+      - heading: "### Wins:"
+        description: What went well
+      - heading: "### Challenges:"
+        description: What was difficult
+      - heading: "### Learnings:"
+        description: Key insights from the week
+      - heading: "### Next Week Priority:"
+        description: Single most important focus for next week
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-23
+  type: weekly
+  year: "[[notes/yearly/2025]]"
+  quarter: "[[notes/quarterly/2025-Q4]]"
+  month: "[[notes/monthly/2025-12]]"
+  tags: [date/2025-12-23, weekly]
+  ---
+
+  # Week 52 - December 23-29, 2025
+
+  ## Week Focus
+  Complete Personal OS architecture and begin migration
+
+  ## Daily Links
+  - [[notes/daily/2025-12-23|Monday]]
+  - [[notes/daily/2025-12-24|Tuesday]]
+  - [[notes/daily/2025-12-25|Wednesday]]
+  - [[notes/daily/2025-12-26|Thursday]]
+  - [[notes/daily/2025-12-27|Friday]]
+
+  ## Outputs Created
+  ```dataview
+  LIST FROM "outputs" WHERE date >= date("2025-12-23") AND date <= date("2025-12-29")
+  ```
+
+  ## Hypotheses to Verify
+  ```dataview
+  LIST FROM "hypotheses" WHERE status = "testing"
+  ```
+
+  ## Week Reflection
+
+  ### Wins:
+  - Completed comprehensive architecture plan
+  - Got alignment on all major decisions
+
+  ### Challenges:
+  - Scope creep on architecture discussions
+
+  ### Learnings:
+  - Schemas should live outside vault for agent reference
+
+  ### Next Week Priority:
+  Execute migration Phase 1-3

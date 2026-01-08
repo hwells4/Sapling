@@ -1,0 +1,223 @@
+# Calibration Schema - Self-Improvement Proposals from Decision Traces
+# Location: brain/outputs/calibrations/YYYY-MM-DD-upgrade.md
+# Created by: /upgrade-os command
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2025-12-29
+    changes: Initial schema definition
+
+name: calibration
+description: Proposals for system improvements generated from decision trace analysis
+location: brain/outputs/calibrations/
+filename_pattern: "YYYY-MM-DD-upgrade.md"
+created_by: /upgrade-os command
+
+purpose: |
+  Upgrade proposals are the output of /upgrade-os analysis. They contain:
+  - Prioritized list of proposed changes
+  - Source traces for each proposal
+  - Specific edit instructions for skills/hooks/CLAUDE.md
+  - Learnings-only items (awareness, no code change)
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date proposal was generated
+
+    type:
+      type: string
+      value: calibration
+      description: Always "calibration"
+
+    status:
+      type: enum
+      values: [pending, partial, applied, rejected]
+      description: |
+        - pending: Awaiting user decision
+        - partial: Some proposals applied, others skipped
+        - applied: All proposals applied
+        - rejected: User cancelled
+
+    traces_processed:
+      type: number
+      description: Count of traces analyzed
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "output/calibration"
+      optional_patterns:
+        - "status/{status}"
+
+  optional:
+    proposals_count:
+      type: number
+      description: Total number of proposals generated
+
+    applied_count:
+      type: number
+      description: Number of proposals applied
+
+    skipped_count:
+      type: number
+      description: Number of proposals skipped
+
+    commit_sha:
+      type: string
+      description: Git commit SHA for the upgrade (for rollback)
+
+    applied_at:
+      type: datetime
+      description: When proposals were applied
+
+body_sections:
+  - name: summary
+    heading: "# Calibration: {date}"
+    required: true
+    description: Overview with counts
+
+  - name: critical
+    heading: "## CRITICAL (fix now)"
+    required: false
+    description: Highest priority - explicit failures, user frustration
+    format: |
+      ### {number}. {target}: {title}
+      **Issue:** {what's wrong}
+      **Source traces:** {list of trace files}
+      **Proposed by:** {agent(s)}
+
+      **Change:**
+      ```{language}
+      {specific edit or new content}
+      ```
+
+  - name: high
+    heading: "## HIGH"
+    required: false
+    description: Human overrides with patterns, core workflow issues
+
+  - name: medium
+    heading: "## MEDIUM"
+    required: false
+    description: Single traces with learnings, MCP usage gaps
+
+  - name: low
+    heading: "## LOW (simplifications)"
+    required: false
+    description: Nice-to-have, consolidations, minor improvements
+
+  - name: learnings_only
+    heading: "## LEARNINGS ONLY (no code change)"
+    required: false
+    description: Insights for human awareness, can't be codified
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-29
+  type: calibration
+  status: pending
+  traces_processed: 20
+  proposals_count: 8
+  tags:
+    - date/2025-12-29
+    - output/calibration
+    - status/pending
+  ---
+
+  # Calibration: 2025-12-29
+
+  | Priority | Count |
+  |----------|-------|
+  | CRITICAL | 2 |
+  | HIGH | 2 |
+  | MEDIUM | 2 |
+  | LOW | 2 |
+  | Learnings | 3 |
+
+  ---
+
+  ## CRITICAL (fix now)
+
+  ### 1. CLAUDE.md: Model Selection Rule
+  **Issue:** Haiku used for creative/judgment work causing failures
+  **Source traces:** trace-5.md, trace-9.md, trace-14.md, trace-19.md
+  **Proposed by:** pattern-recognizer, confirmed by architecture-strategist
+
+  **Add to `<context_engineering>`:**
+  ```xml
+  **Model Selection:**
+  - Opus: Creative work, judgment calls, content creation, complex reasoning
+  - Sonnet: General tasks, code generation, research
+  - Haiku: Mechanical tasks only (formatting, simple extraction, validation)
+  ```
+
+  ---
+
+  ### 2. [NEW SKILL] voice-loader
+  **Issue:** Voice context never loaded before content creation
+  **Source traces:** trace-3.md, trace-7.md, trace-12.md
+  **Proposed by:** architecture-strategist
+
+  **Create:** `.claude/skills/voice-loader/SKILL.md`
+  ```markdown
+  ---
+  name: voice-loader
+  description: Load voice and style context before content creation tasks
+  ---
+  [skill content...]
+  ```
+
+  ---
+
+  ## HIGH
+
+  ### 3. gmail-mcp-usage: Plain Text Formatting
+  **Issue:** guMCP only supports plain text, markdown formatting fails
+  **Source traces:** trace-8.md
+  **Proposed by:** pattern-recognizer
+
+  **Add to formatting section:**
+  ```markdown
+  **Plain text only:** Use Unicode bullets (•), dashes, and line breaks.
+  No markdown formatting - Gmail MCP sends as plain text.
+  ```
+
+  ---
+
+  ## MEDIUM
+
+  ### 4. attio-mcp-usage: Filter Syntax Examples
+  **Issue:** Repeated struggles with Attio filter syntax
+  **Source traces:** trace-11.md, trace-16.md
+  **Proposed by:** architecture-strategist
+
+  **Add examples section with common filter patterns**
+
+  ---
+
+  ## LOW (simplifications)
+
+  ### 5. content-ideation: Consolidate 3 workflows to 1
+  **Issue:** Over-engineered, 3 workflows serve same purpose
+  **Source traces:** general observation
+  **Proposed by:** simplicity-advocate
+
+  ---
+
+  ## LEARNINGS ONLY (no code change)
+
+  - "Extracting themes produces consulting-speak, not insights"
+  - "Specificity without meaning is worse than vague claims"
+  - "Validator checking for AI patterns is useless if content is hollow"

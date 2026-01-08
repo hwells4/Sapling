@@ -1,0 +1,180 @@
+# Daily Note Schema - Task Container and Daily Ledger
+# Location: brain/notes/daily/YYYY-MM-DD.md
+# Created by: /daily command or manually
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: daily-note
+description: Container for daily tasks, focus, and ledger of everything created
+location: brain/notes/daily/
+filename_pattern: "YYYY-MM-DD.md"
+created_by: /daily command
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: The date this note represents
+
+    type:
+      type: literal
+      value: daily
+      description: Always "daily"
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "daily"
+
+  optional:
+    week:
+      type: wikilink
+      target: notes/weekly/
+      description: Link to containing weekly note
+
+    month:
+      type: wikilink
+      target: notes/monthly/
+      description: Link to containing monthly note
+
+    energy:
+      type: number
+      range: [1, 5]
+      description: Energy level rating (filled in reflection)
+
+    focus_rating:
+      type: number
+      range: [1, 5]
+      description: Focus quality rating (filled in reflection)
+
+body_sections:
+  - name: navigation
+    required: true
+    description: Links to previous and next day
+    format: "<< [[YYYY-MM-DD]] | [[YYYY-MM-DD]] >>"
+
+  - name: focus
+    heading: "## Focus"
+    required: true
+    description: Single most important outcome for today
+
+  - name: tasks
+    heading: "## Tasks"
+    required: true
+    description: Tasks organized by type
+    subsections:
+      - heading: "### In-System"
+        description: Tasks executed via /task with block references
+        format: |
+          - [ ] /task {description} ^task-{id}
+            - **Output:** [[outputs/...]]
+            - **Hypothesis:** [[hypotheses/...]]
+      - heading: "### Async"
+        description: Tasks done outside the system
+        format: "- [ ] {description}"
+      - heading: "### Triage"
+        description: Items needing human guidance
+        format: "- [ ] {description}"
+
+  - name: created_today
+    heading: "## Created Today"
+    required: true
+    description: Dataview query showing all files created on this date
+    format: |
+      ```dataview
+      LIST FROM #date/YYYY-MM-DD WHERE file.name != this.file.name
+      SORT type
+      ```
+
+  - name: decisions_made
+    heading: "## Decisions Made"
+    required: false
+    description: Links to decision traces created today
+
+  - name: reflection
+    heading: "## Evening Reflection"
+    required: false
+    description: End of day reflection
+    format: |
+      **Energy:** /5
+      **Focus:** /5
+
+      ### What worked:
+
+      ### What didn't:
+
+      ### Tomorrow's priority:
+
+task_syntax: |
+  Tasks use this format for linking:
+  - [ ] /task {description} ^{block-id}
+    - **Output:** [[outputs/...]]
+    - **Hypothesis:** [[hypotheses/...]]
+
+  The ^{block-id} enables direct linking from outputs back to originating task.
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2025-12-27
+  type: daily
+  week: "[[notes/weekly/2025-W52]]"
+  month: "[[notes/monthly/2025-12]]"
+  tags: [date/2025-12-27, daily]
+  ---
+
+  # Friday, December 27, 2025
+
+  << [[2025-12-26]] | [[2025-12-28]] >>
+
+  ## Focus
+  Complete architecture plan and begin migration
+
+  ## Tasks
+
+  ### In-System
+  - [x] /task Write architecture decision document ^task-abc
+    - **Output:** [[outputs/2025-12-27-architecture-plan]]
+  - [ ] /task Create entity schema files ^task-def
+
+  ### Async
+  - [ ] Call Todd re: January timeline
+  - [ ] Review Linear PRD comments
+
+  ### Triage
+  - [ ] Classifier found unknown domain - review
+
+  ## Created Today
+
+  ```dataview
+  LIST FROM #date/2025-12-27 WHERE file.name != this.file.name
+  SORT type
+  ```
+
+  ## Decisions Made
+  - [[traces/2025-12-27-architecture-decisions]]
+
+  ## Evening Reflection
+  **Energy:** 4/5
+  **Focus:** 5/5
+
+  ### What worked:
+  Deep focus session on architecture
+
+  ### What didn't:
+  Got distracted by Slack mid-morning
+
+  ### Tomorrow's priority:
+  Begin Phase 1 migration

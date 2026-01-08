@@ -1,0 +1,264 @@
+# Library Schema - Reference Material for Learning
+# Location: brain/library/{origin}/{slug}.md
+# Created by: Manual save or skill
+#
+# ARCHITECTURE NOTE:
+# This schema uses a union type pattern (External | Internal)
+# unified by PURPOSE (learning material) despite different SOURCES.
+# This is a conscious design decision favoring schema minimalism.
+
+schema_version: 1.2.0
+changelog:
+  - version: 1.2.0
+    date: 2025-12-28
+    changes: Refactored to origin-based structure (external/internal) for cleaner union type
+  - version: 1.1.0
+    date: 2025-12-28
+    changes: Added retrospective source_type with project linking
+  - version: 1.0.0
+    date: 2025-12-27
+    changes: Initial schema definition
+
+name: library
+description: Reference material for learning - external content and internal retrospectives
+location: brain/library/
+filename_pattern:
+  external: "{source.format}/{slug}.md"  # posts/, articles/, videos/, etc.
+  internal: "internal/{slug}.md"
+created_by: manual or skill
+
+purpose: |
+  The library contains reference material used by AI agents to inform future work.
+
+  Two origins:
+  1. External: Other people's work (posts, articles, videos) - patterns to learn from
+  2. Internal: Your own retrospectives - lessons from completed projects
+
+  Both share the same purpose: extracting patterns to improve future work.
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.2.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date this was saved to library
+
+    type:
+      type: literal
+      value: library
+      description: Always "library"
+
+    origin:
+      type: enum
+      values: [external, internal]
+      description: Where this learning material came from
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "library"
+        - "library/{origin}"
+      optional_patterns:
+        - "topic/{topic}"
+        - "client/{slug}"
+        - "author/{slug}"
+
+  # For external content (origin: external)
+  external:
+    source:
+      type: object
+      required_when: origin == external
+      fields:
+        url:
+          type: url
+          required: true
+          description: Original URL of the content
+        author:
+          type: string
+          required: true
+          description: Who created this content
+        format:
+          type: enum
+          values: [post, article, video, template, book]
+          required: true
+          description: Content format
+        platform:
+          type: string
+          required: false
+          description: Where published (linkedin, twitter, youtube, etc.)
+
+  # For internal content (origin: internal)
+  internal:
+    project:
+      type: object
+      required_when: origin == internal
+      fields:
+        client:
+          type: wikilink
+          target: entities/
+          required: true
+          description: Client company entity
+        linear_url:
+          type: url
+          required: false
+          description: Linear project URL
+        started:
+          type: date
+          required: false
+          description: Project start date
+        completed:
+          type: date
+          required: false
+          description: Project completion date
+        duration_days:
+          type: integer
+          required: false
+          description: Total project duration
+
+  optional:
+    topics:
+      type: array
+      items: string
+      description: Topics covered (for topic/ tags)
+
+body_sections:
+  shared:
+    - name: key_patterns
+      heading: "## Key Patterns"
+      required: true
+      description: Patterns and techniques to learn from (the whole point)
+      format: "- Pattern N: {description}"
+
+  external:
+    - name: header
+      required: true
+      format: |
+        # {Title}
+
+        **Author:** {source.author}
+        **Source:** [{source.platform}]({source.url})
+        **Saved:** {date}
+
+    - name: why_saved
+      heading: "## Why I Saved This"
+      required: true
+      description: One-line reason this is valuable
+
+    - name: content
+      heading: "## Content"
+      required: true
+      description: The actual content (pasted or summarized)
+
+    - name: application
+      heading: "## How I Might Use This"
+      required: false
+
+  internal:
+    - name: header
+      required: true
+      format: |
+        # {Title}
+
+        **Client:** {project.client}
+        **Timeline:** {project.started} -> {project.completed}
+        **Linear:** [Project]({project.linear_url})
+
+    - name: summary
+      heading: "## Executive Summary"
+      required: true
+
+    - name: lessons
+      heading: "## Lessons Learned"
+      required: true
+
+    - name: recommendations
+      heading: "## Recommendations"
+      required: false
+
+example_external: |
+  # Location: brain/library/posts/hook-10k-likes.md
+  ---
+  schema_version: 1.2.0
+  date: 2025-12-27
+  type: library
+  origin: external
+  source:
+    url: https://linkedin.com/in/alexlieberman/post/123
+    author: Alex Lieberman
+    format: post
+    platform: linkedin
+  topics: [content-strategy, hooks, storytelling]
+  tags: [date/2025-12-27, library, library/external, topic/content-strategy]
+  ---
+
+  # The Hook That Got 10K Likes
+
+  **Author:** Alex Lieberman
+  **Source:** [LinkedIn](https://linkedin.com/in/alexlieberman/post/123)
+  **Saved:** 2025-12-27
+
+  ## Why I Saved This
+  Perfect example of controversial opening that drives engagement.
+
+  ## Content
+  {{paste the content here}}
+
+  ## Key Patterns
+  - Pattern 1: Opens with a controversial statement
+  - Pattern 2: Uses very short paragraphs (1-2 sentences)
+  - Pattern 3: Ends with a question to drive comments
+
+  ## How I Might Use This
+  - Apply controversial opener to next AI post
+
+example_internal: |
+  # Location: brain/library/internal/one-click-distributions.md
+  ---
+  schema_version: 1.2.0
+  date: 2025-12-28
+  type: library
+  origin: internal
+  project:
+    client: "[[entities/brown-robin]]"
+    linear_url: https://linear.app/dododigital/project/one-click-distributions
+    started: 2025-11-15
+    completed: 2025-12-20
+    duration_days: 35
+  tags: [date/2025-12-28, library, library/internal, client/brown-robin]
+  ---
+
+  # Project Retrospective: One-Click Distributions
+
+  **Client:** [[entities/brown-robin|Brown Robin]]
+  **Timeline:** 2025-11-15 -> 2025-12-20 (35 days)
+  **Linear:** [Project](https://linear.app/dododigital/project/one-click-distributions)
+
+  ## Executive Summary
+  Built automated distribution system reducing manual workflow from 12 steps to 1.
+  Scope expanded 40% mid-project due to edge cases in fund data.
+
+  ## Key Patterns
+  - Pattern 1: Email integration added 6 issues mid-project (budget 2x for email)
+  - Pattern 2: Database work completed faster than estimated (0.7x multiplier)
+  - Pattern 3: Testing revealed 30% more edge cases than planned
+
+  ## Lessons Learned
+
+  ### What Went Well
+  - Early database schema decisions held up through changes
+  - Daily standups caught scope creep early
+
+  ### What Could Improve
+  - Email template complexity underestimated
+  - Need better upfront edge case discovery
+
+  ## Recommendations
+  1. **Email features:** Budget 2x estimated time
+  2. **Edge cases:** Add discovery phase before implementation

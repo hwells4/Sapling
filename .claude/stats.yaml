@@ -1,0 +1,14 @@
+# Personal OS Statistics
+# Created during /onboard, updated by calibration-stats-updater hook
+
+# Creature companion (set during onboarding)
+creature: null              # ember | drift | bloom
+creature_selected_at: null  # ISO date when creature was chosen
+
+# Calibration stats
+total_traces_processed: 0
+total_calibrations: 0
+last_calibration: null
+
+# Onboarding
+onboarded_at: null

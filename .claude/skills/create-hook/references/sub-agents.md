@@ -11,7 +11,7 @@ This file defines specialized agents that understand the hooks in the codebase a
 
 **Purpose:** Scan the codebase for all existing hooks, settings configurations, and document what's currently in place.
 
-**When to spawn:** At the start of any `/hooks new` workflow.
+**When to spawn:** At the start of any `/create-hook new` workflow.
 
 **Prompt template:**
 ```

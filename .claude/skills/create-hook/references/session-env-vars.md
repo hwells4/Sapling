@@ -2,6 +2,17 @@
 
 SessionStart hooks can persist environment variables for the entire Claude Code session using `CLAUDE_ENV_FILE`.
 
+## Available Environment Variables
+
+| Variable | Available In | Description |
+|----------|--------------|-------------|
+| `CLAUDE_PROJECT_DIR` | All hooks | Absolute path to project root |
+| `CLAUDE_CODE_REMOTE` | All hooks | `"true"` if web/remote environment, empty for CLI |
+| `CLAUDE_ENV_FILE` | SessionStart only | Path to file for persisting env vars |
+| `CLAUDE_PLUGIN_ROOT` | Component hooks only | Absolute path to plugin/skill directory |
+
+---
+
 ## How It Works
 
 1. Claude Code creates a temporary env file at session start

@@ -1,5 +1,5 @@
 ---
-name: hooks-generator
+name: create-hook
 description: Quickly spin up Claude Code hooks for automation. Generates bash scripts, Python handlers, and settings.json configuration for PreToolUse, PostToolUse, SessionStart, Stop, and other hook events.
 invocation: user
 context_budget:
@@ -13,12 +13,12 @@ Generate Claude Code hooks quickly with proper configuration, input handling, an
 
 <intake>
 **If user provides arguments, route directly:**
-- `/hooks new PreToolUse validate-bash` → Create workflow
-- `/hooks debug my-hook.py` → Debug workflow
-- `/hooks template auto-approve` → Show template
-- `/hooks analyze` → Run inventory agent
+- `/create-hook new PreToolUse validate-bash` → Create workflow
+- `/create-hook debug my-hook.py` → Debug workflow
+- `/create-hook template auto-approve` → Show template
+- `/create-hook analyze` → Run inventory agent
 
-**If bare `/hooks` with no arguments, ask:**
+**If bare `/create-hook` with no arguments, ask:**
 
 What would you like to do?
 
@@ -35,6 +35,8 @@ What would you like to do?
 | Intent | References to Load | Workflow |
 |--------|-------------------|----------|
 | Create new hook | hook-events.md, json-output.md, security.md, sub-agents.md | Spawn inventory agent → analyzer agent → create → tester agent |
+| Create prompt-based hook | prompt-based-hooks.md, hook-events.md | Determine event → configure prompt → test |
+| Create component-scoped hook | component-scoped-hooks.md, hook-events.md | Define in frontmatter → test |
 | Edit existing hook | hook-events.md, json-output.md, debugging.md | Read existing hook → modify → test |
 | Debug hook | debugging.md, hook-events.md | Diagnose → fix → test |
 | Analyze hooks | sub-agents.md | Spawn inventory agent |
@@ -55,6 +57,12 @@ What would you like to do?
 </essential_principles>
 
 <quick_reference>
+**Hook Types:**
+| Type | When to Use | Supported Events |
+|------|-------------|------------------|
+| `command` | Deterministic checks (regex, file ops, external APIs) | All events |
+| `prompt` | Judgment calls (task completeness, quality evaluation) | Stop, SubagentStop, UserPromptSubmit, PreToolUse, PermissionRequest |
+
 **Hook Events:**
 | Event | When | Matcher? | Can Block? |
 |-------|------|----------|------------|
@@ -92,6 +100,8 @@ What would you like to do?
 **Task-specific:**
 | Reference | When to Load |
 |-----------|--------------|
+| references/prompt-based-hooks.md | Creating LLM-evaluated hooks (type: prompt) |
+| references/component-scoped-hooks.md | Defining hooks in SKILL.md/command frontmatter |
 | references/security.md | Creating new hooks, security review |
 | references/debugging.md | Debugging, testing, healing hooks |
 | references/mcp-tools.md | Hooking MCP server tools |
@@ -106,7 +116,9 @@ What would you like to do?
 | templates/python-validator.py | Complex validation with JSON |
 | templates/auto-approve.py | Auto-approve safe operations |
 | templates/context-injection.py | SessionStart/UserPromptSubmit context |
-| templates/stop-gate.py | Ensure work completion before stop |
+| templates/stop-gate.py | Ensure work completion before stop (command-based) |
+| templates/intelligent-stop-prompt.json | LLM-evaluated task completion (prompt-based) |
+| templates/permission-handler.py | Handle permission dialogs programmatically |
 | templates/notification-forwarder.sh | Forward notifications externally |
 </templates_index>
 

@@ -12,6 +12,14 @@ Generate Claude Code hooks quickly with proper configuration, input handling, an
 </objective>
 
 <intake>
+**If user provides arguments, route directly:**
+- `/hooks new PreToolUse validate-bash` → Create workflow
+- `/hooks debug my-hook.py` → Debug workflow
+- `/hooks template auto-approve` → Show template
+- `/hooks analyze` → Run inventory agent
+
+**If bare `/hooks` with no arguments, ask:**
+
 What would you like to do?
 
 1. **Create a new hook** - Build a hook from scratch with analysis
@@ -19,8 +27,6 @@ What would you like to do?
 3. **Debug a hook** - Troubleshoot a broken or misbehaving hook
 4. **Analyze hooks** - Inventory existing hooks, find gaps
 5. **Something else** - Templates, settings, MCP tools, security, env vars
-
-Please specify your intent so I can load the right context.
 </intake>
 
 <routing>

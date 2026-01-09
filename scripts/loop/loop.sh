@@ -10,7 +10,12 @@ SESSION_NAME=${2:-"default"}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# Export for use in prompts
 export SESSION_NAME
+
+# Export for loop-stop-gate.py hook (only activates when these are set)
+export CLAUDE_LOOP_AGENT=1
+export CLAUDE_LOOP_SESSION="$SESSION_NAME"
 
 # Record completion status for notification system
 record_completion() {

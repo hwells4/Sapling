@@ -22,6 +22,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-router/skill-router.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }

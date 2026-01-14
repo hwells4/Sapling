@@ -1,0 +1,460 @@
+{
+  "version": "2.0",
+  "generated": true,
+  "config": {
+    "minConfidenceScore": 3,
+    "maxSkillsToShow": 5,
+    "showMatchReasons": true
+  },
+  "scoring": {
+    "keyword": 2,
+    "keywordPattern": 3,
+    "pathPattern": 4,
+    "directoryMatch": 5,
+    "intentPattern": 4,
+    "contextPattern": 2,
+    "contentPattern": 3
+  },
+  "directoryMappings": {
+    ".claude/skills/generate-prd": "generate-prd",
+    ".claude/skills/migration-workflow": "migration-workflow",
+    ".claude/skills/today": "today",
+    ".claude/skills/obsidian-vault-ops": "obsidian-vault-ops",
+    ".claude/skills/calibration-workflow": "calibration-workflow",
+    ".claude/skills/plan-refinery": "plan-refinery",
+    ".claude/skills/triage": "triage",
+    ".claude/skills/onboard": "onboard",
+    ".claude/skills/github": "github",
+    ".claude/skills/generate-stories": "generate-stories",
+    ".claude/skills/agent-chatroom": "agent-chatroom",
+    ".claude/skills/decision-traces": "decision-traces",
+    ".claude/skills/generate-visuals": "generate-visuals",
+    ".claude/skills/create-hook": "create-hook"
+  },
+  "skills": {
+    "generate-prd": {
+      "description": "Generate PRDs through adaptive questioning. Use when user says \"PRD\", \"spec\", \"plan a feature\", \"what should we build\", or describes a project/feature they want to build. Works for both full project PRDs and feature-level specs.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "plan a feature",
+          "want",
+          "user",
+          "describes",
+          "spec",
+          "plan",
+          "what should we build",
+          "questioning",
+          "says",
+          "both",
+          "adaptive",
+          "project",
+          "feature",
+          "generate",
+          "specs",
+          "works",
+          "level",
+          "they",
+          "full",
+          "prd",
+          "build",
+          "prds"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "migration-workflow": {
+      "description": "Migrate vault files to current schema versions. Use when files have outdated frontmatter, missing schema_version, or need bulk updates to match current schema definitions. Detects, previews, and applies migrations with validation.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "schema",
+          "migrate",
+          "frontmatter",
+          "files",
+          "workflow",
+          "outdated",
+          "migration",
+          "bulk",
+          "updates",
+          "current",
+          "previews",
+          "validation",
+          "versions",
+          "vault",
+          "detects",
+          "missing",
+          "applies",
+          "definitions",
+          "migrations",
+          "match"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "today": {
+      "description": "/start Command",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "today",
+          "command",
+          "start"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "obsidian-vault-ops": {
+      "description": "Read and write Obsidian vault files, manage wiki-links, process markdown with YAML frontmatter. Use when working with vault file operations, creating notes, or managing links.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "operations",
+          "working",
+          "file",
+          "frontmatter",
+          "files",
+          "creating",
+          "markdown",
+          "wiki",
+          "process",
+          "manage",
+          "obsidian",
+          "ops",
+          "read",
+          "write",
+          "vault",
+          "yaml",
+          "notes",
+          "links",
+          "managing"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "calibration-workflow": {
+      "description": "Analyze decision traces and calibrate the system to your preferences. Proposes targeted improvements to skills, CLAUDE.md, and workflows based on patterns in your decisions. Use periodically or after accumulating decision traces.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "decisions",
+          "periodically",
+          "workflows",
+          "calibrate",
+          "targeted",
+          "workflow",
+          "calibration",
+          "analyze",
+          "improvements",
+          "accumulating",
+          "preferences",
+          "traces",
+          "decision",
+          "claude",
+          "your",
+          "patterns",
+          "based",
+          "system",
+          "proposes"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "plan-refinery": {
+      "description": "Iterative planning refinement using specialized Opus subagents. \"Check your beads N times, implement once.\" Refine beads, synthesize competing plans, and improve markdown plans before burning implementation tokens.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "plan",
+          "markdown",
+          "refinement",
+          "iterative",
+          "specialized",
+          "beads",
+          "implementation",
+          "burning",
+          "improve",
+          "implement",
+          "check",
+          "synthesize",
+          "subagents",
+          "competing",
+          "refinery",
+          "times",
+          "opus",
+          "planning",
+          "plans",
+          "refine",
+          "your",
+          "tokens"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "triage": {
+      "description": "Process items needing human decision one at a time. Serves inbox items with medium/low confidence, unclassified calls, and stale items. Use after /today_2 or standalone for inbox review.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "needing",
+          "calls",
+          "items",
+          "process",
+          "human",
+          "time",
+          "serves",
+          "inbox",
+          "low",
+          "one",
+          "confidence",
+          "unclassified",
+          "review",
+          "triage",
+          "medium",
+          "standalone",
+          "decision",
+          "stale"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "onboard": {
+      "description": "Onboard new users to Personal OS. Collects context through interview, lets user choose a creature companion, and populates context files.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "context",
+          "creature",
+          "onboard",
+          "users",
+          "companion",
+          "user",
+          "populates",
+          "lets",
+          "personal",
+          "collects",
+          "interview",
+          "new",
+          "choose",
+          "files"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "github": {
+      "description": "GitHub repository management via gh CLI. Use for creating repos, cloning, changing visibility, or scaffolding new projects from boilerplates.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "via",
+          "creating",
+          "boilerplates",
+          "cli",
+          "scaffolding",
+          "projects",
+          "visibility",
+          "management",
+          "github",
+          "new",
+          "repos",
+          "changing",
+          "cloning",
+          "repository"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "generate-stories": {
+      "description": "Generate stories from a PRD for autonomous or assisted execution. Use when user says \"generate tasks\", \"break this down\", \"create stories\", or has a PRD they want to execute.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "generate",
+          "says",
+          "want",
+          "prd",
+          "assisted",
+          "autonomous",
+          "user",
+          "execute",
+          "generate tasks",
+          "break this down",
+          "break",
+          "create",
+          "stories",
+          "execution",
+          "down",
+          "they",
+          "create stories",
+          "tasks"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "agent-chatroom": {
+      "description": "Multi-agent coordination hub for swarm tasks. Creates task-scoped chatrooms where agents communicate, share discoveries, and adapt to each other's findings. Enables both live coordination and retrospective review of agent behavior.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "multi",
+          "chatroom",
+          "tasks",
+          "behavior",
+          "both",
+          "creates",
+          "agent",
+          "enables",
+          "task",
+          "coordination",
+          "scoped",
+          "review",
+          "live",
+          "share",
+          "findings",
+          "swarm",
+          "communicate",
+          "adapt",
+          "chatrooms",
+          "hub",
+          "discoveries",
+          "retrospective"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "decision-traces": {
+      "description": "Extract meaningful decisions from completed tasks. Decisions must be actionable for future agents - not logs, research, or speculation.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "research",
+          "extract",
+          "decisions",
+          "actionable",
+          "future",
+          "logs",
+          "speculation",
+          "traces",
+          "tasks",
+          "decision",
+          "completed",
+          "meaningful"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "generate-visuals": {
+      "description": "Generate professional images using Google's Gemini image models via nano-banana CLI. Use when creating LinkedIn carousel covers, infographics, or professional graphics.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "google",
+          "banana",
+          "generate",
+          "via",
+          "creating",
+          "cli",
+          "carousel",
+          "graphics",
+          "visuals",
+          "professional",
+          "models",
+          "images",
+          "nano",
+          "covers",
+          "image",
+          "linkedin",
+          "infographics",
+          "gemini"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "create-hook": {
+      "description": "Quickly spin up Claude Code hooks for automation. Generates bash scripts, Python handlers, and settings.json configuration for PreToolUse, PostToolUse, SessionStart, Stop, and other hook events.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "python",
+          "handlers",
+          "pretooluse",
+          "hook",
+          "spin",
+          "generates",
+          "settings",
+          "automation",
+          "events",
+          "configuration",
+          "posttooluse",
+          "json",
+          "bash",
+          "code",
+          "quickly",
+          "sessionstart",
+          "claude",
+          "scripts",
+          "create",
+          "hooks",
+          "stop"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    }
+  }
+}

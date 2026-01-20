@@ -27,6 +27,11 @@ Interactive onboarding for new Sapling OS users. Collects context through an int
 - Set up nano-banana for generating PDFs, slide decks, carousel graphics
 - Walks you through getting a Gemini API key from Google
 
+### Phase 3.5: Call Recording Setup (Optional)
+- If Granola is detected, asks if you want to auto-sync meeting notes
+- Installs a background daemon that watches for new calls
+- Meeting summaries sync to `brain/calls/` automatically
+
 ### Phase 4: File Generation
 Creates context files in `brain/context/`:
 - `about-me.md` - Your identity and background

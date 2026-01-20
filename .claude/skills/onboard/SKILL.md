@@ -66,13 +66,14 @@ Only proceed if both checks pass.
 8. Primary use case (skippable): what they want help with
 9. Writing samples (skippable) → analyze → voice-and-style.md
 10. Image generation setup (optional) → Gemini API key
-11. Generate context files from collected data
-12. Explain how /task, /calibrate, /today work
-13. Show creature + personalized welcome banner
-14. GitHub CLI auth (optional): `gh auth login` for GitHub features
-15. ⭐ Ask about starring the repo (optional): auto-star if authed, else manual link
-16. Commit with /commit
-17. Suggest `/today` to start first daily note
+11. Call recording setup (optional) → Granola sync daemon
+12. Generate context files from collected data
+13. Explain how /task, /calibrate, /today work
+14. Show creature + personalized welcome banner
+15. GitHub CLI auth (optional): `gh auth login` for GitHub features
+16. ⭐ Ask about starring the repo (optional): auto-star if authed, else manual link
+17. Commit with /commit
+18. Suggest `/today` to start first daily note
 </quick_start>
 
 <routing>
@@ -105,6 +106,27 @@ User selects an elemental egg. The creature inside hatches after first calibrati
 
 Creature art stored in `.claude/creatures/{name}/{stage}.txt`
 </creatures>
+
+<granola_setup>
+**Step 11: Call Recording Setup (Optional)**
+
+Check if Granola is installed:
+```bash
+[ -f "$HOME/Library/Application Support/Granola/cache-v3.json" ] && echo "installed"
+```
+
+If installed, ask via AskUserQuestion:
+> "Granola detected! Want to auto-sync meeting notes to your vault? (Recommended)"
+> - Yes, set it up
+> - No, skip
+
+If yes:
+```bash
+cd services/granola-sync && ./install.sh
+```
+
+If not installed, skip silently (don't mention Granola to users who don't have it).
+</granola_setup>
 
 <context_files>
 Files populated during onboarding:

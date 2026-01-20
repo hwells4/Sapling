@@ -56,6 +56,19 @@ SaplingOS/
 └── .claude/            # Commands, skills, and hooks
 ```
 
+## Optional Services
+
+### Call Recording with Granola
+
+If you use [Granola](https://granola.ai) for meeting notes, SaplingOS can automatically sync them to your vault:
+
+```bash
+cd services/granola-sync
+./install.sh
+```
+
+Meeting summaries sync to `brain/calls/` whenever Granola records a call. The `/onboard` command will offer to set this up if Granola is detected.
+
 ## Configuration
 
 Copy `.env.example` to `.env` for optional features:

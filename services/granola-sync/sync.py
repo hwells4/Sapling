@@ -150,6 +150,12 @@ def extract_call_data(doc_id: str, doc: dict, document_panels: dict) -> dict | N
         if not created_at:
             return None
 
+        # Skip if call hasn't ended yet (meeting_end_count is set when user clicks "end meeting")
+        meeting_end_count = doc.get("meeting_end_count") or 0
+        if meeting_end_count < 1:
+            print(f"  Skipping {title[:40]}: call not ended yet (meeting_end_count={meeting_end_count})")
+            return None
+
         # Get notes from document panels (AI-generated summaries)
         enhanced_notes = extract_panel_content(document_panels, doc_id)
 

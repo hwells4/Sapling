@@ -72,3 +72,34 @@ Verify: (none)
 - **Learnings**: User actions map to state transitions with context (e.g., reject reason determines target state). State machine validation must check both the transition AND the previous_state invariants.
 ---
 
+## 2026-01-22 - Sapling-pks: Implement approval flow
+- Created `ApprovalService` interface for managing checkpoint approval workflow:
+  - `requestApproval()` - creates pending approval, transitions run to awaiting_approval
+  - `approve()` / `reject()` - user actions with state machine integration
+  - `bulkApprove()` - approve multiple pending checkpoints by action_type or run_id
+  - `processTimeouts()` - handles expired approvals with configurable auto-action
+- Implemented `InMemoryApprovalService` with:
+  - Pending approval tracking with timeout expiration
+  - Audit logging with actor_id, timestamp, source (web/desktop/mobile/api/bulk/timeout)
+  - Integration with RunStateMachine for state transitions
+  - Run-to-checkpoint mapping for efficient lookups
+- Zod schemas for ApprovalStatus, ApprovalSource, RejectionReason, TimeoutAction
+- Files: `src/services/approvals.ts`, `src/services/index.ts`
+- **Learnings**: ApprovalService needs getter/setter callbacks for Run state since it doesn't own persistence. Timeout can auto-approve (configurable) or auto-reject (default). Bulk approval uses 'bulk' source in audit log but 'api' in checkpoint.approved event.
+---
+
+## 2026-01-22 - Sapling-4kz: Implement contract validation
+- Created `ContractValidator` class in `src/services/contract-validator.ts`:
+  - Pre-run validation: schema, tool policy conflicts, ID uniqueness, reference integrity
+  - Runtime validation: tool calls against tool_policy (allowed/blocked lists)
+  - Constraint checking: tool_blocked, path_blocked, pattern_blocked, custom rule types
+  - Drift detection with automatic `drift.detected` event emission via EventEmitter
+- Fixed contract type bugs:
+  - Added 'pdf' and 'image' to DeliverableType (synced with ArtifactType)
+  - Added comment noting tool_policy conflict is validated at runtime
+- Path matching supports glob patterns with `*` and `**` wildcards
+- Constraint context includes tool_name, file_path, action, and metadata
+- Files: `src/services/contract-validator.ts`, `src/services/index.ts`, `src/types/contract.ts`
+- **Learnings**: ToolPolicy conflicts (same tool in allowed & blocked) must be runtime validated since Zod superRefine breaks inference. EventEmitter uses positional args, not object. Uniqueness checks across arrays prevent subtle bugs in contracts.
+---
+

@@ -120,3 +120,20 @@ export {
   // Factory
   createContractValidator,
 } from './contract-validator'
+
+export {
+  // Schemas
+  ErrorCategory,
+  ErrorDetailsSchema,
+  PartialResultsSchema,
+  // Types
+  type ErrorDetails,
+  type PartialResults,
+  type HandleErrorResult,
+  type ErrorInput,
+  type PartialResultsInput,
+  // Implementation
+  ErrorHandler,
+  // Factory
+  createErrorHandler,
+} from './error-handler'

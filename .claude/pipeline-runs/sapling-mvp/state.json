@@ -4,9 +4,9 @@
   "started_at": "2026-01-22T21:13:01Z",
   "status": "running",
   "current_stage": 0,
-  "iteration": 6,
-  "iteration_completed": 5,
-  "iteration_started": "2026-01-22T21:35:45Z",
+  "iteration": 8,
+  "iteration_completed": 7,
+  "iteration_started": "2026-01-22T21:48:00Z",
   "stages": [],
   "history": [
     {
@@ -76,6 +76,36 @@
       "decision": "continue",
       "reason": "",
       "summary": "Completed Sapling-wun: Implement RunStateMachine - enforces valid state transitions, emits phase.changed events, validates previous_state requirements, provides drift detection",
+      "files_touched": [],
+      "items_completed": [],
+      "signals": {
+        "plateau_suspected": false,
+        "risk": "low",
+        "notes": ""
+      }
+    },
+    {
+      "iteration": 6,
+      "timestamp": "2026-01-22T21:41:13Z",
+      "stage": "ralph",
+      "decision": "continue",
+      "reason": "",
+      "summary": "Completed Sapling-pks: Implement approval flow",
+      "files_touched": [],
+      "items_completed": [],
+      "signals": {
+        "plateau_suspected": false,
+        "risk": "low",
+        "notes": ""
+      }
+    },
+    {
+      "iteration": 7,
+      "timestamp": "2026-01-22T21:47:56Z",
+      "stage": "ralph",
+      "decision": "continue",
+      "reason": "",
+      "summary": "Completed Sapling-4kz: Implement contract validation",
       "files_touched": [],
       "items_completed": [],
       "signals": {

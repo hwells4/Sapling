@@ -30,3 +30,33 @@ export {
   validateContract,
   isValidContract,
 } from './contract'
+
+// Event types
+export {
+  // Schemas
+  EventSchema,
+  RunStartedPayload,
+  PhaseChangedPayload,
+  ToolCalledPayload,
+  ToolResultPayload,
+  FileChangedPayload,
+  ArtifactCreatedPayload,
+  CheckpointRequestedPayload,
+  CheckpointApprovedPayload,
+  CheckpointRejectedPayload,
+  CheckpointTimeoutPayload,
+  DriftDetectedPayload,
+  RunCompletedPayload,
+  RunFailedPayload,
+  // Enums
+  Phase,
+  Severity,
+  EventType,
+  // Types
+  type Event,
+  type EventPayload,
+  // Helpers
+  createEvent,
+  validateEvent,
+  isValidEvent,
+} from './event'

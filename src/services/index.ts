@@ -104,3 +104,19 @@ export {
   // Factory
   createApprovalService,
 } from './approvals'
+
+export {
+  // Schemas
+  ValidationSeverity,
+  ValidationIssueType,
+  // Types
+  type ValidationIssue,
+  type ValidationResult,
+  type ToolCall,
+  type ConstraintContext,
+  type DriftResult,
+  // Implementation
+  ContractValidator,
+  // Factory
+  createContractValidator,
+} from './contract-validator'

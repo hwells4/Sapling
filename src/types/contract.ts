@@ -18,13 +18,15 @@ export const SuccessCriterionSchema = z.object({
 })
 export type SuccessCriterion = z.infer<typeof SuccessCriterionSchema>
 
-// Deliverable types
+// Deliverable types - synced with ArtifactType
 export const DeliverableType = z.enum([
   'markdown',
   'email_draft',
   'calendar_event',
   'pr_diff',
   'json_data',
+  'pdf',
+  'image',
 ])
 export type DeliverableType = z.infer<typeof DeliverableType>
 
@@ -56,6 +58,8 @@ export const ConstraintSchema = z.object({
 export type Constraint = z.infer<typeof ConstraintSchema>
 
 // Tool policy - allowed/blocked tools
+// Note: Runtime validation (via ContractValidator) checks for conflicts where
+// the same tool appears in both allowed and blocked arrays
 export const ToolPolicySchema = z.object({
   allowed: z.array(z.string()),
   blocked: z.array(z.string()),

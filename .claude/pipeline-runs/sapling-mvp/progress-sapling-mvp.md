@@ -57,3 +57,15 @@ Verify: (none)
 - **Learnings**: Follow existing Sapling trace conventions; traces are non-negotiable for calibration loop; use typed entry interfaces for JSONL
 ---
 
+## 2026-01-22 - Sapling-njn: Implement run DB (ledger)
+- Created `src/services/run-db.ts` with RunDB interface and InMemoryRunDB implementation
+- Run CRUD: create, read, list (with filtering by workspace/template/state), update state
+- Event log integration: delegates to EventStore for append-only event storage
+- Artifact pointers: store vault paths + object store URIs, update support
+- Approval audit log: records who approved/rejected what, when, from where (web/mobile/api)
+- Transaction support: InMemoryRunDBTransaction for atomic run creation + initial events
+- Designed for backend swap: InMemory for dev, SQLite for local, Convex for web
+- Files: `src/services/run-db.ts`, `src/services/index.ts`
+- **Learnings**: RunDB is the ledger (system state), not knowledge storage (vault); EventStore abstraction allows clean separation; transactions enable atomic run+events creation
+---
+

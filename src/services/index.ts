@@ -209,3 +209,19 @@ export {
   // Factory
   createRunDB,
 } from './run-db'
+
+export {
+  // Types
+  type SandboxOutputType,
+  type SandboxOutput,
+  type ExtractedArtifact,
+  type SandboxExecutionResult,
+  type SandboxCheckpoint,
+  type CreateSandboxOptions,
+  type RunCodeOptions,
+  type SandboxState,
+  // Implementation
+  SandboxAdapter,
+  // Factory
+  createSandboxAdapter,
+} from './sandbox-adapter'

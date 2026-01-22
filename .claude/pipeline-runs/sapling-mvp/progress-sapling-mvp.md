@@ -33,3 +33,15 @@ Verify: (none)
 - **Learnings**: Use `PreviewType` from ArtifactManifest for icon selection; pattern of section components with SectionHeader helper
 ---
 
+## 2026-01-22 - Sapling-k1s: Implement vault writer for artifacts
+- Created `src/services/vault-writer.ts` with VaultWriter class
+- Writes artifacts to `brain/outputs/YYYY/MM/<run_id>_<slug>.md` structure
+- YAML frontmatter: run_id, agent, source, created_at, status, type, description
+- Filename normalization: slugify (lowercase, special chars, max 100 chars)
+- Atomic writes: write to .tmp file, then rename for safety
+- Overwrite protection: appends -2, -3 suffix on filename collision
+- Returns ArtifactManifest with checksum, size_bytes, destination_path
+- Files: `src/services/vault-writer.ts`, `src/services/index.ts`
+- **Learnings**: Use Node.js crypto for SHA256 checksums; fs.rename for atomic file operations
+---
+

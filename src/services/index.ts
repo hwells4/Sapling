@@ -164,3 +164,27 @@ export {
   // Factory
   createVaultWriter,
 } from './vault-writer'
+
+export {
+  // Types
+  type TraceEntryType,
+  type TraceEntry,
+  type ContractEntry,
+  type PhaseStartEntry,
+  type PhaseEndEntry,
+  type DecisionEntry,
+  type ToolCallEntry,
+  type ToolResultEntry,
+  type ErrorEntry,
+  type RecoveryEntry,
+  type CalibrationSeedEntry,
+  type RunCompleteEntry,
+  type RunFailedEntry,
+  type PhaseSummary,
+  type WriteTraceOptions,
+  type WriteTraceResult,
+  // Implementation
+  TraceWriter,
+  // Factory
+  createTraceWriter,
+} from './trace-writer'

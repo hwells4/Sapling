@@ -34,3 +34,17 @@ export {
   // Factory
   createEventEmitter,
 } from './events'
+
+export {
+  // Types
+  type EventStoreResult,
+  type EventCursor,
+  type EventQueryOptions,
+  type EventPage,
+  type EventStats,
+  type EventStore,
+  // Implementations
+  InMemoryEventStore,
+  // Factory
+  createEventStore,
+} from './event-store'

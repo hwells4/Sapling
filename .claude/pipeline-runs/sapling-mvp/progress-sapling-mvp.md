@@ -45,3 +45,15 @@ Verify: (none)
 - **Learnings**: Use Node.js crypto for SHA256 checksums; fs.rename for atomic file operations
 ---
 
+## 2026-01-22 - Sapling-23x: Implement trace writer
+- Created `src/services/trace-writer.ts` with TraceWriter class
+- Writes `brain/traces/YYYY/MM/<run_id>.md` with YAML frontmatter
+- Writes companion `brain/traces/YYYY/MM/<run_id>.jsonl` for detailed events
+- Trace includes: contract snapshot, phase summary, decisions log, tool calls, errors & recoveries, calibration seeds
+- Structured JSONL entries: ContractEntry, PhaseStartEntry, PhaseEndEntry, ToolCallEntry, ToolResultEntry, ErrorEntry, RecoveryEntry, CalibrationSeedEntry
+- Atomic writes (write to .tmp, then rename)
+- Markdown sections: Contract Summary, Outcome, Phase Summary table, Decisions Log, Errors & Recoveries, Calibration Notes
+- Files: `src/services/trace-writer.ts`, `src/services/index.ts`
+- **Learnings**: Follow existing Sapling trace conventions; traces are non-negotiable for calibration loop; use typed entry interfaces for JSONL
+---
+

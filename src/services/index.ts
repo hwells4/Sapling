@@ -188,3 +188,24 @@ export {
   // Factory
   createTraceWriter,
 } from './trace-writer'
+
+export {
+  // Schemas
+  ApprovalAuditAction,
+  ApprovalAuditSource,
+  ApprovalAuditRecordSchema,
+  // Types
+  type RunDBResult,
+  type RunFilter,
+  type RunPagination,
+  type RunListResult,
+  type ApprovalAuditRecord,
+  type CreateRunInput,
+  type UpdateRunStateInput,
+  type RunDBTransaction,
+  type RunDB,
+  // Implementations
+  InMemoryRunDB,
+  // Factory
+  createRunDB,
+} from './run-db'

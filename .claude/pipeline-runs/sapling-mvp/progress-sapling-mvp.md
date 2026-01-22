@@ -120,3 +120,22 @@ Verify: (none)
 - **Learnings**: Retry tracking needs per-run/per-category map since different error types exhaust independently. Exponential backoff uses `baseDelay * 2^retryCount` capped at maxDelay. State machine integration requires checking `isTerminalState` first.
 ---
 
+## 2026-01-22 - Sapling-c1t: Implement cost tracking
+- Created `CostTracker` class in `src/services/cost-tracker.ts`:
+  - Track 3 cost types: e2b_compute, claude_api, external_api
+  - `trackE2BUsage()`, `trackClaudeUsage()`, `trackExternalAPIUsage()` convenience methods
+  - `getCostBreakdown()` aggregates costs into compute vs API buckets
+- Budget enforcement via `BudgetConfig`:
+  - Per-run, per-day, per-month spending limits
+  - Warning threshold (default 80%) alerts before hard limit
+  - `checkBudget()` returns detailed `BudgetStatus` with which limit would be exceeded
+- Pre-run cost estimation via `estimateCost()`:
+  - Accepts goalTokens, estimatedMinutes, expectedToolCalls
+  - Returns low/high bounds with ±30% variance
+- Fixed bug in `CostBreakdownSchema`:
+  - Added Zod refinement to validate `total_cents === compute_cents + api_cents`
+  - Created `createCostBreakdown()` helper for consistent total computation
+- Files: `src/services/cost-tracker.ts`, `src/services/index.ts`, `src/types/run.ts`, `src/types/index.ts`
+- **Learnings**: Cost tracking needs separate daily/monthly totals per workspace (keyed by workspace:YYYY-MM-DD). Budget checks must prevent spend before adding, not after. Transform vs refinement: refinement for validation, transform for auto-compute.
+---
+

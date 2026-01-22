@@ -57,3 +57,18 @@ Verify: (none)
 - **Learnings**: SSE uses `event:`, `id:`, `retry:`, `data:` fields with double-newline terminator. WebSocket needs explicit ping/pong for connection health. Both need to track lastSeq per connection for replay.
 ---
 
+## 2026-01-22 - Sapling-wun: Implement RunStateMachine
+- Fixed bug: VALID_TRANSITIONS for 'verifying' state was missing 'paused' as destination
+- Created `RunStateMachine` class enforcing all state transitions:
+  - `transition()` for orchestrator-driven transitions (phase completion)
+  - `performAction()` for user-initiated actions (pause, resume, cancel, approve, reject, retry)
+  - `detectDrift()` for drift detection when agent actions don't match phase
+- Validates `previous_state` requirements:
+  - States `awaiting_approval` and `paused` require coming from a resumable state (planning/executing/verifying)
+  - Resume/approve only allowed when `previous_state` is set and matches target
+- Emits `phase.changed` events on all transitions via injected EventEmitter
+- `StateMachineError` class with typed `errorType` for handling specific failure modes
+- Files: `src/services/run-state-machine.ts`, `src/types/run.ts`, `src/services/index.ts`
+- **Learnings**: User actions map to state transitions with context (e.g., reject reason determines target state). State machine validation must check both the transition AND the previous_state invariants.
+---
+

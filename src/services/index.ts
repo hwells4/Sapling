@@ -85,3 +85,22 @@ export {
   // Factory
   createRunStateMachine,
 } from './run-state-machine'
+
+export {
+  // Schemas
+  ApprovalStatus,
+  ApprovalSource,
+  RejectionReason,
+  TimeoutAction,
+  // Types
+  type PendingApproval,
+  type ApprovalAuditEntry,
+  type ApprovalResult,
+  type RequestApprovalOptions,
+  type BulkApprovalOptions,
+  type ApprovalService,
+  // Implementations
+  InMemoryApprovalService,
+  // Factory
+  createApprovalService,
+} from './approvals'

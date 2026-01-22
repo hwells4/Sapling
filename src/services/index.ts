@@ -154,3 +154,13 @@ export {
   // Factory
   createCostTracker,
 } from './cost-tracker'
+
+export {
+  // Types
+  type WriteArtifactOptions,
+  type WriteResult,
+  // Implementation
+  VaultWriter,
+  // Factory
+  createVaultWriter,
+} from './vault-writer'

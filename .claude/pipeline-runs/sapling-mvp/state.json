@@ -4,9 +4,9 @@
   "started_at": "2026-01-22T22:21:52Z",
   "status": "running",
   "current_stage": 0,
-  "iteration": 2,
-  "iteration_completed": 1,
-  "iteration_started": "2026-01-22T22:26:54Z",
+  "iteration": 3,
+  "iteration_completed": 2,
+  "iteration_started": "2026-01-22T22:32:45Z",
   "stages": [],
   "history": [
     {
@@ -16,6 +16,21 @@
       "decision": "continue",
       "reason": "",
       "summary": "Completed Sapling-370: Implement useEventStream hook",
+      "files_touched": [],
+      "items_completed": [],
+      "signals": {
+        "plateau_suspected": false,
+        "risk": "low",
+        "notes": ""
+      }
+    },
+    {
+      "iteration": 2,
+      "timestamp": "2026-01-22T22:32:42Z",
+      "stage": "ralph",
+      "decision": "continue",
+      "reason": "",
+      "summary": "Completed Sapling-06z: Build results review screen",
       "files_touched": [],
       "items_completed": [],
       "signals": {

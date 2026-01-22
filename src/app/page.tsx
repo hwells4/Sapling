@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout'
+import { Inspector } from '@/components/inspector'
 import { Sidebar } from '@/components/sidebar'
 
 // Demo data for sidebar
@@ -38,17 +39,6 @@ function MainContent() {
             Click &quot;New Task&quot; to get started
           </p>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function Inspector() {
-  return (
-    <div className="flex h-full flex-col p-4">
-      <h3 className="mb-4 text-sm font-medium">Inspector</h3>
-      <div className="flex flex-1 items-center justify-center">
-        <p className="text-sm text-[hsl(var(--muted-foreground))]">Select a task to see details</p>
       </div>
     </div>
   )

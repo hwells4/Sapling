@@ -1,0 +1,32 @@
+{
+  "session": "sapling-mvp",
+  "pipeline": "loop",
+  "stage": {
+    "id": "ralph",
+    "index": 0,
+    "template": "ralph"
+  },
+  "iteration": 2,
+  "paths": {
+    "session_dir": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp",
+    "stage_dir": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/stage-00-ralph",
+    "progress": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/progress-sapling-mvp.md",
+    "output": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/stage-00-ralph/output.md",
+    "status": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/stage-00-ralph/iterations/002/status.json",
+    "result": "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/stage-00-ralph/iterations/002/result.json"
+  },
+  "inputs": {
+    "from_stage": {},
+    "from_previous_iterations": [
+      "/home/ubuntu/Projects/Sapling/.claude/pipeline-runs/sapling-mvp/stage-00-ralph/iterations/001/output.md"
+    ],
+    "from_initial": [
+      "/home/ubuntu/Projects/Sapling/sapling.md"
+    ]
+  },
+  "limits": {
+    "max_iterations": 15,
+    "remaining_seconds": -1
+  },
+  "commands": {}
+}

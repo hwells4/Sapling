@@ -4,10 +4,26 @@
   "started_at": "2026-01-22T22:21:52Z",
   "status": "running",
   "current_stage": 0,
-  "iteration": 1,
-  "iteration_completed": 0,
-  "iteration_started": "2026-01-22T22:21:53Z",
+  "iteration": 2,
+  "iteration_completed": 1,
+  "iteration_started": "2026-01-22T22:26:54Z",
   "stages": [],
-  "history": [],
+  "history": [
+    {
+      "iteration": 1,
+      "timestamp": "2026-01-22T22:26:50Z",
+      "stage": "ralph",
+      "decision": "continue",
+      "reason": "",
+      "summary": "Completed Sapling-370: Implement useEventStream hook",
+      "files_touched": [],
+      "items_completed": [],
+      "signals": {
+        "plateau_suspected": false,
+        "risk": "low",
+        "notes": ""
+      }
+    }
+  ],
   "event_offset": 0
 }

@@ -48,3 +48,25 @@ export {
   // Factory
   createEventStore,
 } from './event-store'
+
+export {
+  // Types
+  type ConnectionType,
+  type ConnectionState,
+  type StreamConnection,
+  type StreamOptions,
+  type SSEMessage,
+  type WebSocketMessageType,
+  type WebSocketMessage,
+  type SSESender,
+  type WebSocketSender,
+  type StreamHandle,
+  type EventStreamService,
+  // Implementations
+  InMemoryEventStreamService,
+  // Factory
+  createEventStreamService,
+  // Utilities
+  formatSSEMessage,
+  parseStreamOptions,
+} from './event-stream'

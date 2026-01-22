@@ -1,14 +1,21 @@
 import { z } from 'zod'
 
-// Run phases - orchestrator controls phase transitions
+// Run phases - aligned with RunState for event emission in any state
+// These phases represent the high-level work stage for events,
+// distinct from RunState which tracks full orchestration states
 export const Phase = z.enum([
   'pending',
+  'initializing',
   'planning',
   'executing',
   'verifying',
   'packaging',
   'completed',
   'failed',
+  'awaiting_approval',
+  'paused',
+  'cancelled',
+  'timeout',
 ])
 export type Phase = z.infer<typeof Phase>
 
@@ -133,6 +140,40 @@ export const RunFailedPayload = z.object({
 })
 export type RunFailedPayload = z.infer<typeof RunFailedPayload>
 
+// Map event type to its payload schema - the discriminated union source of truth
+export const EventPayloadSchemas = {
+  'run.started': RunStartedPayload,
+  'phase.changed': PhaseChangedPayload,
+  'tool.called': ToolCalledPayload,
+  'tool.result': ToolResultPayload,
+  'file.changed': FileChangedPayload,
+  'artifact.created': ArtifactCreatedPayload,
+  'checkpoint.requested': CheckpointRequestedPayload,
+  'checkpoint.approved': CheckpointApprovedPayload,
+  'checkpoint.rejected': CheckpointRejectedPayload,
+  'checkpoint.timeout': CheckpointTimeoutPayload,
+  'drift.detected': DriftDetectedPayload,
+  'run.completed': RunCompletedPayload,
+  'run.failed': RunFailedPayload,
+} as const
+
+// Type-level mapping from event type to payload type
+export type EventPayloadMap = {
+  'run.started': RunStartedPayload
+  'phase.changed': PhaseChangedPayload
+  'tool.called': ToolCalledPayload
+  'tool.result': ToolResultPayload
+  'file.changed': FileChangedPayload
+  'artifact.created': ArtifactCreatedPayload
+  'checkpoint.requested': CheckpointRequestedPayload
+  'checkpoint.approved': CheckpointApprovedPayload
+  'checkpoint.rejected': CheckpointRejectedPayload
+  'checkpoint.timeout': CheckpointTimeoutPayload
+  'drift.detected': DriftDetectedPayload
+  'run.completed': RunCompletedPayload
+  'run.failed': RunFailedPayload
+}
+
 // Union of all payload types for type inference
 export type EventPayload =
   | RunStartedPayload
@@ -150,7 +191,7 @@ export type EventPayload =
   | RunFailedPayload
 
 /**
- * Event envelope - the atomic unit of observability.
+ * Base event envelope schema (for runtime validation of stored/incoming events)
  *
  * Events are append-only and ordered by `seq` within a run.
  * The `seq` field enables:
@@ -172,15 +213,64 @@ export const EventSchema = z.object({
 })
 export type Event = z.infer<typeof EventSchema>
 
-// Type-safe event creators
+// Typed event - preserves payload type based on event type discriminator
+export type TypedEvent<T extends EventType> = Omit<Event, 'type' | 'payload'> & {
+  type: T
+  payload: EventPayloadMap[T]
+}
+
+// Input for creating a new event (omit auto-generated fields)
+export type CreateEventInput<T extends EventType> = {
+  run_id: string
+  seq: number
+  type: T
+  phase: Phase
+  severity: Severity
+  payload: EventPayloadMap[T]
+}
+
+/**
+ * Type-safe event creator - constrains payload to match event type
+ *
+ * @example
+ * // TypeScript enforces correct payload for event type
+ * const event = createEvent({
+ *   run_id: 'run-123',
+ *   seq: 0,
+ *   type: 'run.started',
+ *   phase: 'pending',
+ *   severity: 'info',
+ *   payload: { contract_id: '...', template_id: '...', template_version: '1.0', goal: '...' }
+ * });
+ *
+ * // This would be a compile error - wrong payload for event type:
+ * // createEvent({ type: 'run.started', payload: { error_type: '...' } })
+ */
 export function createEvent<T extends EventType>(
-  base: Omit<Event, 'event_id' | 'ts'> & { type: T },
-): Event {
+  input: CreateEventInput<T>,
+): TypedEvent<T> {
   return {
-    ...base,
     event_id: crypto.randomUUID(),
     ts: new Date().toISOString(),
+    run_id: input.run_id,
+    seq: input.seq,
+    type: input.type,
+    phase: input.phase,
+    severity: input.severity,
+    payload: input.payload,
   }
+}
+
+/**
+ * Validates an event's payload matches its type at runtime
+ * Returns a typed result or throws on validation failure
+ */
+export function validateEventPayload<T extends EventType>(
+  eventType: T,
+  payload: unknown,
+): EventPayloadMap[T] {
+  const schema = EventPayloadSchemas[eventType]
+  return schema.parse(payload) as EventPayloadMap[T]
 }
 
 // Validation helpers

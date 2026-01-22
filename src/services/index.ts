@@ -21,3 +21,16 @@ export {
   // Factory
   createCredentialStore,
 } from './credential-store'
+
+export {
+  // Types
+  type EventSubscriber,
+  type SubscriptionOptions,
+  type Subscription,
+  type EmitResult,
+  type EventEmitter,
+  // Implementations
+  InMemoryEventEmitter,
+  // Factory
+  createEventEmitter,
+} from './events'

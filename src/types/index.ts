@@ -48,6 +48,7 @@ export {
   DriftDetectedPayload,
   RunCompletedPayload,
   RunFailedPayload,
+  EventPayloadSchemas,
   // Enums
   Phase,
   Severity,
@@ -55,10 +56,14 @@ export {
   // Types
   type Event,
   type EventPayload,
+  type EventPayloadMap,
+  type TypedEvent,
+  type CreateEventInput,
   // Helpers
   createEvent,
   validateEvent,
   isValidEvent,
+  validateEventPayload,
 } from './event'
 
 // Run types

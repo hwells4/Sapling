@@ -1,0 +1,89 @@
+name: dueling-wizards
+description: Cross-evaluation debate between Claude and Codex (Jeffrey Emanuel pattern)
+
+# This pipeline demonstrates the full cross-evaluation debate pattern:
+# 1. Both providers generate ideas independently
+# 2. Each evaluates the OTHER's ideas (cross-feed)
+# 3. Each sees their OWN ideas + the OTHER's critique, and responds
+# 4. A synthesizer combines everything
+#
+# Block 3 uses array-based from_parallel to give each provider multiple inputs:
+# their own history AND the other provider's critique.
+
+nodes:
+  # Block 1: Both generate ideas independently (same prompt, same inputs)
+  - id: ideate
+    parallel:
+      providers:
+        - name: claude
+          model: opus
+        - name: codex
+          model: gpt-5.2-codex:xhigh
+      stages:
+        - id: generate
+          stage: idea-wizard
+          termination:
+            type: fixed
+            iterations: 1
+
+  # Block 2: Cross-evaluate (each evaluates the OTHER's ideas)
+  - id: evaluate
+    parallel:
+      providers:
+        - name: claude
+          model: opus
+          inputs:
+            from_parallel:
+              stage: generate
+              providers: [codex]  # Claude gets Codex's ideas
+        - name: codex
+          model: gpt-5.2-codex:xhigh
+          inputs:
+            from_parallel:
+              stage: generate
+              providers: [claude]  # Codex gets Claude's ideas
+      stages:
+        - id: rate
+          stage: idea-wizard  # Reusing for demo; would be evaluate-ideas
+          context: "Score and critique these ideas from the other model"
+          termination:
+            type: fixed
+            iterations: 1
+
+  # Block 3: Cross-reflect (each sees OWN ideas + OTHER's critique)
+  - id: reflect
+    parallel:
+      providers:
+        - name: claude
+          model: opus
+          inputs:
+            from_parallel:
+              - stage: generate
+                providers: [claude]  # My original ideas
+              - stage: rate
+                providers: [codex]   # Codex's critique of my ideas
+        - name: codex
+          model: gpt-5.2-codex:xhigh
+          inputs:
+            from_parallel:
+              - stage: generate
+                providers: [codex]   # My original ideas
+              - stage: rate
+                providers: [claude]  # Claude's critique of my ideas
+      stages:
+        - id: respond
+          stage: idea-wizard  # Reusing for demo; would be reflect-on-rating
+          context: "Here are your original ideas and the other model's critique. Respond to defend or refine your ideas."
+          termination:
+            type: fixed
+            iterations: 1
+
+  # Block 4: Synthesis (sequential, gets everything)
+  - id: synthesize
+    stage: elegance
+    inputs:
+      from_parallel:
+        stage: respond  # Gets both providers' final outputs
+    termination:
+      type: fixed
+      iterations: 1

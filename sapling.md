@@ -6,7 +6,28 @@ A run is: **intent → plan → work → checks → deliverables → saved recor
 
 This maps cleanly onto Claude’s common agent loop: **gather context → take action → verify work → repeat**. ([anthropic.com][1])
 
-Your existing `agent-sdk-boilerplate` already aligns with this product shape: it’s a TypeScript orchestration layer for running Claude agents inside **isolated E2B sandboxes** with **real-time streaming** (SSE + WebSocket) and Next.js-friendly patterns. ([GitHub][2])
+Your existing `agent-sdk-boilerplate` already aligns with this product shape: it's a TypeScript orchestration layer for running Claude agents inside **isolated E2B sandboxes** with **real-time streaming** (SSE + WebSocket) and Next.js-friendly patterns. ([GitHub][2])
+
+---
+
+## MVP Scope Decisions
+
+> **Design Decision:** Both reviewers agreed the plan oscillates between deployment models without committing. These decisions must be explicit before implementation.
+
+**Choose explicitly for MVP:**
+
+| Decision | Option A | Option B |
+|----------|----------|----------|
+| **Deployment** | Desktop shell (Tauri) with direct vault access | Web app with sync agent |
+| **Storage** | Local ledger DB (SQLite) | Remote shared DB |
+| **User model** | Single-user per vault | Multi-user workspaces |
+
+**Recommendation for MVP:** Pick ONE path. Do NOT ship hybrid simultaneously—that's a V2 optimization after the core loop is validated.
+
+- **Choose Desktop** if: local vault access is non-negotiable, you're building primarily for yourself first
+- **Choose Web** if: you want fast iteration, plan to test with multiple users, okay with "sync later" for vault integration
+
+Document chosen defaults and explicitly defer the other options.
 
 ---
 
@@ -127,7 +148,14 @@ Timeline steps should be coarse and consistent:
 2. Doing the work
 3. Checking work
 4. Preparing results
-   (derived from Claude’s loop) ([anthropic.com][1])
+   (derived from Claude's loop) ([anthropic.com][1])
+
+> **Design Decision:** Phases are derived from event types and contract milestones, not model prose. Human-readable updates are produced by labeling normalized events; no separate narration engine required.
+
+**Phase mapping rules:**
+- `phase.changed` events drive the timeline
+- Each tool call type maps to a friendly label (e.g., `github.list_issues` → "Checking GitHub issues")
+- Streaming narration = live labels on events, not chain-of-thought
 
 Your boilerplate already supports real-time streaming (SSE + WebSocket) and even includes an SSE streaming API example with a web UI pattern you can lift. ([GitHub][2])
 
@@ -163,9 +191,38 @@ Simple connector cards:
 * Allowed scopes
 * Last used
 
+### Connector Authentication UX
+
+> **Design Decision:** The plan depends on Gmail/GCal/GitHub connectors but didn't specify how tokens are stored or scoped. This is a security and architecture blocker.
+
+**Connection screen:**
+- List of available connectors with "Connect" buttons
+- Each shows: last connected, scopes granted, linked account
+
+**OAuth flow:**
+- Standard OAuth 2.0 redirect flow
+- After auth, store tokens securely (encrypted at rest)
+- Refresh tokens automatically; surface errors if refresh fails
+
+**Scope management:**
+- Show exactly what scopes were granted
+- Allow users to disconnect and reconnect with different scopes
+- Warn if a template requires scopes not yet granted
+
+**Credential storage:**
+- For web: store in backend, never expose to frontend
+- For desktop: use OS keychain (Tauri supports this)
+- For agents: inject credentials via orchestrator, never in prompts
+
+**Security rules:**
+- OAuth tokens are stored encrypted in the control plane, scoped per workspace
+- Short-lived access tokens are injected into tool calls at execution time
+- The sandbox never stores long-lived credentials
+- Revocation and scope changes are audited in the run ledger
+
 ---
 
-## How “monitoring” stays intuitive without showing code
+## How "monitoring" stays intuitive without showing code
 
 You do not need to show the E2B filesystem. You need to show **operational intent + observable progress**.
 
@@ -254,20 +311,34 @@ Non-technical benefit: they can find everything in one place without understandi
 
 Make correctness visible via **checks**, not via logs.
 
-### Add a “Checks” panel per run
+### Add a "Checks" panel per run
 
 Examples:
 
-* “All promised deliverables produced”
-* “No external actions executed without approval”
-* “Email tone matches template”
-* “Calendar conflicts checked”
-* “GitHub links validated”
+* "All promised deliverables produced"
+* "No external actions executed without approval"
+* "Email tone matches template"
+* "Calendar conflicts checked"
+* "GitHub links validated"
+
+### Hard vs Soft Checks
+
+> **Design Decision:** LLM-based reviewer checks are not reliable enough to gate completion. Deterministic checks should control run status, with configurable overrides.
+
+| Check Type | Examples | Default Behavior | Override |
+|------------|----------|------------------|----------|
+| **Hard checks** (deterministic) | Schema validation, link checks, conflict checks, required deliverables exist | Block completion | Can be demoted to warn |
+| **Soft checks** (LLM review) | "Email tone matches template", "PR description is complete" | Warn only | Can be promoted to block |
+
+**Configuration:**
+- Per-template: define which checks are hard vs soft
+- Per-run: user can override at launch time
+- If LLM reviewer determines agent completely ignored the goal, user should have the option to configure this as blocking
 
 Under the hood you can implement:
 
 * deterministic validators (schema validation, link checks, conflict checks)
-* a second “reviewer” agent that verifies outputs against the run contract (kept invisible; surfaced as pass/fail)
+* a second "reviewer" agent that verifies outputs against the run contract (kept invisible; surfaced as pass/fail)
 
 ### Put approvals where harm is possible
 
@@ -277,7 +348,43 @@ Default policy:
 * Write to vault: auto + undo history
 * External side effects (send email, create meeting, push changes): approval required
 
-Claude Agent SDK’s permissions + hooks are built for this exact pattern. ([Claude][6])
+Claude Agent SDK's permissions + hooks are built for this exact pattern. ([Claude][6])
+
+### Cost Tracking and Limits
+
+> **Design Decision:** Agent systems that run up surprise bills destroy user trust immediately. Even a rough cost estimate changes user behavior. This should be in MVP, not deferred.
+
+**Track costs at the run level:**
+
+Every run accumulates costs from:
+- E2B compute time (billed per second)
+- Claude API tokens (input + output)
+- External API calls (GitHub API, etc., if metered)
+
+Display in the Run Monitor:
+- "Cost so far: $0.12"
+- Breakdown on hover: "E2B: $0.08 | Claude: $0.04"
+
+**Budget caps:**
+
+Contracts can include `max_cost_cents`. When the run approaches the limit:
+- At 80%: warning event emitted
+- At 100%: run pauses with `budget_limit_reached` state
+- User can: increase budget and resume, or cancel
+
+**Workspace-level budgets:**
+
+Set monthly/daily limits per workspace:
+- "This workspace can spend up to $50/month"
+- When approaching limit, new runs are blocked until reset or limit raised
+
+**Cost estimation before run:**
+
+Before starting, show estimate based on template averages:
+- "Runs of this type typically cost $0.10 - $0.50"
+- "Estimated time: 2-5 minutes"
+
+This sets expectations and prevents surprise bills.
 
 ---
 
@@ -291,7 +398,97 @@ Minimum:
 * UI can reconnect to stream by run_id
 * “Resume” uses stored session state
 
-Anthropic explicitly discusses harnessing long-running agents across context windows by leaving clear artifacts and using an initializer + incremental worker approach. That pattern matches your “agents produce artifacts; UI shows artifacts; system resumes later” goal. ([anthropic.com][8])
+Anthropic explicitly discusses harnessing long-running agents across context windows by leaving clear artifacts and using an initializer + incremental worker approach. That pattern matches your "agents produce artifacts; UI shows artifacts; system resumes later" goal. ([anthropic.com][8])
+
+---
+
+## Error Handling and Recovery
+
+> **Design Decision:** The plan's happy path is extensive, but agents fail, networks fail, E2B sandboxes crash, and API limits get hit. Without explicit error handling, the product will feel unreliable.
+
+### Error Categories
+
+| Category | Examples | Recovery Strategy |
+|----------|----------|-------------------|
+| Transient | Network timeout, rate limit, E2B hiccup | Auto-retry with backoff |
+| Tool failure | API returned error, file not found | Log and continue (or fail based on severity) |
+| Agent error | Infinite loop, wrong output format | Pause, notify user, offer manual intervention |
+| Sandbox crash | OOM, segfault, E2B infrastructure | Checkpoint and retry from last known good state |
+| Contract violation | Blocked tool called, constraint breached | Immediate stop, flag as `failed:policy_violation` |
+| Timeout | Exceeded `max_duration_seconds` | Stop, save partial results, flag as `timeout` |
+| Approval timeout | No response within window | Apply `auto_action_on_timeout` from approval rule |
+| Stalled | No progress for N minutes | Flag as `stalled`, trigger retry or fail |
+
+### Auto-Retry Policy
+
+Transient errors trigger automatic retry with exponential backoff:
+- First retry: 2 seconds
+- Second retry: 4 seconds
+- Third retry: 8 seconds
+- After 3 retries: surface error to user
+
+Retries are transparent to the user unless all attempts fail.
+
+### Checkpointing (MVP)
+
+> **Design Decision:** Full sandbox filesystem snapshots at every tool call are too expensive for MVP. Start with phase boundary checkpoints only.
+
+Orchestrator saves lightweight checkpoints at:
+- Each phase transition
+- Before external side effects (email send, PR create, calendar write)
+
+Checkpoint contains:
+- Run state
+- Agent conversation history (serializable)
+- List of artifacts produced so far
+
+Sandbox filesystem snapshots are **not** part of MVP. If the sandbox crashes:
+- Resume from last phase boundary
+- Agent re-executes from that point (idempotent tool design assumed)
+
+### Partial Results
+
+Runs that fail should still save whatever was produced:
+- Artifacts created before failure → written to vault with `status: partial` frontmatter
+- Events logged → always persisted
+- Trace → written with failure details
+
+User sees: "Run failed at Execute phase. 2 of 3 deliverables were produced. [View partial results] [Retry from checkpoint]"
+
+### User-Facing Error Messages
+
+Never show raw stack traces. Map errors to human-readable messages:
+
+| Internal Error | User Message |
+|----------------|--------------|
+| `E2B_SANDBOX_TIMEOUT` | "The task took longer than expected and was stopped. You can retry or adjust the time limit." |
+| `TOOL_RATE_LIMITED` | "GitHub is temporarily limiting requests. The task will automatically retry in a few seconds." |
+| `APPROVAL_TIMEOUT` | "The approval request expired without a response. The task has been cancelled." |
+| `CONTRACT_VIOLATION` | "The assistant tried to do something outside its allowed actions and was stopped." |
+| `SANDBOX_CRASH` | "Something unexpected happened. We've saved your progress and you can retry from where it left off." |
+
+---
+
+## Concurrent Runs and Resource Conflicts
+
+> **Design Decision:** For MVP, prevent conflicts via contract scoping rather than building complex conflict detection. This is simpler and sufficient for single-user validation.
+
+### MVP Approach: Scope Blocking
+
+Runs declare `exclusive_scopes` (e.g., "github:owner/repo", "vault:brain/entities/*").
+
+Orchestrator blocks new runs with overlapping scopes until the first completes:
+- User sees: "Another run is using this scope. Wait or cancel the other run."
+
+### Future: Advisory Locks + Conflict Detection (Post-MVP)
+
+When multi-user or overlapping tasks are needed:
+1. At run start, declare resources that may be accessed
+2. Check for conflicts with other active runs
+3. If conflict found, warn user: "Another run is already working with repo X. Start anyway?"
+4. Before external writes, check for changes since run started
+5. If resource was modified by another run, pause with conflict event
+6. User resolves: "Use mine" / "Use theirs" / "Merge" / "Cancel"
 
 ---
 
@@ -443,21 +640,179 @@ An instance of work:
 * event stream reference
 * produced artifacts
 
+### Contract Schema
+
+> **Design Decision:** "Contract-first" is a core principle, but the schema must be explicit for validation, UI rendering, and policy checks to work.
+
+Every run starts with a contract. This is immutable once the run begins.
+
+```typescript
+interface RunContract {
+  // Identity
+  contract_version: "1.0";
+  template_id: string;
+  template_version: string;
+
+  // Goal
+  goal: string;                          // User's request in plain language
+  success_criteria: SuccessCriterion[];  // Measurable outcomes
+
+  // Deliverables
+  deliverables: DeliverableSpec[];       // What must be produced
+
+  // Constraints
+  constraints: Constraint[];             // What must NOT happen
+
+  // Permissions
+  tool_policy: ToolPolicy;               // Allowed/blocked tools
+  integration_scopes: IntegrationScope[]; // What external systems can be accessed
+  approval_rules: ApprovalRule[];        // What requires human OK
+
+  // Limits
+  max_duration_seconds: number;
+  max_cost_cents?: number;               // Optional budget cap
+
+  // Context
+  input_files: string[];                 // Vault paths to mount
+  output_destinations: OutputDestination[];
+}
+
+interface SuccessCriterion {
+  id: string;
+  description: string;
+  evidence_type: "file_exists" | "api_response" | "test_passed" | "manual_check";
+  evidence_spec?: Record<string, unknown>;
+}
+
+interface DeliverableSpec {
+  id: string;
+  type: "markdown" | "email_draft" | "calendar_event" | "pr_diff" | "json_data";
+  destination: string;                   // Vault path pattern with variables
+  required: boolean;
+}
+
+interface Constraint {
+  id: string;
+  description: string;
+  rule_type: "tool_blocked" | "path_blocked" | "pattern_blocked" | "custom";
+  rule_spec: Record<string, unknown>;
+}
+
+interface ApprovalRule {
+  action_type: string;                   // "send_email", "create_pr", "write_entity", etc.
+  condition: "always" | "first_time" | "if_external" | "never";
+  timeout_seconds: number;
+  auto_action_on_timeout: "approve" | "reject";
+}
+```
+
+Contract validation happens at two points:
+1. **Before run starts**: Orchestrator validates contract is well-formed and permissions are granted
+2. **During run**: Orchestrator validates each tool call against `tool_policy` and `constraints`
+
 ### Event (append-only)
 
 The atomic unit of observability.
 
-Minimum event types:
+> **Design Decision:** Reconnect/resume, pagination, and idempotency require stable event ids and ordering semantics. The `seq`-based cursor is essential for replay.
 
-* `run.started`
-* `phase.changed` (plan → execute → verify → package)
-* `tool.called` / `tool.result`
-* `file.changed` (with diff/patch)
-* `artifact.created`
-* `checkpoint.requested` (approval needed)
-* `run.completed` / `run.failed`
+**Event envelope (versioned):**
+
+```typescript
+interface Event {
+  event_id: string;        // UUID
+  run_id: string;
+  seq: number;             // Monotonic per run - critical for replay
+  ts: string;              // ISO 8601 UTC
+  type: EventType;
+  phase: Phase;
+  severity: "info" | "warning" | "error";
+  payload: Record<string, unknown>;
+}
+
+type EventType =
+  | "run.started"
+  | "phase.changed"
+  | "tool.called"
+  | "tool.result"
+  | "file.changed"
+  | "artifact.created"
+  | "checkpoint.requested"
+  | "checkpoint.approved"
+  | "checkpoint.rejected"
+  | "checkpoint.timeout"
+  | "drift.detected"
+  | "run.completed"
+  | "run.failed";
+
+type Phase = "pending" | "planning" | "executing" | "verifying" | "packaging" | "completed" | "failed";
+```
+
+**Replay semantics:** Events are append-only, ordered by `seq`. The UI can request events after a `seq` cursor for reconnection. Example: `GET /runs/{run_id}/events?after_seq=42`
 
 Your `agent-sdk-boilerplate` already emphasizes real-time streaming (SSE/WebSocket) and isolated E2B execution, which aligns with event streaming into a frontend. ([GitHub][2])
+
+### Run Lifecycle State Machine
+
+> **Design Decision:** Without explicit states, UI developers guess what "running" means, error handling is inconsistent, and resume logic is ad-hoc. The state machine costs almost nothing to write and prevents significant implementation bugs.
+
+**States:**
+
+| State | Description | Valid User Actions |
+|-------|-------------|-------------------|
+| `pending` | Contract submitted, sandbox not yet created | Cancel |
+| `initializing` | E2B sandbox being created | Cancel |
+| `planning` | Agent is in Plan phase | Pause, Cancel |
+| `executing` | Agent is doing work | Pause, Cancel |
+| `verifying` | Agent is checking results | Pause, Cancel |
+| `packaging` | Agent is writing artifacts | Cancel (with idempotency) |
+| `awaiting_approval` | Blocked on human approval | Approve, Reject, Cancel |
+| `paused` | User-initiated pause | Resume, Cancel |
+| `completed` | Run finished successfully | None |
+| `failed` | Run terminated with error | Retry, View Logs |
+| `cancelled` | User cancelled | Retry |
+| `timeout` | Exceeded time limit | Retry |
+
+**Transitions:**
+
+```
+pending → initializing (on sandbox request)
+initializing → planning (on sandbox ready)
+initializing → failed (on sandbox creation error)
+
+planning → executing (on plan phase complete)
+planning → awaiting_approval (on checkpoint.requested)
+planning → failed (on unrecoverable error)
+planning → paused (on user pause)
+
+executing → verifying (on execute phase complete)
+executing → awaiting_approval (on checkpoint.requested)
+executing → failed (on unrecoverable error)
+executing → paused (on user pause)
+
+verifying → packaging (on verify phase complete)
+verifying → executing (on verification failure requiring retry)
+verifying → failed (on unrecoverable error)
+
+packaging → completed (on artifacts written)
+packaging → failed (on write error)
+
+awaiting_approval → {previous_state} (on approval granted)
+awaiting_approval → cancelled (on approval rejected with user_cancelled reason)
+awaiting_approval → paused (on approval rejected with needs_edit reason)
+awaiting_approval → failed (on approval rejected with policy_violation reason)
+awaiting_approval → timeout (on approval timeout)
+
+paused → {previous_state} (on user resume)
+paused → cancelled (on user cancel)
+
+Any state → cancelled (on user cancel)
+Any state → failed (on sandbox crash, network failure, etc.)
+```
+
+**Phase enforcement:** The orchestrator (not the agent) owns phase transitions. Agents emit `phase.complete` events; orchestrator validates and transitions. If an agent emits tool calls inconsistent with its current phase (e.g., writing files during Plan), the orchestrator logs a `drift.detected` event.
+
+**Packaging idempotency:** Artifacts are written atomically (write to temp, then rename). Cancel during packaging waits for current atomic write to complete. Partial runs still produce valid partial artifacts.
 
 ### Artifact
 
@@ -468,6 +823,26 @@ A durable output:
 * JSON payload for email/calendar
 * zipped sandbox snapshot (optional)
 * trace bundle
+
+### Artifact Manifest
+
+> **Design Decision:** The UI needs stable artifact ids, preview hints, and checksums to render and export correctly without parsing file contents.
+
+```typescript
+interface ArtifactManifest {
+  artifact_id: string;
+  type: "markdown" | "email_draft" | "calendar_event" | "pr_diff" | "json_data" | "pdf" | "image";
+  mime_type: string;
+  preview_type: "email" | "calendar" | "markdown" | "diff" | "json" | "binary";
+  destination_path: string;
+  checksum: string;           // SHA256
+  size_bytes: number;
+  created_at: string;         // ISO 8601
+  status: "draft" | "final" | "partial";
+}
+```
+
+Emit `artifact.created` event with the manifest so the UI can render without parsing files.
 
 ## UI architecture that fits E2B execution
 
@@ -637,7 +1012,59 @@ status: draft
 
 ### Trace writing is non-negotiable
 
-A run is not “complete” until the trace exists. Sapling’s calibration loop depends on this. ([GitHub][1])
+A run is not "complete" until the trace exists. Sapling's calibration loop depends on this. ([GitHub][1])
+
+> **Design Decision:** Before implementing a new trace schema, audit existing Sapling trace files in `brain/traces/` to understand current conventions. Extend, don't replace.
+
+**Pre-implementation check:**
+1. Understand current naming conventions
+2. Identify required frontmatter fields
+3. Check if JSONL companion files already exist
+
+**Trace schema (extends existing Sapling conventions):**
+
+Each trace is a JSONL file with a markdown wrapper for human readability.
+
+`brain/traces/YYYY/MM/{run_id}.md`:
+```markdown
+---
+run_id: run_2026_01_20_123456
+template: github_issue_agent@v3
+goal: "Triage new issues in repo X"
+started_at: 2026-01-20T18:00:00Z
+finished_at: 2026-01-20T18:03:12Z
+outcome: completed
+cost_cents: 42
+---
+
+# Trace: GitHub Issue Triage
+
+## Contract Summary
+[Rendered contract in human-readable form]
+
+## Outcome
+- Triaged 12 issues
+- 3 marked high priority
+- 9 marked low priority
+- 0 errors
+
+## Decisions Log
+[see trace.jsonl for full details]
+
+## Calibration Notes
+- Issue #45 was incorrectly marked low priority (actually a P1 bug)
+- Consider: add rule "issues mentioning 'data loss' are always high priority"
+```
+
+`brain/traces/YYYY/MM/{run_id}.jsonl`:
+```jsonl
+{"type":"contract","data":{"goal":"...","success_criteria":[...]}}
+{"type":"phase_start","phase":"plan","timestamp":"2026-01-20T18:00:01Z"}
+{"type":"decision","phase":"plan","action":"read_issues","rationale":"Need to see all open issues"}
+{"type":"tool_call","tool":"github.list_issues","input":{"repo":"owner/repo"},"output_summary":"12 issues"}
+{"type":"phase_end","phase":"plan","timestamp":"2026-01-20T18:00:15Z"}
+{"type":"run_complete","outcome":"completed","deliverables":["triage_report.md"]}
+```
 
 Trace file contains:
 
@@ -648,7 +1075,7 @@ Trace file contains:
 * errors + recoveries
 * what to improve next time (seed for calibration)
 
-## Agent launch UX: what “agent-first intuitive” looks like
+## Agent launch UX: what "agent-first intuitive" looks like
 
 ### Launch should be a form, not a chat
 
@@ -674,6 +1101,21 @@ Templates include:
 * default success criteria
 * preflight checks
 
+### Template Versioning
+
+> **Design Decision:** Calibration should not mutate templates retroactively. Runs must pin to a template version for reproducibility.
+
+**Versioning rules:**
+- Templates are immutable once published
+- Calibration produces a new version with a changelog and diff from the prior version
+- Runs store `template_name` + `template_version`
+- Old runs reference old versions (reproducibility maintained)
+
+**Dashboard shows:**
+- "Template improved 3 times based on your feedback"
+- Version history with diffs
+- Which runs used which version
+
 ## Approvals: the critical UI primitive
 
 Treat every high-risk side effect as a structured approval request:
@@ -682,30 +1124,92 @@ Treat every high-risk side effect as a structured approval request:
 * GitHub: show patch summary + files changed + tests status
 * Calendar: show title/time/attendees + conflict check evidence
 
-Approvals produce signed events:
+### Approval Flow Mechanics
 
-* `checkpoint.approved`
-* `checkpoint.rejected`
+> **Design Decision:** Both reviewers agreed enforcement must be real, not just UI decoration. The orchestrator—not the agent—handles all validation. Agents are untrusted compute environments and should never validate tokens themselves.
 
-Agent resumes only with an approval token.
+**Enforcement model (choose for MVP):**
+
+| Option | How it works | When to use |
+|--------|--------------|-------------|
+| **A: Control-plane only (simpler)** | Control plane is the only executor of side effects; sandbox can only request. | MVP default |
+| **B: Token-gated (distributed)** | Signed approval token bound to run_id + action hash + TTL; orchestrator validates before executing. | When side effects execute outside control plane |
+
+**The approval flow:**
+
+1. **Agent yields**: Agent emits `checkpoint.requested` event with:
+   - `checkpoint_id`: unique identifier
+   - `action_type`: what's being requested (send_email, create_pr, etc.)
+   - `preview`: structured payload of what will happen
+   - `timeout_seconds`: how long until auto-action (default: 3600)
+
+2. **Orchestrator blocks**: Orchestrator intercepts this event and:
+   - Persists the checkpoint to the run ledger
+   - Notifies the frontend via the event stream
+   - Puts the agent into `awaiting_approval` state (E2B sandbox stays alive but idle)
+
+3. **User acts**: Frontend shows the approval request. User clicks Approve/Reject/Edit.
+
+4. **Orchestrator resumes**: On approval, orchestrator:
+   - Records `checkpoint.approved` with approver identity and timestamp
+   - Validates the action is still safe (nothing changed while waiting)
+   - Resumes the agent process with a simple "proceed" signal
+   - The orchestrator—not the agent—gates the subsequent tool call
+
+5. **Agent proceeds**: Agent only knows "I can proceed" or "I must stop." It never sees or validates tokens.
+
+**Timeout behavior:**
+- Default: auto-reject with `checkpoint.timeout`
+- Configurable per-template: auto-approve for low-risk actions
+
+**Rejection routing:**
+- User cancellation → `cancelled` state
+- Needs edit → `paused` state
+- Policy violation → `failed` state
+
+**Bulk approvals**: For runs with many similar checkpoints (e.g., "send 50 emails"), support:
+- "Approve all of type X for this run"
+- "Approve all matching pattern Y"
 
 ## Calibration UX: turn `/calibrate` into a UI workflow
 
-Sapling’s core claim is “improve over time.” The UI needs to make calibration fast and specific. ([GitHub][1])
+Sapling's core claim is "improve over time." The UI needs to make calibration fast and specific. ([GitHub][1])
 
-Calibration screen:
+> **Design Decision:** Traces exist to enable calibration, but the UI must close the loop by showing how traces feed back into templates and policies.
 
-* List traces (sortable by “regret”, “manual edits after run”, “failures”, “time spent”)
-* Trace detail with:
+### Quick Feedback Controls (After Run Completes)
 
-  * decisions timeline
-  * “what should have happened” annotations
-  * extraction of reusable rules (“when writing emails, always include…”, “never schedule meetings without…”)
-* Commit calibrated rules into:
+On the results screen:
+1. **Rate this run**: thumbs up/down
+2. **Flag a mistake**: point-and-click on specific decisions in the trace
+3. **Add a note**: freeform text for what should have happened differently
 
-  * agent template versions
-  * skill definitions
-  * policy presets
+### Calibration Queue
+
+Traces with feedback accumulate in a review queue:
+- Accessible from: Settings → Calibration → Review Pending
+- Each item shows: run summary, flagged mistakes, user notes
+- Sortable by: "regret", "manual edits after run", "failures", "time spent"
+
+### Rule Extraction
+
+From flagged mistakes, suggest rules:
+- "When X, always Y"
+- User approves/edits rules
+- Rules attach to templates or workspace-wide policies
+
+Example rules:
+- "When writing emails, always include…"
+- "Never schedule meetings without…"
+- "Issues mentioning 'data loss' are always high priority"
+
+### Commit Calibrated Rules Into:
+
+* agent template versions (creates new version, maintains reproducibility)
+* skill definitions
+* policy presets
+
+Dashboard shows: "Template improved 3 times based on your feedback"
 
 This is where the frontend becomes more valuable than Cursor.
 
@@ -742,6 +1246,73 @@ That points to:
 
 If you want the vault to stay local (Obsidian-native), a desktop shell (Tauri/Electron) becomes the cleanest path because it can write directly to the vault while still using web UI components.
 
+## Identity and Access Control
+
+> **Design Decision:** Even for single-user MVP, establish identity primitives. Retrofitting auth is expensive, and audit trails need identity even for one user.
+
+**Approval identity:**
+Every `checkpoint.approved` event records:
+- `approver_id`: unique user/device identifier
+- `approved_from`: "web" | "desktop" | "mobile"
+- `timestamp`: ISO 8601
+
+**Workspace isolation (for future multi-user):**
+- Workspaces are the unit of access control
+- Users are invited to workspaces with roles: owner, operator, viewer
+- Runs inherit workspace permissions
+
+For MVP, hardcode a single user/workspace. But design the schema to accommodate multi-user later.
+
+---
+
+## Testing Strategy
+
+> **Design Decision:** For a system with this much async behavior and external dependencies, testability should be designed in, not bolted on.
+
+**Event stream replay tests:**
+- Record event streams from real runs
+- Replay for deterministic regression testing
+- Verify UI renders correctly for known sequences
+
+**Approval gating tests:**
+- Mock connectors and tool calls
+- Verify approval flow blocks and resumes correctly
+- Test timeout and rejection paths
+
+**Contract schema validation:**
+- Validate contracts against schema on startup
+- Test migration path for schema changes
+- Ensure old contracts remain parseable
+
+**End-to-end smoke:**
+- Stubbed agents that produce predictable outputs
+- Stubbed sandbox adapter
+- Verify full flow: launch → events → artifacts → trace
+
+---
+
+## Offline Behavior
+
+> **Design Decision:** If it's local-first, define explicit behavior when connectors are unavailable.
+
+**When connectors are unavailable:**
+
+| Scenario | Behavior | User sees |
+|----------|----------|-----------|
+| Gmail/GCal/GitHub unreachable | Queue or fail (configurable) | "Gmail is unavailable. Queue email for later?" |
+| E2B unreachable | Fail with retry option | "Can't start sandbox. Check your internet connection." |
+| Partial connectivity | Run what's possible | "GitHub unavailable. Skipping PR creation." |
+
+**Local-only runs:**
+- Runs that only use vault and local files can proceed without external connectors
+- Clearly mark runs as "local-only" when no external scopes are requested
+
+**Resume and reconcile:**
+- Once connectivity returns, resume queued actions
+- Define cache TTL for connector state (e.g., GitHub issue list cached for 5 minutes)
+
+---
+
 ## Non-negotiables that keep quality high
 
 * Event schema is stable and versioned.
@@ -749,7 +1320,7 @@ If you want the vault to stay local (Obsidian-native), a desktop shell (Tauri/El
 * Approvals are first-class and audited.
 * Outputs always land in deterministic vault paths.
 * Traces always exist and are easy to calibrate.
-* Tool policies are visible and enforced (not “prompted”).
+* Tool policies are visible and enforced (not "prompted").
 
 ([GitHub][1])
 

@@ -81,3 +81,17 @@ Verify: (none)
 - **Learnings**: E2B SDK uses `sandboxId` (not `id`); files.write() expects ArrayBuffer not Buffer; use `sandbox.files.read()` for extraction before kill()
 ---
 
+## 2026-01-22 - Sapling-k2n: Implement Run Orchestrator
+- Created `src/services/run-orchestrator.ts` with RunOrchestrator class
+- Central control plane: coordinates sandbox lifecycle, state machine, approvals, events
+- Start/pause/resume/cancel run lifecycle management
+- Checkpoint handling: requestApproval() gates execution until resolved
+- Artifact collection: writes to vault via VaultWriter, emits artifact.created events
+- Trace writing: captures events for trace on run completion/failure/cancel
+- Cost tracking integration: getCostBreakdown() and addCost() methods
+- Contract validation: validateToolCall() and validateConstraints() methods
+- EventEmitter pattern for orchestrator events (run.created, run.started, run.completed, etc.)
+- Files: `src/services/run-orchestrator.ts`, `src/services/index.ts`
+- **Learnings**: Use OrchestratorDependencies interface for DI; single run per orchestrator instance; collect events for trace writing
+---
+

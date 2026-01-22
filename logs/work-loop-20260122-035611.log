@@ -1,0 +1,27 @@
+=== Sapling MVP Work Loop ===
+Started: Thu Jan 22 03:56:11 CST 2026
+Project: /home/ubuntu/Projects/Sapling
+Ready beads:
+
+📋 Ready work (10 issues with no blockers):
+
+1. [P1] [task] Sapling-928: Define RunContract TypeScript interface
+2. [P1] [task] Sapling-stm: Define Event schema and types
+3. [P1] [task] Sapling-dfc: Define Run and RunState types
+4. [P1] [task] Sapling-0m9: Define ArtifactManifest type
+5. [P1] [task] Sapling-4kl: Define AgentTemplate type
+6. [P1] [task] Sapling-w8b: Create app layout shell with three-pane structure
+7. [P1] [task] Sapling-ly0: Implement E2B sandbox adapter
+8. [P1] [task] Sapling-chu: Implement credential storage service
+9. [P2] [task] Sapling-qdu: Define Workspace type
+10. [P2] [task] Sapling-cr2: Implement event translation layer
+
+
+Starting ralph work loop...
+PROJECT_ROOT: /home/ubuntu/Projects/Sapling (skills will load from .claude/skills/)
+Session started in tmux: pipeline-sapling-mvp
+
+  Monitor: tmux capture-pane -t pipeline-sapling-mvp -p | tail -50
+  Attach:  tmux attach -t pipeline-sapling-mvp
+  Status:  ./scripts/run.sh status sapling-mvp
+  Kill:    tmux kill-session -t pipeline-sapling-mvp

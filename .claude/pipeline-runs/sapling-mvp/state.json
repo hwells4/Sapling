@@ -1,0 +1,13 @@
+{
+  "session": "sapling-mvp",
+  "type": "loop",
+  "started_at": "2026-01-22T21:13:01Z",
+  "status": "running",
+  "current_stage": 0,
+  "iteration": 1,
+  "iteration_completed": 0,
+  "iteration_started": "2026-01-22T21:13:02Z",
+  "stages": [],
+  "history": [],
+  "event_offset": 0
+}

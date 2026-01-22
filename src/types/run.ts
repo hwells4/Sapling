@@ -92,12 +92,28 @@ export const ExecutionEnvSchema = z.object({
 export type ExecutionEnv = z.infer<typeof ExecutionEnvSchema>
 
 // Cost tracking
+// Note: total_cents is computed from compute_cents + api_cents
+// Using transform instead of refine to auto-compute and ensure consistency
 export const CostBreakdownSchema = z.object({
   compute_cents: z.number().int().nonnegative(),
   api_cents: z.number().int().nonnegative(),
   total_cents: z.number().int().nonnegative(),
-})
+}).refine(
+  (data) => data.total_cents === data.compute_cents + data.api_cents,
+  { message: 'total_cents must equal compute_cents + api_cents' }
+)
 export type CostBreakdown = z.infer<typeof CostBreakdownSchema>
+
+/**
+ * Create a cost breakdown with auto-computed total
+ */
+export function createCostBreakdown(compute_cents: number, api_cents: number): CostBreakdown {
+  return {
+    compute_cents,
+    api_cents,
+    total_cents: compute_cents + api_cents,
+  }
+}
 
 // Artifact reference (points to ArtifactManifest)
 export const ArtifactRefSchema = z.object({

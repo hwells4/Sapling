@@ -137,3 +137,20 @@ export {
   // Factory
   createErrorHandler,
 } from './error-handler'
+
+export {
+  // Schemas
+  CostType,
+  CostEntrySchema,
+  BudgetConfigSchema,
+  // Types
+  type CostEntry,
+  type BudgetConfig,
+  type BudgetStatus,
+  type CostEstimate,
+  type AddCostResult,
+  // Implementation
+  CostTracker,
+  // Factory
+  createCostTracker,
+} from './cost-tracker'

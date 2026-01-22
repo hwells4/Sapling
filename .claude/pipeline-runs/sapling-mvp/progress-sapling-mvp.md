@@ -103,3 +103,20 @@ Verify: (none)
 - **Learnings**: ToolPolicy conflicts (same tool in allowed & blocked) must be runtime validated since Zod superRefine breaks inference. EventEmitter uses positional args, not object. Uniqueness checks across arrays prevent subtle bugs in contracts.
 ---
 
+## 2026-01-22 - Sapling-s1v: Implement error handling and recovery
+- Created `ErrorHandler` class in `src/services/error-handler.ts`:
+  - 8 error categories: transient, tool_failure, agent_error, sandbox_crash, contract_violation, timeout, approval_timeout, stalled
+  - Auto-retry with exponential backoff (2s, 4s, 8s base) capped at configurable max delay
+  - Category-specific retry limits: transient(3), tool_failure(2), sandbox_crash(1), others(0)
+  - `classifyError()` heuristics to auto-detect category from error type/message
+- Human-readable error messages:
+  - Static `USER_MESSAGES` for each category
+  - Dynamic `DETAILED_USER_MESSAGES` with context interpolation (retry count, tool name, timeout, etc.)
+- Partial results preservation via `PartialResultsSchema`:
+  - Captures artifacts, files_changed, last_phase, last_event_seq
+  - Allows run recovery from failure checkpoint
+- Integration: RunStateMachine for `failed` transitions, EventEmitter for `run.failed` events
+- Files: `src/services/error-handler.ts`, `src/services/index.ts`
+- **Learnings**: Retry tracking needs per-run/per-category map since different error types exhaust independently. Exponential backoff uses `baseDelay * 2^retryCount` capped at maxDelay. State machine integration requires checking `isTerminalState` first.
+---
+

@@ -69,3 +69,15 @@ Verify: (none)
 - **Learnings**: RunDB is the ledger (system state), not knowledge storage (vault); EventStore abstraction allows clean separation; transactions enable atomic run+events creation
 ---
 
+## 2026-01-22 - Sapling-ly0: Implement E2B sandbox adapter
+- Created `src/services/sandbox-adapter.ts` with SandboxAdapter class
+- Full lifecycle: start() → mountFiles() → runCode() → extractArtifacts() → shutdown()
+- Streaming output via EventEmitter pattern: stdout, stderr, result, error events
+- Timeout handling: configurable via contract.max_duration_seconds or override (default 5 min)
+- Crash recovery: createCheckpoint() captures state before external actions
+- Security: sanitizeEnvVars() blocks credential patterns from sandbox env
+- State machine: idle → creating → ready → running → extracting → shutdown
+- Files: `src/services/sandbox-adapter.ts`, `src/services/index.ts`
+- **Learnings**: E2B SDK uses `sandboxId` (not `id`); files.write() expects ArrayBuffer not Buffer; use `sandbox.files.read()` for extraction before kill()
+---
+

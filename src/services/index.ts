@@ -225,3 +225,17 @@ export {
   // Factory
   createSandboxAdapter,
 } from './sandbox-adapter'
+
+export {
+  // Types
+  type OrchestratorState,
+  type StartRunOptions,
+  type UserActionOptions,
+  type OrchestratorResult,
+  type OrchestratorEvents,
+  type OrchestratorDependencies,
+  // Implementation
+  RunOrchestrator,
+  // Factory
+  createRunOrchestrator,
+} from './run-orchestrator'

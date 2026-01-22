@@ -23,7 +23,7 @@
     ]
   },
   "limits": {
-    "max_iterations": 25,
+    "max_iterations": 15,
     "remaining_seconds": -1
   },
   "commands": {}

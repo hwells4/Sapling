@@ -1,24 +1,21 @@
 import { AppShell } from '@/components/layout'
+import { Sidebar } from '@/components/sidebar'
 
-// Placeholder components - will be replaced by actual implementations
-function Sidebar() {
+// Demo data for sidebar
+const demoTemplates = [
+  { id: '1', name: 'Email Assistant', icon: '📧' },
+  { id: '2', name: 'GitHub Issue Triage', icon: '🔍' },
+  { id: '3', name: 'Calendar Scheduler', icon: '📅' },
+]
+
+function SidebarWrapper() {
   return (
-    <div className="flex h-full flex-col p-4">
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold">Sapling</h1>
-      </div>
-      <nav className="flex flex-1 flex-col gap-1">
-        <div className="rounded-md bg-[hsl(var(--background))] px-3 py-2 text-sm font-medium">
-          Tasks
-        </div>
-        <div className="px-3 py-2 text-sm text-[hsl(var(--muted-foreground))]">Library</div>
-        <div className="px-3 py-2 text-sm text-[hsl(var(--muted-foreground))]">Templates</div>
-        <div className="px-3 py-2 text-sm text-[hsl(var(--muted-foreground))]">Connections</div>
-      </nav>
-      <div className="border-t border-[hsl(var(--border))] pt-4">
-        <div className="text-xs text-[hsl(var(--muted-foreground))]">Approvals</div>
-      </div>
-    </div>
+    <Sidebar
+      workspaces={[{ id: '1', name: 'Personal Vault' }]}
+      workspace={{ id: '1', name: 'Personal Vault' }}
+      templates={demoTemplates}
+      approvalCount={0}
+    />
   )
 }
 
@@ -58,5 +55,5 @@ function Inspector() {
 }
 
 export default function Home() {
-  return <AppShell sidebar={<Sidebar />} main={<MainContent />} inspector={<Inspector />} />
+  return <AppShell sidebar={<SidebarWrapper />} main={<MainContent />} inspector={<Inspector />} />
 }

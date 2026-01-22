@@ -171,7 +171,7 @@ const VALID_TRANSITIONS: Record<RunState, RunState[]> = {
   initializing: ['planning', 'failed', 'cancelled'],
   planning: ['executing', 'awaiting_approval', 'failed', 'paused', 'cancelled'],
   executing: ['verifying', 'awaiting_approval', 'failed', 'paused', 'cancelled'],
-  verifying: ['packaging', 'executing', 'failed', 'cancelled'],
+  verifying: ['packaging', 'executing', 'failed', 'paused', 'cancelled'],
   packaging: ['completed', 'failed', 'cancelled'],
   awaiting_approval: ['planning', 'executing', 'verifying', 'cancelled', 'paused', 'failed', 'timeout'],
   paused: ['planning', 'executing', 'verifying', 'cancelled'],

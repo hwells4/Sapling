@@ -20,3 +20,40 @@ Verify: (none)
 - **Learnings**: WebCrypto's `Uint8Array` needs explicit `BufferSource` cast for TypeScript. Backend-only credential access pattern ensures tokens never leak to frontend.
 ---
 
+## 2026-01-22 - Sapling-3rh: Implement EventEmitter service
+- Fixed Phase enum to include all RunState values (initializing, awaiting_approval, paused, cancelled, timeout)
+- Created discriminated union type safety: `EventPayloadSchemas` maps event types to payload schemas
+- Added `TypedEvent<T>` for compile-time payload type enforcement based on event type discriminator
+- Refactored `createEvent<T>` to constrain payload type based on event type generic
+- Added `validateEventPayload()` for runtime payload validation
+- Implemented `EventEmitter` interface with emit/subscribe/getSeq/getEvents/clearRun operations
+- Created `InMemoryEventEmitter` with monotonic seq per run_id, payload validation, and subscription filtering
+- Files: `src/types/event.ts`, `src/types/index.ts`, `src/services/events.ts`, `src/services/index.ts`
+- **Learnings**: Using `EventPayloadSchemas` as a const object allows both runtime validation and type-level mapping. Subscriptions need to handle replay on connect (afterSeq option) for reconnection scenarios.
+---
+
+## 2026-01-22 - Sapling-767: Implement event persistence layer
+- Created `EventStore` interface for durable event storage (distinct from EventEmitter which handles real-time)
+- Implemented `InMemoryEventStore` with:
+  - Append-only writes with idempotent event_id deduplication
+  - Strict seq ordering validation per run_id
+  - Paginated query with cursor (`EventCursor`) for large streams
+  - Event type filtering in queries
+  - Run statistics (`EventStats`) for summaries
+- Added `StoreResult<T>` pattern matching other services
+- Files: `src/services/event-store.ts`, `src/services/index.ts`
+- **Learnings**: EventStore and EventEmitter serve different purposes - Store is for persistence/replay, Emitter is for real-time pub/sub. Pagination with cursors uses afterSeq pattern for consistent iteration.
+---
+
+## 2026-01-22 - Sapling-2qd: Implement SSE/WebSocket event streaming
+- Created `EventStreamService` interface for real-time HTTP streaming
+- Implemented `InMemoryEventStreamService` bridging EventEmitter to HTTP clients:
+  - SSE: `createSSEStream()` with heartbeat (30s default), retry hints, seq-based event IDs
+  - WebSocket: `createWebSocketStream()` with ping/pong (30s default), subscribed confirmation
+- Reconnection support via `afterSeq` cursor - clients can resume from last seen seq
+- Connection tracking: `StreamConnection` metadata, `getConnections()`, `closeConnection()`
+- Utilities: `formatSSEMessage()` for HTTP response, `parseStreamOptions()` for query params
+- Files: `src/services/event-stream.ts`, `src/services/index.ts`
+- **Learnings**: SSE uses `event:`, `id:`, `retry:`, `data:` fields with double-newline terminator. WebSocket needs explicit ping/pong for connection health. Both need to track lastSeq per connection for replay.
+---
+

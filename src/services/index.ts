@@ -70,3 +70,18 @@ export {
   formatSSEMessage,
   parseStreamOptions,
 } from './event-stream'
+
+export {
+  // Types
+  type StateMachineErrorType,
+  type TransitionResult,
+  type TransitionInput,
+  type ActionInput,
+  type DriftContext,
+  // Error class
+  StateMachineError,
+  // Implementation
+  RunStateMachine,
+  // Factory
+  createRunStateMachine,
+} from './run-state-machine'

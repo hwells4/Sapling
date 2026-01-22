@@ -139,3 +139,20 @@ Verify: (none)
 - **Learnings**: Cost tracking needs separate daily/monthly totals per workspace (keyed by workspace:YYYY-MM-DD). Budget checks must prevent spend before adding, not after. Transform vs refinement: refinement for validation, transform for auto-compute.
 ---
 
+## 2026-01-22 - Sapling-b2k: Build New Task wizard
+- Created 4-step wizard in `src/components/wizard/new-task-wizard.tsx`:
+  - Step 1: Goal input (textarea for describing task)
+  - Step 2: Template selector (card grid with capabilities/cost display)
+  - Step 3: Integration scope selector (toggle available scopes)
+  - Step 4: Confirm plan + permissions (read-only contract preview)
+- Features:
+  - `StepIndicator` shows completed/current/future steps with visual state
+  - Back/Next/Cancel navigation with step-specific validation gates
+  - `TemplateCard` displays name, description, capabilities, estimated cost
+  - `ScopeToggle` for granting integration access
+  - Trust notice on confirm step (non-negotiable for permission awareness)
+- Follows existing UI patterns: `cn()` utility, `hsl(var(--*))` color tokens, `transition-colors duration-150`
+- Files: `src/components/wizard/new-task-wizard.tsx`, `src/components/wizard/index.ts`
+- **Learnings**: Wizard state is kept in a single `WizardState` object for easy prop drilling. Validation happens in `canGoNext()` callback per step. Integration scopes are optional but templates are required.
+---
+

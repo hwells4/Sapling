@@ -106,3 +106,25 @@ export {
   isValidArtifactManifest,
   createArtifactManifest,
 } from './artifact'
+
+// Template types
+export {
+  // Schemas
+  AgentTemplateSchema,
+  AgentTemplateRefSchema,
+  TemplateCatalogEntrySchema,
+  OutputMappingRuleSchema,
+  SubAgentSpecSchema,
+  SuccessCriteriaTemplateSchema,
+  // Types
+  type AgentTemplate,
+  type AgentTemplateRef,
+  type TemplateCatalogEntry,
+  type OutputMappingRule,
+  type SubAgentSpec,
+  type SuccessCriteriaTemplate,
+  // Helpers
+  validateAgentTemplate,
+  isValidAgentTemplate,
+  compareVersions,
+} from './template'

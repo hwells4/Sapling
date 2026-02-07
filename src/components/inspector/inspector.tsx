@@ -45,7 +45,7 @@ interface InspectorProps {
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
+    <h3 className="mb-2 font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
       {children}
     </h3>
   )
@@ -58,7 +58,7 @@ function ToolPolicySection({ policy }: { policy: ToolPolicy }) {
       <div className="space-y-2 text-sm">
         {policy.allowed.length > 0 && (
           <div>
-            <span className="text-green-600 dark:text-green-400">Allowed:</span>
+            <span className="text-green-600">Allowed:</span>
             <div className="ml-2 text-[hsl(var(--muted-foreground))]">
               {policy.allowed.join(', ')}
             </div>
@@ -66,7 +66,7 @@ function ToolPolicySection({ policy }: { policy: ToolPolicy }) {
         )}
         {policy.blocked.length > 0 && (
           <div>
-            <span className="text-red-600 dark:text-red-400">Blocked:</span>
+            <span className="text-red-600">Blocked:</span>
             <div className="ml-2 text-[hsl(var(--muted-foreground))]">
               {policy.blocked.join(', ')}
             </div>
@@ -86,14 +86,14 @@ function ConstraintsSection({ constraints }: { constraints: Constraint[] }) {
       <SectionHeader>Constraints</SectionHeader>
       <div className="space-y-1 text-sm">
         {violations.map((c) => (
-          <div key={c.id} className="flex items-start gap-2 rounded-md bg-red-500/10 p-2">
-            <span className="text-red-600 dark:text-red-400">✕</span>
-            <span className="text-red-600 dark:text-red-400">{c.description}</span>
+          <div key={c.id} className="flex items-start gap-2 rounded-lg bg-red-500/10 p-2">
+            <span className="text-red-600">✕</span>
+            <span className="text-red-600">{c.description}</span>
           </div>
         ))}
         {passing.map((c) => (
           <div key={c.id} className="flex items-start gap-2 text-[hsl(var(--muted-foreground))]">
-            <span className="text-green-600 dark:text-green-400">✓</span>
+            <span className="text-green-600">✓</span>
             <span>{c.description}</span>
           </div>
         ))}
@@ -112,12 +112,12 @@ function PendingSideEffectsSection({ effects }: { effects: PendingSideEffect[] }
         {effects.map((effect) => (
           <div
             key={effect.id}
-            className="rounded-md border border-orange-500/30 bg-orange-500/10 p-2 text-sm"
+            className="rounded-lg border border-[hsl(var(--accent))]/30 bg-[hsl(var(--accent))]/10 p-2 text-sm"
           >
-            <div className="font-medium text-orange-600 dark:text-orange-400">
+            <div className="font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--accent))]">
               {effect.action_type}
             </div>
-            <div className="text-[hsl(var(--muted-foreground))]">{effect.description}</div>
+            <div className="mt-1 text-[hsl(var(--muted-foreground))]">{effect.description}</div>
           </div>
         ))}
       </div>
@@ -131,17 +131,17 @@ function TelemetrySection({ telemetry }: { telemetry: ResourceTelemetry }) {
       <SectionHeader>Resources</SectionHeader>
       <div className="space-y-1 text-sm">
         <div className="flex justify-between">
-          <span className="text-[hsl(var(--muted-foreground))]">Sandbox</span>
+          <span className="font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">Sandbox</span>
           <span className={telemetry.sandbox_alive ? 'text-green-600' : 'text-red-600'}>
             {telemetry.sandbox_alive ? 'Active' : 'Inactive'}
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[hsl(var(--muted-foreground))]">Elapsed</span>
+          <span className="font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">Elapsed</span>
           <span className="tabular-nums">{formatDuration(telemetry.elapsed_seconds)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[hsl(var(--muted-foreground))]">Cost</span>
+          <span className="font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">Cost</span>
           <span className="tabular-nums">${(telemetry.cost_cents / 100).toFixed(2)}</span>
         </div>
       </div>
@@ -175,12 +175,12 @@ function ControlButton({
       disabled={disabled}
       aria-label={ariaLabel}
       className={cn(
-        'flex-1 rounded-md px-3 py-2 text-sm font-medium',
+        'flex-1 rounded-lg px-3 py-2 text-sm font-medium',
         'transition-colors duration-150',
         'disabled:cursor-not-allowed disabled:opacity-50',
         variant === 'destructive'
           ? 'bg-red-600 text-white hover:bg-red-700'
-          : 'bg-[hsl(var(--foreground))] text-[hsl(var(--background))] hover:opacity-90',
+          : 'bg-[hsl(var(--foreground))] text-white hover:opacity-90',
       )}
     >
       {children}
@@ -200,15 +200,15 @@ function StopConfirmDialog({
   return (
     <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialog.Portal>
-        <AlertDialog.Backdrop className="fixed inset-0 bg-black/50" />
-        <AlertDialog.Popup className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-[hsl(var(--background))] p-6 shadow-lg">
-          <AlertDialog.Title className="text-lg font-semibold">Stop this run?</AlertDialog.Title>
-          <AlertDialog.Description className="mt-2 text-sm text-[hsl(var(--muted-foreground))]">
+        <AlertDialog.Backdrop className="fixed inset-0 bg-black/60" />
+        <AlertDialog.Popup className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl bg-[hsl(var(--card))] p-6 shadow-lg">
+          <AlertDialog.Title className="font-serif text-lg">Stop this run?</AlertDialog.Title>
+          <AlertDialog.Description className="mt-2 text-pretty text-sm text-[hsl(var(--muted-foreground))]">
             This action cannot be undone. The run will be cancelled and any unsaved progress will be
             lost.
           </AlertDialog.Description>
           <div className="mt-6 flex gap-3">
-            <AlertDialog.Close className="flex-1 rounded-md border border-[hsl(var(--border))] px-3 py-2 text-sm font-medium transition-colors duration-150 hover:bg-[hsl(var(--muted))]">
+            <AlertDialog.Close className="flex-1 rounded-lg border border-[hsl(var(--border))] px-3 py-2 text-sm font-medium transition-colors duration-150 hover:bg-[hsl(var(--muted))]">
               Cancel
             </AlertDialog.Close>
             <button
@@ -217,7 +217,7 @@ function StopConfirmDialog({
                 onConfirm()
                 onOpenChange(false)
               }}
-              className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-red-700"
+              className="flex-1 rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-red-700"
             >
               Stop Run
             </button>
@@ -246,10 +246,10 @@ export function Inspector({
   // No run selected
   if (!runId) {
     return (
-      <div className={cn('flex h-full flex-col p-4', className)}>
+      <div className={cn('flex h-full flex-col p-6', className)}>
         <SectionHeader>Inspector</SectionHeader>
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-sm text-[hsl(var(--muted-foreground))]">Select a task to see details</p>
+          <p className="font-serif text-sm text-[hsl(var(--muted-foreground))]">Select a task to inspect</p>
         </div>
       </div>
     )
@@ -262,7 +262,7 @@ export function Inspector({
   return (
     <div className={cn('flex h-full flex-col', className)}>
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-6">
         {toolPolicy && <ToolPolicySection policy={toolPolicy} />}
         {constraints && constraints.length > 0 && <ConstraintsSection constraints={constraints} />}
         <PendingSideEffectsSection effects={pendingSideEffects} />
@@ -270,7 +270,7 @@ export function Inspector({
       </div>
 
       {/* Fixed controls at bottom */}
-      <div className="border-t border-[hsl(var(--border))] p-4">
+      <div className="border-t border-[hsl(var(--border))] p-6">
         <SectionHeader>Controls</SectionHeader>
         <div className="flex gap-2">
           {isActive && (

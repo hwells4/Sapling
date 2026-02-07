@@ -20,6 +20,13 @@ const STEP_LABELS: Record<WizardStep, string> = {
   confirm: 'Review and confirm',
 }
 
+const STEP_NUMBERS: Record<WizardStep, string> = {
+  goal: '01',
+  template: '02',
+  scope: '03',
+  confirm: '04',
+}
+
 // Input state for the wizard
 interface WizardState {
   goal: string
@@ -37,57 +44,20 @@ interface NewTaskWizardProps {
   contractPreview?: Partial<RunContract>
 }
 
-function StepIndicator({
+function ProgressBar({
   steps,
   currentIndex,
 }: {
   steps: readonly WizardStep[]
   currentIndex: number
 }) {
+  const progress = ((currentIndex + 1) / steps.length) * 100
   return (
-    <div className="flex items-center gap-2" role="navigation" aria-label="Wizard progress">
-      {steps.map((step, index) => (
-        <div key={step} className="flex items-center">
-          {index > 0 && (
-            <div
-              className={cn(
-                'mx-2 h-px w-8',
-                index <= currentIndex
-                  ? 'bg-[hsl(var(--foreground))]'
-                  : 'bg-[hsl(var(--border))]',
-              )}
-            />
-          )}
-          <div
-            className={cn(
-              'flex size-8 items-center justify-center rounded-full text-sm font-medium',
-              index < currentIndex
-                ? 'bg-[hsl(var(--foreground))] text-[hsl(var(--background))]'
-                : index === currentIndex
-                  ? 'border-2 border-[hsl(var(--foreground))] text-[hsl(var(--foreground))]'
-                  : 'border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]',
-            )}
-            aria-current={index === currentIndex ? 'step' : undefined}
-          >
-            {index < currentIndex ? (
-              <svg
-                className="size-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              index + 1
-            )}
-          </div>
-        </div>
-      ))}
+    <div className="h-1 w-full rounded-full bg-[hsl(var(--border))]" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Wizard progress">
+      <div
+        className="h-full rounded-full bg-green-500 transition-all duration-300"
+        style={{ width: `${progress}%` }}
+      />
     </div>
   )
 }
@@ -110,8 +80,8 @@ function GoalStep({
         onChange={(e) => onChange(e.target.value)}
         placeholder="e.g., Draft a weekly status email summarizing my GitHub activity..."
         className={cn(
-          'min-h-32 w-full resize-none rounded-md border border-[hsl(var(--border))]',
-          'bg-[hsl(var(--background))] px-3 py-2 text-sm',
+          'min-h-32 w-full resize-none rounded-xl border border-[hsl(var(--border))]',
+          'bg-[hsl(var(--background))] px-4 py-3 text-sm',
           'placeholder:text-[hsl(var(--muted-foreground))]',
           'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))]',
         )}
@@ -135,24 +105,24 @@ function TemplateCard({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full flex-col items-start gap-2 rounded-lg border p-4 text-left',
+        'flex w-full flex-col items-start gap-2 rounded-xl border p-4 text-left',
         'transition-colors duration-150',
         selected
-          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--muted))]'
-          : 'border-[hsl(var(--border))] hover:border-[hsl(var(--foreground))/50] hover:bg-[hsl(var(--muted))/50]',
+          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--foreground))]/5'
+          : 'border-[hsl(var(--border))] hover:border-[hsl(var(--foreground))]/30 hover:bg-[hsl(var(--muted))]/50',
       )}
     >
       <div className="flex items-center gap-2">
         {template.icon && <span className="text-lg">{template.icon}</span>}
-        <span className="font-medium">{template.name}</span>
+        <span className="font-serif font-medium">{template.name}</span>
       </div>
-      <p className="text-sm text-[hsl(var(--muted-foreground))]">{template.description}</p>
+      <p className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">{template.description}</p>
       {template.capabilities && template.capabilities.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {template.capabilities.slice(0, 3).map((cap) => (
             <span
               key={cap}
-              className="rounded-full bg-[hsl(var(--muted))] px-2 py-0.5 text-xs text-[hsl(var(--muted-foreground))]"
+              className="rounded-full bg-[hsl(var(--muted))] px-2 py-0.5 font-pixel text-[10px] uppercase tracking-wide text-[hsl(var(--muted-foreground))]"
             >
               {cap}
             </span>
@@ -160,7 +130,7 @@ function TemplateCard({
         </div>
       )}
       {template.estimated_cost_range && (
-        <span className="text-xs tabular-nums text-[hsl(var(--muted-foreground))]">
+        <span className="font-pixel text-[10px] tabular-nums text-[hsl(var(--muted-foreground))]">
           Est. ${(template.estimated_cost_range.min_cents / 100).toFixed(2)} - $
           {(template.estimated_cost_range.max_cents / 100).toFixed(2)}
         </span>
@@ -180,7 +150,7 @@ function TemplateStep({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-[hsl(var(--muted-foreground))]">
+      <p className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">
         Select a template that best matches your task
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -194,8 +164,8 @@ function TemplateStep({
         ))}
       </div>
       {templates.length === 0 && (
-        <div className="rounded-md border border-dashed border-[hsl(var(--border))] p-8 text-center">
-          <p className="text-sm text-[hsl(var(--muted-foreground))]">
+        <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-8 text-center">
+          <p className="font-serif text-sm text-[hsl(var(--muted-foreground))]">
             No templates available. Create one to get started.
           </p>
         </div>
@@ -218,11 +188,11 @@ function ScopeToggle({
       type="button"
       onClick={onToggle}
       className={cn(
-        'flex items-center gap-3 rounded-md border px-4 py-3 text-left',
+        'flex items-center gap-3 rounded-xl border px-4 py-3 text-left',
         'transition-colors duration-150',
         selected
-          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--muted))]'
-          : 'border-[hsl(var(--border))] hover:border-[hsl(var(--foreground))/50]',
+          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--foreground))]/5'
+          : 'border-[hsl(var(--border))] hover:border-[hsl(var(--foreground))]/30',
       )}
     >
       <div
@@ -235,7 +205,7 @@ function ScopeToggle({
       >
         {selected && (
           <svg
-            className="size-3 text-[hsl(var(--background))]"
+            className="size-3 text-white"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
@@ -270,7 +240,7 @@ function ScopeStep({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-[hsl(var(--muted-foreground))]">
+      <p className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">
         Select the integrations this task can access
       </p>
       <div className="flex flex-col gap-2">
@@ -284,8 +254,8 @@ function ScopeStep({
         ))}
       </div>
       {availableScopes.length === 0 && (
-        <div className="rounded-md border border-dashed border-[hsl(var(--border))] p-8 text-center">
-          <p className="text-sm text-[hsl(var(--muted-foreground))]">
+        <div className="rounded-xl border border-dashed border-[hsl(var(--border))] p-8 text-center">
+          <p className="font-serif text-sm text-[hsl(var(--muted-foreground))]">
             No integrations connected. Connect services in Settings.
           </p>
         </div>
@@ -296,7 +266,7 @@ function ScopeStep({
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
+    <h4 className="mb-2 font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
       {children}
     </h4>
   )
@@ -311,23 +281,23 @@ function ConfirmStep({
 }) {
   return (
     <div className="flex flex-col gap-6">
-      <p className="text-sm text-[hsl(var(--muted-foreground))]">
+      <p className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">
         Review the task configuration before starting
       </p>
 
       {/* Goal summary */}
       <section>
         <SectionHeader>Goal</SectionHeader>
-        <div className="rounded-md bg-[hsl(var(--muted))] p-3 text-sm">{state.goal}</div>
+        <div className="rounded-xl bg-[hsl(var(--muted))] p-3 text-sm">{state.goal}</div>
       </section>
 
       {/* Template summary */}
       {state.template && (
         <section>
           <SectionHeader>Helper</SectionHeader>
-          <div className="flex items-center gap-2 rounded-md bg-[hsl(var(--muted))] p-3">
+          <div className="flex items-center gap-2 rounded-xl bg-[hsl(var(--muted))] p-3">
             {state.template.icon && <span>{state.template.icon}</span>}
-            <span className="text-sm font-medium">{state.template.name}</span>
+            <span className="font-serif text-sm font-medium">{state.template.name}</span>
           </div>
         </section>
       )}
@@ -353,17 +323,17 @@ function ConfirmStep({
       {contractPreview && (
         <section>
           <SectionHeader>Permissions</SectionHeader>
-          <div className="rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-3 text-sm">
+          <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-3 text-sm">
             {contractPreview.tool_policy && (
               <div className="mb-2">
                 <span className="text-[hsl(var(--muted-foreground))]">Tools: </span>
                 {contractPreview.tool_policy.allowed.length > 0 && (
-                  <span className="text-green-600 dark:text-green-400">
+                  <span className="text-green-600">
                     {contractPreview.tool_policy.allowed.length} allowed
                   </span>
                 )}
                 {contractPreview.tool_policy.blocked.length > 0 && (
-                  <span className="ml-2 text-red-600 dark:text-red-400">
+                  <span className="ml-2 text-red-600">
                     {contractPreview.tool_policy.blocked.length} blocked
                   </span>
                 )}
@@ -393,8 +363,8 @@ function ConfirmStep({
         </section>
       )}
 
-      {/* Trust notice - non-negotiable */}
-      <div className="rounded-md border border-orange-500/30 bg-orange-500/10 p-3 text-sm text-orange-600 dark:text-orange-400">
+      {/* Trust notice */}
+      <div className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--muted))] p-3 text-sm text-[hsl(var(--muted-foreground))]">
         By starting this task, you agree to the permissions and constraints above. The agent will
         request approval for sensitive actions.
       </div>
@@ -472,38 +442,41 @@ export function NewTaskWizard({
 
   return (
     <div className={cn('flex h-full flex-col', className)}>
-      {/* Header */}
+      {/* Header with progress bar */}
       <div className="border-b border-[hsl(var(--border))] p-6">
-        <h2 className="mb-4 text-lg font-semibold">New Task</h2>
-        <StepIndicator steps={STEPS} currentIndex={currentIndex} />
+        <h2 className="mb-4 font-serif text-lg">New Task</h2>
+        <ProgressBar steps={STEPS} currentIndex={currentIndex} />
       </div>
 
       {/* Step content */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <h3 className="mb-4 text-base font-medium">{STEP_LABELS[currentStep]}</h3>
-        {currentStep === 'goal' && (
-          <GoalStep
-            value={state.goal}
-            onChange={(goal) => setState((prev) => ({ ...prev, goal }))}
-          />
-        )}
-        {currentStep === 'template' && (
-          <TemplateStep
-            templates={templates}
-            selected={state.template}
-            onSelect={(template) => setState((prev) => ({ ...prev, template }))}
-          />
-        )}
-        {currentStep === 'scope' && (
-          <ScopeStep
-            availableScopes={availableScopes}
-            selectedScopes={state.scopes}
-            onToggle={toggleScope}
-          />
-        )}
-        {currentStep === 'confirm' && (
-          <ConfirmStep state={state} contractPreview={contractPreview} />
-        )}
+      <div className="relative flex-1 overflow-y-auto p-6">
+        <span className="step-watermark">{STEP_NUMBERS[currentStep]}</span>
+        <div className="relative z-10">
+          <h3 className="mb-4 text-balance font-serif text-base">{STEP_LABELS[currentStep]}</h3>
+          {currentStep === 'goal' && (
+            <GoalStep
+              value={state.goal}
+              onChange={(goal) => setState((prev) => ({ ...prev, goal }))}
+            />
+          )}
+          {currentStep === 'template' && (
+            <TemplateStep
+              templates={templates}
+              selected={state.template}
+              onSelect={(template) => setState((prev) => ({ ...prev, template }))}
+            />
+          )}
+          {currentStep === 'scope' && (
+            <ScopeStep
+              availableScopes={availableScopes}
+              selectedScopes={state.scopes}
+              onToggle={toggleScope}
+            />
+          )}
+          {currentStep === 'confirm' && (
+            <ConfirmStep state={state} contractPreview={contractPreview} />
+          )}
+        </div>
       </div>
 
       {/* Footer with navigation */}
@@ -512,7 +485,7 @@ export function NewTaskWizard({
           type="button"
           onClick={currentIndex === 0 ? onCancel : goBack}
           className={cn(
-            'rounded-md px-4 py-2 text-sm font-medium',
+            'rounded-lg px-4 py-2 text-sm font-medium',
             'transition-colors duration-150',
             'border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]',
           )}
@@ -524,12 +497,16 @@ export function NewTaskWizard({
             type="button"
             onClick={handleSubmit}
             className={cn(
-              'rounded-md px-4 py-2 text-sm font-medium',
+              'inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium',
               'transition-colors duration-150',
-              'bg-[hsl(var(--foreground))] text-[hsl(var(--background))]',
+              'bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]',
               'hover:opacity-90',
             )}
           >
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-green-500" />
+            </span>
             Start Task
           </button>
         ) : (
@@ -538,9 +515,9 @@ export function NewTaskWizard({
             onClick={goNext}
             disabled={!canGoNext()}
             className={cn(
-              'rounded-md px-4 py-2 text-sm font-medium',
+              'rounded-lg px-4 py-2 text-sm font-medium',
               'transition-colors duration-150',
-              'bg-[hsl(var(--foreground))] text-[hsl(var(--background))]',
+              'bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]',
               'hover:opacity-90',
               'disabled:cursor-not-allowed disabled:opacity-50',
             )}

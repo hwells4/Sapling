@@ -8,7 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // Using Tailwind defaults as per ui-skills constraint
+      fontFamily: {
+        serif: ['var(--font-instrument-serif)', 'serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
+        pixel: ['var(--font-silkscreen)', 'monospace'],
+      },
     },
   },
   plugins: [],

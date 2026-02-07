@@ -11,47 +11,44 @@ interface AppShellProps {
 }
 
 /**
- * Three-pane application shell inspired by Cursor's layout.
+ * Three-pane application shell with editorial warm aesthetic.
  *
- * Layout:
- * - Left: Sidebar (work + library) - collapsible
- * - Center: Main content (run canvas)
- * - Right: Inspector panel (compliance + controls) - collapsible
- *
- * Uses h-dvh instead of h-screen per ui-skills constraint.
- * Respects safe-area-inset for fixed elements.
+ * Three-surface layering:
+ * - Left: Dark sidebar (near-black with warm undertone)
+ * - Center: Warm cream main area
+ * - Right: White inspector panel
  */
 export function AppShell({ sidebar, main, inspector, className }: AppShellProps) {
   return (
     <div
       className={cn(
         'flex h-dvh w-full overflow-hidden',
-        // Respect safe-area-inset for mobile
         'safe-area-inset',
         className,
       )}
     >
-      {/* Left Sidebar */}
+      {/* Left Sidebar — dark surface */}
       <aside
         className={cn(
-          'flex h-full w-64 shrink-0 flex-col',
-          'border-r border-[hsl(var(--border))]',
-          'bg-[hsl(var(--muted))]',
+          'flex h-full w-72 shrink-0 flex-col',
+          'bg-[hsl(var(--sidebar-bg))]',
         )}
       >
         {sidebar}
       </aside>
 
-      {/* Center Main Content */}
-      <main className="flex h-full flex-1 flex-col overflow-hidden">{main}</main>
+      {/* Center Main Content — warm cream */}
+      <main className="flex h-full flex-1 flex-col overflow-hidden bg-[hsl(var(--background))]">
+        {main}
+      </main>
 
-      {/* Right Inspector Panel */}
+      {/* Right Inspector Panel — white card surface */}
       {inspector && (
         <aside
           className={cn(
             'flex h-full w-80 shrink-0 flex-col',
             'border-l border-[hsl(var(--border))]',
-            'bg-[hsl(var(--muted))]',
+            'bg-[hsl(var(--card))]',
           )}
         >
           {inspector}

@@ -81,7 +81,7 @@ interface ApprovalRequestProps {
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
+    <h4 className="mb-2 font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
       {children}
     </h4>
   )
@@ -121,9 +121,9 @@ function TimeoutCountdown({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 rounded-md px-3 py-2 text-sm tabular-nums',
+        'flex items-center gap-2 rounded-lg px-3 py-2 font-pixel text-[10px] tabular-nums',
         isUrgent
-          ? 'bg-red-500/10 text-red-600 dark:text-red-400'
+          ? 'bg-red-500/10 text-red-600'
           : 'bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]',
       )}
     >
@@ -207,7 +207,7 @@ function EmailPreviewRenderer({ preview }: { preview: EmailPreview }) {
         <SectionHeader>Body</SectionHeader>
         {preview.html_body ? (
           <div
-            className="prose prose-sm max-w-none dark:prose-invert"
+            className="prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: preview.html_body }}
           />
         ) : (
@@ -247,14 +247,14 @@ function PRPreviewRenderer({ preview }: { preview: PRPreview }) {
         </div>
         <div className="font-medium">{preview.title}</div>
         {preview.description && (
-          <div className="text-[hsl(var(--muted-foreground))]">{preview.description}</div>
+          <div className="text-pretty text-[hsl(var(--muted-foreground))]">{preview.description}</div>
         )}
       </div>
 
       {/* Diff stats */}
-      <div className="flex items-center gap-4 rounded-md bg-[hsl(var(--muted))] px-3 py-2 text-sm">
-        <span className="text-green-600 dark:text-green-400">+{preview.additions}</span>
-        <span className="text-red-600 dark:text-red-400">-{preview.deletions}</span>
+      <div className="flex items-center gap-4 rounded-lg bg-[hsl(var(--muted))] px-3 py-2 text-sm">
+        <span className="text-green-600">+{preview.additions}</span>
+        <span className="text-red-600">-{preview.deletions}</span>
         <span className="text-[hsl(var(--muted-foreground))]">
           {preview.files_changed.length} file{preview.files_changed.length !== 1 ? 's' : ''} changed
         </span>
@@ -270,7 +270,7 @@ function PRPreviewRenderer({ preview }: { preview: PRPreview }) {
                 type="button"
                 onClick={() => file.patch && toggleFile(file.path)}
                 className={cn(
-                  'flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-sm',
+                  'flex w-full items-center gap-2 rounded-lg px-2 py-1 text-left text-sm',
                   'hover:bg-[hsl(var(--muted))]',
                   file.patch && 'cursor-pointer',
                 )}
@@ -285,8 +285,8 @@ function PRPreviewRenderer({ preview }: { preview: PRPreview }) {
                   )}
                 />
                 <span className="flex-1 truncate font-mono text-xs">{file.path}</span>
-                <span className="text-xs text-green-600 dark:text-green-400">+{file.additions}</span>
-                <span className="text-xs text-red-600 dark:text-red-400">-{file.deletions}</span>
+                <span className="text-xs text-green-600">+{file.additions}</span>
+                <span className="text-xs text-red-600">-{file.deletions}</span>
                 {file.patch && (
                   <svg
                     className={cn(
@@ -305,13 +305,13 @@ function PRPreviewRenderer({ preview }: { preview: PRPreview }) {
                 )}
               </button>
               {file.patch && expandedFiles.has(file.path) && (
-                <pre className="mt-1 max-h-48 overflow-auto rounded-md bg-[hsl(var(--background))] p-2 font-mono text-xs">
+                <pre className="mt-1 max-h-48 overflow-auto rounded-lg bg-[hsl(var(--background))] p-2 font-mono text-xs">
                   {file.patch.split('\n').map((line, i) => (
                     <div
                       key={i}
                       className={cn(
-                        line.startsWith('+') && !line.startsWith('+++') && 'bg-green-500/10 text-green-600 dark:text-green-400',
-                        line.startsWith('-') && !line.startsWith('---') && 'bg-red-500/10 text-red-600 dark:text-red-400',
+                        line.startsWith('+') && !line.startsWith('+++') && 'bg-green-500/10 text-green-600',
+                        line.startsWith('-') && !line.startsWith('---') && 'bg-red-500/10 text-red-600',
                         line.startsWith('@@') && 'text-[hsl(var(--muted-foreground))]',
                       )}
                     >
@@ -354,12 +354,12 @@ function CalendarPreviewRenderer({ preview }: { preview: CalendarPreview }) {
     <div className="flex flex-col gap-4">
       {/* Event title and time */}
       <div className="space-y-2">
-        <div className="text-lg font-medium">{preview.title}</div>
+        <div className="font-serif text-lg">{preview.title}</div>
         <div className="flex flex-wrap items-center gap-2 text-sm text-[hsl(var(--muted-foreground))]">
           <span>{formatTime(preview.start_time)}</span>
           <span>→</span>
           <span>{formatTime(preview.end_time)}</span>
-          <span className="rounded bg-[hsl(var(--muted))] px-2 py-0.5 text-xs">
+          <span className="rounded bg-[hsl(var(--muted))] px-2 py-0.5 font-pixel text-[10px]">
             {getDuration()}
           </span>
         </div>
@@ -382,9 +382,9 @@ function CalendarPreviewRenderer({ preview }: { preview: CalendarPreview }) {
               key={attendee.email}
               className={cn(
                 'flex items-center gap-2 rounded-full px-3 py-1 text-sm',
-                attendee.status === 'accepted' && 'bg-green-500/10 text-green-600 dark:text-green-400',
-                attendee.status === 'declined' && 'bg-red-500/10 text-red-600 dark:text-red-400',
-                attendee.status === 'tentative' && 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
+                attendee.status === 'accepted' && 'bg-green-500/10 text-green-600',
+                attendee.status === 'declined' && 'bg-red-500/10 text-red-600',
+                attendee.status === 'tentative' && 'bg-yellow-500/10 text-yellow-600',
                 attendee.status === 'pending' && 'bg-[hsl(var(--muted))] text-[hsl(var(--foreground))]',
               )}
             >
@@ -396,8 +396,8 @@ function CalendarPreviewRenderer({ preview }: { preview: CalendarPreview }) {
 
       {/* Conflicts warning */}
       {preview.conflicts && preview.conflicts.length > 0 && (
-        <div className="rounded-md border border-orange-500/30 bg-orange-500/10 p-3">
-          <div className="flex items-center gap-2 text-sm font-medium text-orange-600 dark:text-orange-400">
+        <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3">
+          <div className="flex items-center gap-2 text-sm font-medium text-yellow-600">
             <svg className="size-4" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
             </svg>
@@ -430,7 +430,7 @@ function CalendarPreviewRenderer({ preview }: { preview: CalendarPreview }) {
 
 function GenericPreviewRenderer({ preview }: { preview: Record<string, unknown> }) {
   return (
-    <div className="rounded-md bg-[hsl(var(--muted))] p-3">
+    <div className="rounded-lg bg-[hsl(var(--muted))] p-3">
       <pre className="overflow-auto text-xs">
         {JSON.stringify(preview, null, 2)}
       </pre>
@@ -491,7 +491,7 @@ function ActionButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'flex-1 rounded-md px-4 py-2 text-sm font-medium',
+        'flex-1 rounded-lg px-4 py-2 text-sm font-medium',
         'transition-colors duration-150',
         'disabled:cursor-not-allowed disabled:opacity-50',
         variant === 'approve' && 'bg-green-600 text-white hover:bg-green-700',
@@ -538,13 +538,13 @@ export function ApprovalRequest({
     .replace(/\b\w/g, (c) => c.toUpperCase())
 
   return (
-    <div className={cn('flex flex-col rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))]', className)}>
+    <div className={cn('flex flex-col rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]', className)}>
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[hsl(var(--border))] p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-full bg-orange-500/10">
+          <div className="flex size-10 items-center justify-center rounded-full bg-yellow-500/10">
             <svg
-              className="size-5 text-orange-600 dark:text-orange-400"
+              className="size-5 text-yellow-600"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -556,8 +556,8 @@ export function ApprovalRequest({
             </svg>
           </div>
           <div>
-            <div className="font-medium">Approval Required</div>
-            <div className="text-sm text-[hsl(var(--muted-foreground))]">{actionTypeLabel}</div>
+            <div className="font-serif font-medium">Approval Required</div>
+            <div className="font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">{actionTypeLabel}</div>
           </div>
         </div>
         <TimeoutCountdown
@@ -577,7 +577,7 @@ export function ApprovalRequest({
       {/* Action buttons */}
       <div className="border-t border-[hsl(var(--border))] p-4">
         {isExpired ? (
-          <div className="rounded-md bg-red-500/10 p-3 text-center text-sm text-red-600 dark:text-red-400">
+          <div className="rounded-lg bg-red-500/10 p-3 text-center text-sm text-red-600">
             This approval request has expired. The configured timeout action will be applied.
           </div>
         ) : (

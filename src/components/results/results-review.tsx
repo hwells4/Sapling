@@ -29,7 +29,7 @@ interface ResultsReviewProps {
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-[hsl(var(--muted-foreground))]">
+    <h3 className="mb-3 font-pixel text-[10px] uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
       {children}
     </h3>
   )
@@ -118,10 +118,10 @@ function StatusBadge({ status }: { status: 'draft' | 'final' | 'partial' }) {
   return (
     <span
       className={cn(
-        'rounded-full px-2 py-0.5 text-xs font-medium',
-        status === 'final' && 'bg-green-500/10 text-green-600 dark:text-green-400',
-        status === 'draft' && 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
-        status === 'partial' && 'bg-red-500/10 text-red-600 dark:text-red-400',
+        'rounded-full px-2 py-0.5 font-pixel text-[10px] uppercase tracking-wide',
+        status === 'final' && 'bg-green-500/10 text-green-600',
+        status === 'draft' && 'bg-yellow-500/10 text-yellow-600',
+        status === 'partial' && 'bg-red-500/10 text-red-600',
       )}
     >
       {status}
@@ -153,10 +153,10 @@ function ArtifactCard({
         }
       }}
       className={cn(
-        'flex cursor-pointer items-start gap-3 rounded-lg border p-3',
+        'flex cursor-pointer items-start gap-3 rounded-xl border p-3',
         'transition-colors duration-150',
         selected
-          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--muted))]'
+          ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--foreground))]/5'
           : 'border-[hsl(var(--border))] hover:border-[hsl(var(--muted-foreground))]',
       )}
     >
@@ -170,31 +170,31 @@ function ArtifactCard({
         )}
       >
         {selected && (
-          <svg className="size-3 text-[hsl(var(--background))]" viewBox="0 0 12 12" fill="currentColor">
+          <svg className="size-3 text-white" viewBox="0 0 12 12" fill="currentColor">
             <path d="M9.78 2.97a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L2.22 6.03a.75.75 0 0 1 1.06-1.06l1.72 1.72 3.72-3.72a.75.75 0 0 1 1.06 0Z" />
           </svg>
         )}
       </div>
 
       {/* Icon */}
-      <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]">
         <ArtifactIcon type={artifact.preview_type} />
       </div>
 
       {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="truncate font-medium">
+          <span className="truncate font-serif font-medium">
             {artifact.title || artifact.destination_path.split('/').pop()}
           </span>
           <StatusBadge status={artifact.status} />
         </div>
         {artifact.description && (
-          <p className="mt-0.5 truncate text-sm text-[hsl(var(--muted-foreground))]">
+          <p className="mt-0.5 truncate text-pretty text-sm text-[hsl(var(--muted-foreground))]">
             {artifact.description}
           </p>
         )}
-        <div className="mt-1 flex items-center gap-3 text-xs text-[hsl(var(--muted-foreground))]">
+        <div className="mt-1 flex items-center gap-3 font-pixel text-[10px] text-[hsl(var(--muted-foreground))]">
           <span className="font-mono">{artifact.destination_path}</span>
           <span>{formatBytes(artifact.size_bytes)}</span>
         </div>
@@ -211,21 +211,21 @@ function ReceiptSummary({ receipt }: { receipt: Receipt }) {
     <section>
       <SectionHeader>Receipt</SectionHeader>
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-md bg-[hsl(var(--muted))] p-3">
-          <div className="text-2xl font-semibold tabular-nums">{receipt.files_read}</div>
-          <div className="text-xs text-[hsl(var(--muted-foreground))]">Files read</div>
+        <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+          <div className="font-serif text-2xl tabular-nums">{receipt.files_read}</div>
+          <div className="font-pixel text-[10px] text-[hsl(var(--muted-foreground))]">Files read</div>
         </div>
-        <div className="rounded-md bg-[hsl(var(--muted))] p-3">
-          <div className="text-2xl font-semibold tabular-nums">{receipt.files_written}</div>
-          <div className="text-xs text-[hsl(var(--muted-foreground))]">Files written</div>
+        <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+          <div className="font-serif text-2xl tabular-nums">{receipt.files_written}</div>
+          <div className="font-pixel text-[10px] text-[hsl(var(--muted-foreground))]">Files written</div>
         </div>
-        <div className="rounded-md bg-[hsl(var(--muted))] p-3">
-          <div className="text-2xl font-semibold tabular-nums">{receipt.actions_proposed}</div>
-          <div className="text-xs text-[hsl(var(--muted-foreground))]">Actions proposed</div>
+        <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+          <div className="font-serif text-2xl tabular-nums">{receipt.actions_proposed}</div>
+          <div className="font-pixel text-[10px] text-[hsl(var(--muted-foreground))]">Actions proposed</div>
         </div>
-        <div className="rounded-md bg-[hsl(var(--muted))] p-3">
-          <div className="text-2xl font-semibold tabular-nums">{receipt.actions_executed}</div>
-          <div className="text-xs text-[hsl(var(--muted-foreground))]">Actions executed</div>
+        <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+          <div className="font-serif text-2xl tabular-nums">{receipt.actions_executed}</div>
+          <div className="font-pixel text-[10px] text-[hsl(var(--muted-foreground))]">Actions executed</div>
         </div>
       </div>
     </section>
@@ -261,10 +261,10 @@ function EmptyState({ isRunning }: { isRunning: boolean }) {
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
       {isRunning ? (
         <>
-          <Spinner className="size-8 text-[hsl(var(--muted-foreground))]" />
+          <Spinner className="size-8 text-green-500" />
           <div>
-            <div className="font-medium">Working...</div>
-            <div className="text-sm text-[hsl(var(--muted-foreground))]">
+            <div className="font-serif font-medium">Working...</div>
+            <div className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">
               Deliverables will appear here as they are created
             </div>
           </div>
@@ -285,8 +285,8 @@ function EmptyState({ isRunning }: { isRunning: boolean }) {
             </svg>
           </div>
           <div>
-            <div className="font-medium">No deliverables yet</div>
-            <div className="text-sm text-[hsl(var(--muted-foreground))]">
+            <div className="font-serif font-medium">No deliverables yet</div>
+            <div className="text-pretty text-sm text-[hsl(var(--muted-foreground))]">
               Start a run to generate artifacts
             </div>
           </div>
@@ -298,13 +298,6 @@ function EmptyState({ isRunning }: { isRunning: boolean }) {
 
 /**
  * ResultsReview component - displays run results with deliverables, receipt, and export
- *
- * Design priorities (per task spec):
- * 1. Deliverables (primary) - artifact list with previews
- * 2. What changed (secondary) - receipt summary
- * 3. Audit trail - link to trace for calibration
- *
- * Artifact-first, not conversation-first.
  */
 export function ResultsReview({
   runId,
@@ -350,8 +343,8 @@ export function ResultsReview({
     <div className={cn('flex h-full flex-col', className)}>
       {/* Header */}
       <div className="border-b border-[hsl(var(--border))] p-4">
-        <h2 className="text-lg font-semibold">Results</h2>
-        <p className="text-sm text-[hsl(var(--muted-foreground))]">Run {runId}</p>
+        <h2 className="font-serif text-lg">Results</h2>
+        <p className="font-pixel text-[10px] tabular-nums text-[hsl(var(--muted-foreground))]">Run {runId}</p>
       </div>
 
       {/* Scrollable content */}
@@ -400,7 +393,7 @@ export function ResultsReview({
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    'flex items-center gap-2 rounded-md border border-[hsl(var(--border))] p-3',
+                    'flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] p-3',
                     'text-sm transition-colors duration-150',
                     'hover:border-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--muted))]',
                   )}
@@ -433,9 +426,9 @@ export function ResultsReview({
             onClick={handleExport}
             disabled={selectedArtifacts.size === 0}
             className={cn(
-              'flex w-full items-center justify-center gap-2 rounded-md px-4 py-2',
+              'flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2',
               'text-sm font-medium transition-colors duration-150',
-              'bg-[hsl(var(--foreground))] text-[hsl(var(--background))]',
+              'bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]',
               'hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50',
             )}
           >

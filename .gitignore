@@ -45,3 +45,5 @@ brain/context/preferences.md
 # Plugin symlinks (user-specific)
 .claude/loop-agents
 .claude/loop-completions.json
+
+.env.local

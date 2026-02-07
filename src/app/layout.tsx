@@ -1,10 +1,26 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Instrument_Serif, Inter, Silkscreen } from 'next/font/google'
+import { ConvexClientProvider } from '@/components/convex-provider'
 import './globals.css'
+
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-instrument-serif',
+  display: 'swap',
+})
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+})
+
+const silkscreen = Silkscreen({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-silkscreen',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -19,7 +35,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
+      <body
+        className={`${instrumentSerif.variable} ${inter.variable} ${silkscreen.variable} font-sans antialiased`}
+      >
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+      </body>
     </html>
   )
 }

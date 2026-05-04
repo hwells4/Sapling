@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Skill Evaluation Engine v2.0 (Python)
 

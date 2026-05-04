@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Ensure today's daily note exists, creating from schema if needed.
 

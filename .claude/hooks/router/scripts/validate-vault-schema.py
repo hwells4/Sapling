@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 PreToolUse hook to validate vault writes against schemas.
 
@@ -26,7 +27,6 @@ def get_schema_path(file_path: str) -> str | None:
     # Mapping from folder patterns to schema files
     # NOTE: Order matters! More specific paths must come first
     folder_to_schema = [
-        ("brain/traces/agents/", "schemas/vault/chatroom.yaml"),
         ("brain/calls/", "schemas/vault/call.yaml"),
         ("brain/entities/", "schemas/vault/entity.yaml"),
         ("brain/inbox/", "schemas/vault/inbox.yaml"),

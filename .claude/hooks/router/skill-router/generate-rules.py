@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Generate skill-rules.json from SKILL.md files.
 
@@ -85,7 +86,7 @@ def extract_auto_trigger(content: str) -> dict:
             triggers["keywords"].append(bullet)
 
     # Look for intent patterns (verbs + objects)
-    intent_verbs = ["write", "create", "add", "fix", "debug", "implement", "build", "draft", "generate", "make"]
+    intent_verbs = ["write", "create", "add", "fix", "debug", "implement", "build", "draft", "generate", "make", "email", "compose", "send", "reply", "respond"]
     for verb in intent_verbs:
         if verb in trigger_content.lower():
             # Extract context around the verb

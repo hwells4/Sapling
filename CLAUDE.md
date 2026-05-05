@@ -128,7 +128,7 @@ bd sync                     # Push to git
 | `/today` | Create or open today's daily note |
 | `/weekly` | Weekly review process |
 | `/create-skill` | Create or modify Claude Code skills |
-| `/create-hook` | Create, edit, analyze, or debug hooks |
+| `/create-hooks:create-hook` | Create, edit, analyze, or debug hooks from the create-hooks plugin |
 | `/ideate` | Generate and winnow improvement ideas |
 | `/refine` | Iteratively refine plans or beads |
 | `/commit` | Create an atomic git commit |

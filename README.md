@@ -41,7 +41,6 @@ claude
 | `/today` | Create/open today's daily note |
 | `/task` | Start tracked work |
 | `/create-skill` | Create or modify Claude Code skills |
-| `/create-hook` | Create, edit, analyze, or debug hooks |
 | `/ideate` | Generate and winnow improvement ideas |
 | `/refine` | Iteratively refine plans or beads |
 | `/commit` | Create an atomic git commit |
@@ -64,6 +63,14 @@ SaplingOS/
 ## Local Hooks
 
 Hooks are integral to Sapling. The repo registers the core hook router, and onboarding writes a local profile so hooks can adapt to the user's machine.
+
+Hook authoring comes from the maintained `create-hooks` plugin, not from a vendored Sapling skill:
+
+```bash
+/plugin install github:hwells4/create-hooks
+```
+
+Use `/create-hooks:create-hook` to create, edit, analyze, or debug hooks.
 
 Run `/onboard` to choose a hook profile, or run the setup script directly:
 

@@ -24,8 +24,7 @@
     ".claude/skills/create-skill": "create-skill",
     ".claude/skills/github": "github",
     ".claude/skills/generate-stories": "generate-stories",
-    ".claude/skills/generate-visuals": "generate-visuals",
-    ".claude/skills/create-hook": "create-hook"
+    ".claude/skills/generate-visuals": "generate-visuals"
   },
   "skills": {
     "generate-prd": {
@@ -302,40 +301,6 @@
           "banana",
           "generate",
           "via"
-        ],
-        "keywordPatterns": [],
-        "intentPatterns": [],
-        "pathPatterns": []
-      },
-      "excludePatterns": [],
-      "source": "description"
-    },
-    "create-hook": {
-      "description": "Quickly spin up Claude Code hooks for automation. Generates bash scripts, Python handlers, and settings.json configuration for PreToolUse, PostToolUse, SessionStart, Stop, and other hook events.",
-      "priority": 5,
-      "triggers": {
-        "keywords": [
-          "configuration",
-          "stop",
-          "posttooluse",
-          "json",
-          "scripts",
-          "settings",
-          "pretooluse",
-          "hook",
-          "hooks",
-          "events",
-          "spin",
-          "sessionstart",
-          "automation",
-          "generates",
-          "handlers",
-          "create",
-          "claude",
-          "bash",
-          "quickly",
-          "python",
-          "code"
         ],
         "keywordPatterns": [],
         "intentPatterns": [],

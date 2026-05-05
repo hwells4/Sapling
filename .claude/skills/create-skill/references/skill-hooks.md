@@ -45,7 +45,7 @@ hooks:
 2. **Prompt-based Stop hook** in frontmatter (works for forked/subagent skills)
 3. **PostToolUse validation** — validate after specific tool calls rather than at completion
 
-For pattern 1 (most reliable): invoke `create-hook` with intent "skill stop hook" → `workflows/create-skill-stop-hook.md`
+For pattern 1 (most reliable): invoke `/create-hooks:create-hook` with intent "skill stop hook".
 
 ## Environment Variables
 
@@ -75,7 +75,7 @@ Runs once per session even if skill triggers multiple times. Resets on session r
 |--------|---------------|-----------------|
 | Hook only relevant when skill active | Yes | No |
 | Hook should be portable with skill | Yes | No |
-| Need reliable Stop validation | No | Yes — invoke `create-hook` |
+| Need reliable Stop validation | No | Yes — invoke `/create-hooks:create-hook` |
 | Project-wide policy enforcement | No | Yes |
 | Hook requires tool access | No | Yes (agent type) |
 
@@ -85,10 +85,10 @@ If a skill frequently fails to complete its success criteria:
 
 1. Check if the skill has clear `<success_criteria>` defined
 2. If yes but agent still skips steps → **build a skill stop hook**
-3. Invoke: `/create-hook` → "skill stop hook" → select the target skill
+3. Invoke: `/create-hooks:create-hook` → "skill stop hook" → select the target skill
 4. This creates a global Stop hook that validates the skill's output
 
-The stop hook reads the skill's success criteria and blocks completion until met. See `create-hook/workflows/create-skill-stop-hook.md` for the full pattern.
+The stop hook reads the skill's success criteria and blocks completion until met.
 
 ## Script Organization
 

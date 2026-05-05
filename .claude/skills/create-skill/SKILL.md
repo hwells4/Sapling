@@ -67,7 +67,7 @@ What would you like to do?
 8. **Upgrade simple to router** → workflows/upgrade-to-router.md
 9. **Make skill adaptive/self-healing** → references/skill-evolution.md
 10. **Add hooks to a skill** → references/skill-hooks.md
-11. **Fix unreliable skill completion** → references/skill-hooks.md → invoke `create-hook`
+11. **Fix unreliable skill completion** → references/skill-hooks.md → invoke `/create-hooks:create-hook`
 
 Ask the user which they need, or infer from their request.
 </intake>
@@ -86,7 +86,7 @@ Ask the user which they need, or infer from their request.
 | Convert simple to complex | - | workflows/upgrade-to-router.md |
 | Make skill adaptive/self-healing | - | references/skill-evolution.md |
 | Add hooks to a skill | - | references/skill-hooks.md |
-| Skill completion unreliable | - | references/skill-hooks.md → `create-hook` |
+| Skill completion unreliable | - | references/skill-hooks.md → `/create-hooks:create-hook` |
 </routing>
 
 <archetype_selection>
@@ -125,7 +125,7 @@ Help user select archetype:
 | references/model-testing.md | Haiku/Sonnet/Opus testing patterns |
 | references/scripts-pattern.md | When and how to use scripts/ folder |
 | references/skill-evolution.md | learnings.md, living knowledge files, self-healing patterns |
-| references/skill-hooks.md | Frontmatter hooks, Stop hook gotcha, when to escalate to create-hook |
+| references/skill-hooks.md | Frontmatter hooks, Stop hook gotcha, when to escalate to the create-hooks plugin |
 | references/common-patterns.md | Templates, examples, anti-patterns, validation |
 | references/be-clear-and-direct.md | Clarity, specificity, edge cases, decision criteria |
 | references/skill-structure.md | Directory structure, file organization patterns |

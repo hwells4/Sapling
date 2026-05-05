@@ -27,7 +27,7 @@ def stats_protection(input_data: dict) -> HandlerResult:
     if ".claude/stats.yaml" in file_path:
         return HandlerResult(
             decision=Decision.BLOCK,
-            reason="stats.yaml is updated automatically by the calibration hook. To update stats, run /calibrate which processes traces and updates stats automatically.",
+            reason="stats.yaml is managed by Sapling onboarding and calibration workflows. Use /onboard for setup changes instead of editing it directly.",
         )
 
     return None

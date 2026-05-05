@@ -1,18 +1,18 @@
 # Sapling OS
 
-A personal knowledge system built on Obsidian + Claude Code that learns user preferences over time.
+A personal knowledge system built on Obsidian + Claude Code.
 
-You manage this system: a structured vault (`brain/`), reusable workflows (`skills/`), and a learning loop that improves from decisions. Your job is to execute tasks with minimal context pollution while capturing decisions that make the system smarter.
+You manage this system: a structured vault (`brain/`), reusable workflows (`.claude/skills/`), hooks, and beads-backed task tracking. Your job is to execute tasks with minimal context pollution and save durable generated work in the right place.
 
-**Core loop:** User requests → You execute → Decisions traced → Skills improve → Better execution next time.
+**Core loop:** User requests → You execute → Durable outputs go to `brain/outputs/` → Tasks persist in beads → Hooks keep the workspace consistent.
 
 <querying>
 **By Path (fastest):**
 - `brain/entities/` → People and companies
 - `brain/calls/` → Call notes
 - `brain/outputs/` → Deliverables (posts, PRDs, emails)
-- `brain/traces/` → Decision traces
-- `brain/inbox/` → Tasks pending action
+- `brain/traces/` → Legacy learning traces
+- `brain/inbox/` → Legacy inbox items; prefer beads for active tasks
 - `brain/context/` → Identity, business, voice
 
 **By Tag (most flexible):**
@@ -44,14 +44,41 @@ grep -r "\[\[entities/john-doe\]\]" brain/
 </querying>
 
 <tools>
-**Beads (`bd`):** File-based issue tracking in `.beads/`. Use for multi-session work, dependencies, discovered tasks. Commands: `bd ready`, `bd create`, `bd close`, `bd sync`. See `agents.md` for full reference.
+**Beads (`bd`):** File-based issue tracking in `.beads/`. Use for multi-session work, dependencies, discovered tasks. Commands: `bd ready`, `bd create`, `bd close`, `bd sync`. See `AGENTS.md` for full reference.
 
-**Skills:** Reusable workflows in `.claude/skills/`. Each skill has a `SKILL.md` defining its purpose, triggers, and workflow. Invoked via slash commands (`/task`, `/onboard`, `/calibrate`).
+**Skills:** Reusable workflows in `.claude/skills/`. Each skill has a `SKILL.md` defining its purpose, triggers, and workflow. Invoked via slash commands such as `/task` and `/onboard`.
 
 **Commands:** Slash commands in `.claude/commands/`. Lightweight wrappers that may invoke skills or run standalone workflows.
 
-**Hooks:** Event handlers in `.claude/hooks/`. Run on file edits (schema validation), session start, etc.
+**Hooks:** Event handlers in `.claude/hooks/`. Hooks are core Sapling behavior. Run `.claude/hooks/setup-local-hooks.py` during onboarding to tune the local profile for this machine.
 </tools>
+
+<outputs>
+Agents must not scatter generated work across arbitrary folders.
+
+**Default behavior:**
+- If the user asks for a durable artifact (draft, PRD, proposal, research summary, post, email, plan, report, script for later use), create an output in `brain/outputs/`.
+- If the user asks a question, wants brainstorming, or has not asked to save anything, answer in chat only.
+- If editing source code, schemas, skills, commands, hooks, or docs, edit the relevant project files directly.
+- If unsure whether something should be saved, keep it in chat and ask before creating a file.
+
+**Output path:** `brain/outputs/{YYYY-MM-DD}-{slug}.md`
+
+**Required frontmatter:**
+```yaml
+---
+schema_version: 1.1.0
+date: YYYY-MM-DD
+type: research
+status: draft
+tags:
+  - date/YYYY-MM-DD
+  - output
+  - output/research
+  - status/draft
+---
+```
+</outputs>
 
 <context_engineering>
 The context window is a public good. Every token competes for attention.
@@ -61,28 +88,13 @@ The context window is a public good. Every token competes for attention.
 - Load skill content only when triggered (~1,500 tokens)
 - Load references only when workflows require them (0 tokens until needed)
 
-**Sub-Agent Trigger Rule:**
-Spawn sub-agents when reading OR editing 3+ files, regardless of task complexity.
-Subagents are for context management, not complexity. The orchestrator should know *what* was done, not *how* every file looks. Orchestrator receives only summaries, not raw outputs.
-
-**Sub-Agent Output Limits:**
-Max 2,000 words per sub-agent. Return structured proposals or summaries, not prose analysis. Analysis stays in sub-agent context; only actionable output returns to orchestrator.
+**Sub-Agent Rule:**
+Only use sub-agents when the user explicitly asks for parallel agent work. Prefer beads for durable task tracking and concise local reads for ordinary cleanup.
 
 **Context Resumption:**
 After context compaction or session resume, verify actual file state (`git status`, read files) before trusting completion claims from summaries. Summaries may report "done" when work is staged but uncommitted.
 
-**Chatroom Coordination:**
-When spawning 2+ parallel sub-agents, invoke `agent-chatroom` skill first.
 </context_engineering>
-
-<evolution>
-This system learns from decisions. When `/task` completes:
-1. `decision-traces` skill captures meaningful choices
-2. Traces marked with `target_skill` identify improvement opportunities
-3. `/review-traces` (upcoming) proposes skill upgrades
-
-**Litmus Test:** Only capture choices between alternatives that change future behavior with non-obvious reasoning.
-</evolution>
 
 <task_management>
 **Beads (`bd`)** is the single task system. All work—human and agent—lives here.
@@ -112,12 +124,11 @@ bd sync                     # Push to git
 <commands>
 | Command | Purpose |
 |---------|---------|
-| `/task` | Start task with decision tracing |
-| `/today` | Daily note workflow |
+| `/task` | Start tracked work |
+| `/today` | Create or open today's daily note |
 | `/weekly` | Weekly review process |
 | `/commit` | Git commit with Linear sync |
 | `/migrate` | Run schema migrations |
-| `/review-traces` | Upgrade skills from decision traces |
 | `/create-skill` | Create new skills |
 </commands>
 

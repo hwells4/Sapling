@@ -63,7 +63,6 @@ find . -type f -mmin -120 -not -path './.git/*' | head -30
 - Config files if behavior changed (e.g., new env vars)
 
 **Content/output changes** → Look for:
-- Associated traces in `brain/traces/`
 - Source files referenced in output
 - Template files if output format is new
 
@@ -76,7 +75,7 @@ find . -type f -mmin -120 -not -path './.git/*' | head -30
 
 ```bash
 # Check frontmatter for linked files
-grep -l "linked_trace\|related_chatroom\|source:" brain/**/*.md 2>/dev/null
+grep -l "source:\|task_ref:\|published_url:" brain/**/*.md 2>/dev/null
 ```
 
 **When uncertain:** Show user the candidate files and ask which belong together.

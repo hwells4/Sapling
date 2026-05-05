@@ -27,7 +27,6 @@ Each file type has a YAML schema defining:
 schemas/vault/
 ├── call.yaml       # Call notes
 ├── entity.yaml     # People, companies
-├── inbox.yaml      # Tasks pending action
 ├── library.yaml    # Saved content
 ├── output.yaml     # Posts, PRDs, deliverables
 ├── trace.yaml      # Decision traces
@@ -60,7 +59,6 @@ Run `/migrate` to update old files to the current schema version. This keeps you
 |--------|----------|---------|
 | `call` | `brain/calls/` | Call notes and meeting records |
 | `entity` | `brain/entities/` | People and company profiles |
-| `inbox` | `brain/inbox/` | Tasks pending human action |
 | `library` | `brain/library/` | Saved articles, resources |
 | `output` | `brain/outputs/` | Deliverables (posts, PRDs, emails) |
 | `trace` | `brain/traces/` | Decision traces for calibration |

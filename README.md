@@ -1,8 +1,8 @@
 # SaplingOS
 
-A personal operating system built on Claude Code that learns your preferences over time.
+A personal operating system built on Claude Code for local knowledge, hooks, and durable outputs.
 
-**Core idea:** Run `/task` to work with decision tracing. Run `/calibrate` to review decisions and improve the system. The more you use it, the smarter it gets.
+**Core idea:** Run `/onboard` first, then use Sapling as a lightweight personal knowledge base that Claude Code can read and improve with you over time.
 
 ## Quick Start
 
@@ -17,28 +17,29 @@ brew tap steveyegge/beads && brew install bd
 # Clone and setup
 git clone https://github.com/hwells4/SaplingOS.git
 cd SaplingOS
+
+# Prime agent workflow instructions
 bd onboard
 
-# Start using it
+# Start using Sapling
 claude
-/onboard  # First-time setup (~5 min)
+/onboard  # First-time setup, including optional local hooks
 ```
 
 ## What You Get
 
-- **`/task`** - Start work with automatic decision tracing
-- **`/calibrate`** - Review your decisions and improve the system over time
-- **Structured vault** - Obsidian-compatible knowledge base with queryable schemas
+- **`/onboard`** - First-run setup for context files, optional services, and local hooks
+- **`/today`** - Create or open today's daily note
+- **Structured vault** - Obsidian-compatible knowledge base with a PARA-inspired direction
 - **Beads integration** - File-based issue tracking that syncs with git
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/task` | Start a task with decision tracing |
-| `/calibrate` | Review decision traces and improve skills |
 | `/onboard` | Initial setup - populate context |
 | `/today` | Create/open today's daily note |
+| `/task` | Start tracked work |
 | `/commit` | Git commit with Linear issue sync |
 | `/push` | Push to remote |
 
@@ -51,10 +52,30 @@ SaplingOS/
 │   ├── context/        # About you, your business, your voice
 │   ├── entities/       # People and companies
 │   ├── outputs/        # Deliverables (posts, PRDs, emails)
-│   └── traces/         # Decision traces for calibration
+│   └── notes/          # Daily/weekly/monthly notes
 ├── schemas/            # YAML schemas for file structure
 └── .claude/            # Commands, skills, and hooks
 ```
+
+## Local Hooks
+
+Hooks are integral to Sapling. The repo registers the core hook router, and onboarding writes a local profile so hooks can adapt to the user's machine.
+
+Run `/onboard` to choose a hook profile, or run the setup script directly:
+
+```bash
+python3 .claude/hooks/setup-local-hooks.py --profile recommended
+```
+
+Profiles:
+
+| Profile | Use When | Includes |
+|---------|----------|----------|
+| `minimal` | You want the safest setup | Daily-note session hook only |
+| `recommended` | Default for most users | Daily note, schema/prose checks, skill routing when supported |
+| `full` | You explicitly want automation | Recommended hooks plus git auto-commit/push |
+
+The script writes `.claude/settings.local.json`, which is ignored by git. Unsupported optional hooks disable themselves instead of failing the session.
 
 ## Optional Services
 

@@ -13,9 +13,9 @@ export CURRENT_WEEK=$(date +%Y-W%V)
 # Daily note path
 export DAILY_NOTE="$VAULT_PATH/brain/notes/daily/$TODAY.md"
 
-# Verify vault structure (check for brain/CLAUDE.md)
-if [ ! -f "$VAULT_PATH/brain/CLAUDE.md" ]; then
-    echo "Note: Not in a vault root directory (no CLAUDE.md found)"
+# Verify vault structure
+if [ ! -d "$VAULT_PATH/brain" ] || [ ! -f "$VAULT_PATH/CLAUDE.md" ]; then
+    echo "Note: Not in a SaplingOS root directory"
 fi
 
 # Output session info

@@ -13,14 +13,6 @@ except ImportError:
 
 # Map skill names to their schema files and which example block to extract
 SKILL_SCHEMAS = {
-    "decision-traces": {
-        "schema": "schemas/vault/trace.yaml",
-        "example_key": "example_trace:",
-    },
-    "today": {
-        "schema": "schemas/vault/daily-note.yaml",
-        "example_key": "example:",
-    },
     "weekly": {
         "schema": "schemas/vault/weekly-note.yaml",
         "example_key": "example:",

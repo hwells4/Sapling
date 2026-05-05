@@ -37,7 +37,7 @@ to tailor this system to your preferences and get you started on the right foot.
 Here's what we'll cover:
   1. Pick your companion creature (the fun part!)
   2. Learn a bit about your work
-  3. Set up optional features
+  3. Set up optional features and local hooks
   4. Generate your personal context files
 
 Everything except the creature is skippable—you can always add more later.
@@ -232,6 +232,39 @@ options:
 
 **If "Skip":** Mark `image_gen_skipped: true`, continue
 
+### Step 8.5: Local Hook Setup
+Explain:
+
+```
+Sapling hooks are core to the system. This step tunes the local hook profile
+so optional behavior matches the tools available on this machine.
+```
+
+Use AskUserQuestion:
+
+```yaml
+question: "Which local hook profile should I install?"
+header: "Hooks"
+multiSelect: false
+options:
+  - label: "Recommended"
+    description: "Daily note, schema/prose checks, and skill routing when supported"
+  - label: "Minimal"
+    description: "Safest setup: daily note session hook only"
+  - label: "Full automation"
+    description: "Adds git auto-commit/push hooks; only choose this if you want that"
+```
+
+Run the selected command:
+
+```bash
+python3 .claude/hooks/setup-local-hooks.py --profile recommended
+python3 .claude/hooks/setup-local-hooks.py --profile minimal
+python3 .claude/hooks/setup-local-hooks.py --profile full
+```
+
+Confirm that `.claude/settings.local.json` was written. If the script reports missing optional tools, continue; it disables unsupported hooks automatically.
+
 ## Phase 4: Generate Context Files
 
 ### Step 9: Generate Files
@@ -268,22 +301,17 @@ How Sapling OS Works:
    These files help me understand you. I reference them when helping
    with tasks, writing in your voice, or making recommendations.
 
-2. **Decision Tracing** (/task)
-   When you start work with /task, I track meaningful decisions—not
-   what you did, but *why* you chose one approach over another.
-
-3. **Calibration** (/calibrate)
-   This is the magic. Run /calibrate periodically and I'll:
-   - Review your decision traces
-   - Identify patterns in your preferences
-   - Propose updates to my skills and behaviors
-   - Tailor myself to work the way YOU work
-
-   After 10 decision traces, your egg hatches!
-
-4. **Daily Notes** (/today)
-   Start each day with /today to capture tasks and context.
+2. **Daily Notes** (/today)
+   Start with /today to create or open the current daily note.
    This becomes the memory that makes me more useful over time.
+
+3. **Tasks** (beads)
+   Beads tracks active work across sessions. Run bd ready to see what
+   can be worked next, and bd close when work is complete.
+
+4. **Advanced Learning** (/task)
+   If you want Sapling to learn from choices over time, /task can capture
+   meaningful decisions as part of larger tracked work.
 
 The more you use it, the better it gets.
 ```
@@ -404,8 +432,8 @@ Invoke `/commit` - it will create an appropriate commit message.
 Ready to get started? Here's what to do next:
 
   /today     - Create your first daily note
-  /task      - Start a task (decisions get traced!)
-  /calibrate - Run after 10+ traces to hatch your egg
+  bd ready   - See available tracked work
+  /task      - Start a larger tracked task
 
 Your egg is waiting. Let's get to work!
 ```

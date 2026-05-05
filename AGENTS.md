@@ -12,6 +12,10 @@ bd close <id>         # Complete work
 bd sync               # Sync with git
 ```
 
+## Output Policy
+
+When an agent creates a durable artifact, save it under `brain/outputs/YYYY-MM-DD-{slug}.md` with output schema frontmatter. If the user did not ask for something to be saved, keep the result in chat. Do not create generated drafts, plans, reports, or research notes in random folders.
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
@@ -37,4 +41,3 @@ bd sync               # Sync with git
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
-

@@ -12,10 +12,13 @@ from router.models import HandlerConfig
 from router.handlers.git import git_auto_commit_stop
 from router.handlers.session_logger import log_session_summary
 
-HANDLERS = [
-    HandlerConfig(fn=log_session_summary, name="session-log-summary"),
-    HandlerConfig(fn=git_auto_commit_stop, name="git-auto-commit-stop"),
-]
+HANDLERS = []
+
+if os.environ.get("SAPLING_ENABLE_SESSION_LOG") == "1":
+    HANDLERS.append(HandlerConfig(fn=log_session_summary, name="session-log-summary"))
+
+if os.environ.get("SAPLING_ENABLE_GIT_HOOKS") == "1":
+    HANDLERS.append(HandlerConfig(fn=git_auto_commit_stop, name="git-auto-commit-stop"))
 
 if __name__ == "__main__":
     dispatch(HANDLERS, "Stop")

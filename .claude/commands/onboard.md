@@ -1,6 +1,6 @@
 # Onboard Command
 
-Interactive onboarding for new Sapling OS users. Collects context through an interview, lets you choose a companion creature, and optionally sets up image generation.
+Interactive onboarding for new Sapling OS users. Collects context through an interview, configures local hook support, and optionally sets up integrations.
 
 ## Usage
 
@@ -32,6 +32,12 @@ Interactive onboarding for new Sapling OS users. Collects context through an int
 - Installs a background daemon that watches for new calls
 - Meeting summaries sync to `brain/calls/` automatically
 
+### Phase 3.6: Local Hook Setup (Recommended)
+- Explain that hooks are core Sapling behavior and can be tuned per machine
+- Offer `minimal`, `recommended`, and `full` profiles
+- Run `.claude/hooks/setup-local-hooks.py --profile {choice}`
+- Use `recommended` unless the user wants no hooks or explicitly wants git auto-commit/push
+
 ### Phase 4: File Generation
 Creates context files in `brain/context/`:
 - `about-me.md` - Your identity and background
@@ -41,9 +47,9 @@ Creates context files in `brain/context/`:
 
 ### Phase 5: Explain the System
 - How context files work
-- How `/task` traces your decisions
-- How `/calibrate` tailors the system to you
-- How your creature evolves
+- How `/today` opens the daily note
+- How beads tracks real work
+- How `/task` can be used for larger tracked workflows
 
 ### Phase 6: Commit & Finish
 - Uses `/commit` to save all generated files
@@ -57,12 +63,7 @@ Creates context files in `brain/context/`:
 | Water | Blue | **Drift** | Flows around obstacles, adaptable |
 | Nature | Green | **Bloom** | Grows organically, cultivates knowledge |
 
-Creatures evolve based on decision traces processed:
-- **Egg**: 0-9 traces
-- **Hatchling**: 10-99 traces (hatches after first `/calibrate`)
-- **Juvenile**: 100-499 traces
-- **Adult**: 500-1499 traces
-- **Legendary**: 1500+ traces
+Creatures are selected during onboarding and stored in `.claude/stats.yaml`.
 
 ## Files Modified
 
@@ -77,8 +78,7 @@ If onboarding is interrupted, progress is saved to `.claude/onboard-state.json`.
 ## Related Commands
 
 - `/today` - Create your first daily note (suggested after onboard)
-- `/calibrate` - Process decision traces (hatches your creature)
-- `/task` - Start a task with decision tracing
+- `/task` - Start tracked work
 
 ---
 *Command Version: 2.0*

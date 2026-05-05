@@ -1,0 +1,313 @@
+{
+  "version": "2.0",
+  "generated": true,
+  "config": {
+    "minConfidenceScore": 3,
+    "maxSkillsToShow": 5,
+    "showMatchReasons": true
+  },
+  "scoring": {
+    "keyword": 2,
+    "keywordPattern": 3,
+    "pathPattern": 4,
+    "directoryMatch": 5,
+    "intentPattern": 4,
+    "contextPattern": 2,
+    "contentPattern": 3
+  },
+  "directoryMappings": {
+    ".claude/skills/generate-prd": "generate-prd",
+    ".claude/skills/migration-workflow": "migration-workflow",
+    ".claude/skills/obsidian-vault-ops": "obsidian-vault-ops",
+    ".claude/skills/plan-refinery": "plan-refinery",
+    ".claude/skills/onboard": "onboard",
+    ".claude/skills/create-skill": "create-skill",
+    ".claude/skills/github": "github",
+    ".claude/skills/generate-stories": "generate-stories",
+    ".claude/skills/generate-visuals": "generate-visuals"
+  },
+  "skills": {
+    "generate-prd": {
+      "description": "Generate PRDs through adaptive questioning. Use when user says \"PRD\", \"spec\", \"plan a feature\", \"what should we build\", or describes a project/feature they want to build. Works for both full project PRDs and feature-level specs.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "what should we build",
+          "says",
+          "build",
+          "full",
+          "level",
+          "want",
+          "works",
+          "they",
+          "feature",
+          "spec",
+          "plan a feature",
+          "project",
+          "user",
+          "questioning",
+          "specs",
+          "plan",
+          "adaptive",
+          "describes",
+          "both",
+          "prds",
+          "prd",
+          "generate"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "migration-workflow": {
+      "description": "Migrate vault files to current schema versions. Use when files have outdated frontmatter, missing schema_version, or need bulk updates to match current schema definitions. Detects, previews, and applies migrations with validation.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "detects",
+          "migrations",
+          "versions",
+          "frontmatter",
+          "match",
+          "applies",
+          "validation",
+          "files",
+          "outdated",
+          "migration",
+          "current",
+          "schema",
+          "migrate",
+          "previews",
+          "bulk",
+          "workflow",
+          "missing",
+          "definitions",
+          "updates",
+          "vault"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "obsidian-vault-ops": {
+      "description": "Read and write Obsidian vault files, manage wiki-links, process markdown with YAML frontmatter. Use when working with vault file operations, creating notes, or managing links.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "read",
+          "frontmatter",
+          "notes",
+          "managing",
+          "operations",
+          "yaml",
+          "manage",
+          "write",
+          "files",
+          "process",
+          "wiki",
+          "markdown",
+          "links",
+          "creating",
+          "ops",
+          "file",
+          "working",
+          "vault",
+          "obsidian"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "plan-refinery": {
+      "description": "Iterative planning refinement using specialized Opus subagents. \"Check your beads N times, implement once.\" Refine beads, synthesize competing plans, and improve markdown plans before burning implementation tokens.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "beads",
+          "check",
+          "implement",
+          "your",
+          "planning",
+          "specialized",
+          "burning",
+          "refinement",
+          "competing",
+          "implementation",
+          "times",
+          "opus",
+          "markdown",
+          "subagents",
+          "improve",
+          "tokens",
+          "plan",
+          "synthesize",
+          "iterative",
+          "plans",
+          "refinery",
+          "refine"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "onboard": {
+      "description": "Onboard new users to SaplingOS. Collects context, configures local hook support, and populates context files.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "configures",
+          "support",
+          "new",
+          "users",
+          "populates",
+          "onboard",
+          "files",
+          "local",
+          "collects",
+          "context",
+          "saplingos",
+          "hook"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "create-skill": {
+      "description": "Create Claude Code skills with context engineering built in. Use when building new skills, auditing existing skills, or adding components to skills. Supports four archetypes: simple, router, orchestrator, and reference.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "adding",
+          "archetypes",
+          "router",
+          "engineering",
+          "built",
+          "new",
+          "existing",
+          "simple",
+          "orchestrator",
+          "four",
+          "supports",
+          "skill",
+          "create",
+          "reference",
+          "claude",
+          "components",
+          "auditing",
+          "building",
+          "context",
+          "code"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "github": {
+      "description": "GitHub repository management via gh CLI. Use for creating repos, cloning, changing visibility, or scaffolding new projects from boilerplates.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "repos",
+          "management",
+          "new",
+          "repository",
+          "cli",
+          "scaffolding",
+          "projects",
+          "github",
+          "cloning",
+          "changing",
+          "creating",
+          "visibility",
+          "via",
+          "boilerplates"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "generate-stories": {
+      "description": "Generate stories from a PRD for autonomous or assisted execution. Use when user says \"generate tasks\", \"break this down\", \"create stories\", or has a PRD they want to execute.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "user",
+          "tasks",
+          "generate",
+          "assisted",
+          "execution",
+          "says",
+          "generate tasks",
+          "break this down",
+          "stories",
+          "autonomous",
+          "prd",
+          "want",
+          "down",
+          "break",
+          "create",
+          "execute",
+          "they",
+          "create stories"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    },
+    "generate-visuals": {
+      "description": "Generate professional images using Google's Gemini image models via nano-banana CLI. Use when creating LinkedIn carousel covers, infographics, or professional graphics.",
+      "priority": 5,
+      "triggers": {
+        "keywords": [
+          "images",
+          "professional",
+          "nano",
+          "linkedin",
+          "cli",
+          "carousel",
+          "image",
+          "models",
+          "covers",
+          "google",
+          "gemini",
+          "visuals",
+          "graphics",
+          "creating",
+          "infographics",
+          "banana",
+          "generate",
+          "via"
+        ],
+        "keywordPatterns": [],
+        "intentPatterns": [],
+        "pathPatterns": []
+      },
+      "excludePatterns": [],
+      "source": "description"
+    }
+  }
+}

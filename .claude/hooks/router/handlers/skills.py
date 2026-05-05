@@ -6,8 +6,26 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 
-from ..config import SKILL_SCHEMAS
-from ..models import HandlerResult
+try:
+    from ..models import HandlerResult
+except ImportError:
+    from models import HandlerResult
+
+# Map skill names to their schema files and which example block to extract
+SKILL_SCHEMAS = {
+    "weekly": {
+        "schema": "schemas/vault/weekly-note.yaml",
+        "example_key": "example:",
+    },
+    "scrape-linkedin": {
+        "schema": "schemas/vault/library.yaml",
+        "example_key": "example_external:",
+    },
+    "project-retrospective": {
+        "schema": "schemas/vault/library.yaml",
+        "example_key": "example_internal:",
+    },
+}
 
 
 def skill_router(input_data: dict) -> HandlerResult:
@@ -17,7 +35,7 @@ def skill_router(input_data: dict) -> HandlerResult:
         return None
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
-    router_dir = Path(project_dir) / ".claude" / "hooks" / "skill-router"
+    router_dir = Path(project_dir) / ".claude" / "hooks" / "router" / "skill-router"
     rules_path = router_dir / "skill-rules.json"
     generate_script = router_dir / "generate-rules.py"
     router_script = router_dir / "skill-router.py"

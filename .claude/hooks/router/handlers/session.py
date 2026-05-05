@@ -5,13 +5,16 @@ import subprocess
 import sys
 from pathlib import Path
 
-from ..models import HandlerResult
+try:
+    from ..models import HandlerResult
+except ImportError:
+    from models import HandlerResult
 
 
 def session_init(input_data: dict) -> HandlerResult:
     """SessionStart: run session-init.sh (sets env, creates daily note)."""
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
-    script_path = os.path.join(project_dir, ".claude", "hooks", "session-init.sh")
+    script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", "session-init.sh")
 
     if not os.path.exists(script_path):
         return None

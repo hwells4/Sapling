@@ -5,8 +5,10 @@ import os
 import re
 from datetime import datetime
 
-from ..config import MIGRATION_DIR, SCHEMA_DIR
-from ..models import HandlerResult
+try:
+    from ..models import HandlerResult
+except ImportError:
+    from models import HandlerResult
 
 
 def schema_update_prompt(input_data: dict) -> HandlerResult:
@@ -19,7 +21,7 @@ def schema_update_prompt(input_data: dict) -> HandlerResult:
 
     file_path = tool_input.get("file_path", "")
 
-    if SCHEMA_DIR not in file_path or not file_path.endswith(".yaml"):
+    if "schemas/vault/" not in file_path or not file_path.endswith(".yaml"):
         return None
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
@@ -47,7 +49,7 @@ def schema_update_prompt(input_data: dict) -> HandlerResult:
     changes = changelog[0].get("changes", "No description")
 
     migration_filename = f"{schema_name}-{from_version}-to-{to_version}.md"
-    migration_path = os.path.join(project_dir, MIGRATION_DIR, migration_filename)
+    migration_path = os.path.join(project_dir, "schemas", "migrations", migration_filename)
 
     if os.path.exists(migration_path):
         return None
@@ -101,7 +103,7 @@ schema_version: {to_version}
         f"{'='*60}\n"
         f"Schema: {schema_name}\n"
         f"Version: {from_version} → {to_version}\n"
-        f"File: {MIGRATION_DIR}/{migration_filename}\n"
+        f"File: schemas/migrations/{migration_filename}\n"
         f"\nChangelog: {changes}\n"
         f"\nACTION: Complete the transformation rules in the migration file.\n"
         f"{'='*60}\n"

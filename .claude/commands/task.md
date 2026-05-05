@@ -1,11 +1,11 @@
 ---
-description: Start a task with automatic decision tracing
+description: Start tracked work with beads
 argument-hint: [task description]
 ---
 
 # /task Command
 
-Wrapper that adds planning, decision tracing, and commit to any task.
+Wrapper that adds lightweight planning and beads persistence to larger tasks.
 
 ## Task: $ARGUMENTS
 
@@ -22,7 +22,6 @@ Wrapper that adds planning, decision tracing, and commit to any task.
 | Multi-step work (3+ distinct actions) | +1 |
 | Unknown scope (research, exploration) | +1 |
 | Multiple data sources to consult | +1 |
-| Likely to spawn sub-agents | +1 |
 | Could span multiple sessions | +1 |
 
 **Score 0-1:** Simple task → Skip to Phase 3 (Execute)
@@ -38,11 +37,10 @@ Check if existing skills handle this task:
 
 | Skill | Triggers On |
 |-------|-------------|
-| `content-ideation` | "content ideas", "post ideas", "linkedin post", "from calls" |
-| `client-context` | Client names, "email to", "update for", stakeholder names |
-| `email-draft` | "draft an email", "write an email to", "email {client-name}" |
-| `project-retrospective` | "retrospective", "post-mortem", "project review" |
-| `calibration-workflow` | "calibrate", "review traces", "improve skills" |
+| `onboard` | "set up", "first run", "configure hooks" |
+| `generate-prd` | "PRD", "spec", "requirements" |
+| `generate-stories` | "break this down", "create stories" |
+| `github` | GitHub repository operations |
 
 **If skill matches:** Invoke that skill. It handles its own workflow. Skip remaining phases.
 
@@ -51,8 +49,7 @@ Check if existing skills handle this task:
 If no skill matches, break down the work:
 
 1. **Identify sub-tasks** — What are the distinct pieces of work?
-2. **Identify agents** — Which sub-tasks need isolated context?
-3. **Identify dependencies** — What must complete before what?
+2. **Identify dependencies** — What must complete before what?
 
 ### 2.3 Create Beads
 
@@ -83,8 +80,6 @@ Wait for confirmation before executing.
 Just do the work. No ceremony needed.
 
 ### Complex Tasks (Score 2+)
-
-**If spawning 2+ sub-agents:** Invoke `agent-chatroom` skill first.
 
 Work through beads in order:
 ```bash
@@ -127,9 +122,7 @@ When all work is done:
 
 2. **Create output files** for external deliverables (Gmail drafts, sent emails, etc.)
 
-3. **Invoke `decision-traces` skill** — extracts decisions that pass litmus test
-
-4. **Invoke `/commit`** — atomic commit with message `task: {description}`
+3. **Invoke `/commit`** — atomic commit with message `task: {description}`
 
 ---
 
@@ -138,7 +131,6 @@ When all work is done:
 If context resets mid-task:
 
 ```bash
-bd context  # Shows what was planned + current progress
 bd list     # Shows open beads
 ```
 

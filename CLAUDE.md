@@ -1,169 +1,145 @@
 # Sapling OS
 
-Personal knowledge system: Obsidian vault + Claude Code + learning loop.
-You manage `brain/`, skills, hooks. Execute tasks; capture decisions; system gets smarter.
+A personal knowledge system built on Obsidian + Claude Code.
 
-**Core loop:** Request → Execute → Trace decisions → Skills improve → Better next time.
+You manage this system: a structured vault (`brain/`), reusable workflows (`.claude/skills/`), hooks, and beads-backed task tracking. Your job is to execute tasks with minimal context pollution and save durable generated work in the right place.
 
-## Vault Writing Rules (CRITICAL)
+**Core loop:** User requests → You execute → Durable outputs go to `brain/outputs/` → Tasks persist in beads → Hooks keep the workspace consistent.
 
-Every file in `brain/` builds an Obsidian knowledge graph. **Wiki-links and tags are mandatory** — without them, files are isolated and useless.
-
-### Wiki-Links
-
-**Always link.** Every person, company, call, output, or trace you reference MUST be a wiki-link.
-
-```markdown
-# Good
-people: ["[[entities/jane-smith]]"]
-Follow up from [[calls/2025-12-27-strategy-update]].
-Send deliverable to [[entities/jane-smith|Jane]].
-
-# Bad — broken graph, no connections
-people: ["jane-smith"]
-Follow up from strategy call.
-Send deliverable to Jane.
-```
-
-**Format:** `[[entities/{slug}]]` or `[[entities/{slug}|Display Name]]` for inline.
-**Entities are flat:** `entities/{slug}` — never `entities/people/` or `entities/companies/`.
-
-**Cross-reference rule:** If file A mentions entity/file B, file A MUST wiki-link to B.
-- Mention a person → `[[entities/{slug}]]`
-- Reference a call → `[[calls/{date}-{slug}]]`
-- Cite an output → `[[outputs/{date}-{slug}]]`
-- Link to daily note → `[[notes/daily/{date}]]`
-
-**Entity creation:** If you reference an entity that doesn't exist yet, create it in `brain/entities/{slug}.md` with proper schema. Don't leave broken links.
-
-### Tags
-
-**Every `brain/` file needs tags.** Tags are how Obsidian queries work — no tags = invisible file.
-
-Required tag namespaces (per schema `required_patterns`):
-- `date/YYYY-MM-DD` — always
-- Type literal — `call`, `entity`, `output`, `trace`, `inbox`, `library`, `daily`, `weekly`
-- Context tags — `person/{slug}`, `company/{slug}`, `client/{slug}`, `source/{source}`, `output/{type}`, `status/{status}`
-
-**Derive tags from frontmatter:**
-```yaml
-# If frontmatter has:
-people: ["[[entities/jane-smith]]"]
-companies: ["[[entities/acme-corp]]"]
-
-# Then tags MUST include:
-tags:
-  - person/jane-smith
-  - company/acme-corp
-```
-
-**Topic tags:** Use `topic/{slug}`. Check existing files for prior topics before inventing new ones.
-
-### Frontmatter
-
-Every `brain/` file needs YAML frontmatter. Hook `validate-edits.py` enforces required fields per schema — if it rejects a write, read the error + schema example, fix in one retry.
-
-Schema mapping:
-| Path | Schema |
-|------|--------|
-| `brain/calls/` | `schemas/vault/call.yaml` |
-| `brain/entities/` | `schemas/vault/entity.yaml` |
-| `brain/inbox/` | `schemas/vault/inbox.yaml` |
-| `brain/library/` | `schemas/vault/library.yaml` |
-| `brain/outputs/` | `schemas/vault/output.yaml` |
-| `brain/traces/` | `schemas/vault/trace.yaml` |
-| `brain/notes/daily/` | `schemas/vault/daily-note.yaml` |
-| `brain/notes/weekly/` | `schemas/vault/weekly-note.yaml` |
-
-**Before creating a file:** Read the schema's `example:` block. Match it exactly.
-
-### Knowledge Graph Checklist
-
-Before finishing any `brain/` write, verify:
-- [ ] Frontmatter has all required fields per schema
-- [ ] All people/companies in frontmatter are wiki-links to `entities/`
-- [ ] Tags include namespaces for every linked entity (`person/`, `company/`, `client/`)
-- [ ] Body text uses wiki-links for any entity, call, output, or trace mentioned
-- [ ] Referenced entities exist — if not, create them
-
-## Querying
-
-**By Path:**
-- `brain/entities/` → People + companies
+<querying>
+**By Path (fastest):**
+- `brain/entities/` → People and companies
 - `brain/calls/` → Call notes
-- `brain/outputs/` → Deliverables
-- `brain/traces/` → Decision traces
-- `brain/inbox/` → Pending tasks
+- `brain/outputs/` → Deliverables (posts, PRDs, emails)
+- `brain/traces/` → Legacy learning traces
+- `brain/inbox/` → Legacy inbox items; prefer beads for active tasks
 - `brain/context/` → Identity, business, voice
 
-**By Tag:**
-- `client/{slug}` — all content for a client
-- `person/{slug}` — all content involving a person
-- `company/{slug}` — all content involving a company
-- `topic/{topic}` — subject matter
-- `status/{status}` — state (draft, published, done)
-- `output/{type}` — output type (linkedin-post, prd, email)
+**By Tag (most flexible):**
+Tags follow `/schemas/tags/taxonomy.yaml`. Key namespaces:
+- `client/{slug}` - All content for a client
+- `person/{slug}` - All content involving a person
+- `company/{slug}` - All content involving a company
+- `topic/{topic}` - Subject matter (check registry first)
+- `status/{status}` - State (draft, published, done, etc.)
+- `output/{type}` - Output type (linkedin-post, prd, email)
 
-**Find everything about someone:**
+**Example: "Find everything about John"**
 ```bash
-grep -r "person/jane-smith" brain/
-grep -r "\[\[entities/jane-smith\]\]" brain/
+grep -r "person/john-doe" brain/
+grep -r "\[\[entities/john-doe\]\]" brain/
 ```
 
+**By Frontmatter (structured):**
+- `people:` - Wiki-links to person entities
+- `companies:` - Wiki-links to company entities
+- `schema_version:` - File format version
+- `type:` / `status:` - Entity classification
+
+**Before querying topics:** Read `/schemas/tags/registry.yaml` for existing topics. Use existing tags before creating new ones.
+
 **Source of Truth:**
-- **Beads** owns: tasks, dependencies, work status
-- **Obsidian (brain/)** owns: knowledge — entities, calls, outputs, traces, context
+- **Beads** owns: All tasks (human and agent), dependencies, work status
+- **Obsidian (brain/)** owns: Knowledge—entities, calls, outputs, traces, context
+</querying>
 
-## Tools
+<tools>
+**Beads (`bd`):** File-based issue tracking in `.beads/`. Use for multi-session work, dependencies, discovered tasks. Commands: `bd ready`, `bd create`, `bd close`, `bd sync`. See `AGENTS.md` for full reference.
 
-**Beads (`bd`):** File-based issue tracking. `bd ready`, `bd create`, `bd close`, `bd sync`.
-**Skills:** `.claude/skills/` — reusable workflows. Invoked via `/task`, `/onboard`, `/calibrate`.
-**Commands:** `.claude/commands/` — slash command wrappers.
-**Hooks:** `.claude/hooks/` — event handlers (schema validation, session start).
+**Skills:** Reusable workflows in `.claude/skills/`. Each skill has a `SKILL.md` defining its purpose, triggers, and workflow. Invoked via slash commands such as `/task` and `/onboard`.
 
-## Context Engineering
+**Commands:** Slash commands in `.claude/commands/`. Lightweight wrappers that may invoke skills or run standalone workflows.
 
-Context window = public good. Every token competes.
+**Hooks:** Event handlers in `.claude/hooks/`. Hooks are core Sapling behavior. Run `.claude/hooks/setup-local-hooks.py` during onboarding to tune the local profile for this machine.
+</tools>
 
-- Progressive disclosure: metadata first (~50 tok), skill content on trigger (~1,500 tok), references only when needed.
-- Sub-agents when reading/editing 3+ files — for context isolation, not complexity.
-- Sub-agent output: max 2,000 words. Summaries, not prose. Analysis stays in sub-agent.
-- Context resumption: verify `git status` + read files before trusting summaries.
-- 2+ parallel sub-agents → invoke `agent-chatroom` skill first.
+<outputs>
+Agents must not scatter generated work across arbitrary folders.
 
-## Task Management
+**Default behavior:**
+- If the user asks for a durable artifact (draft, PRD, proposal, research summary, post, email, plan, report, script for later use), create an output in `brain/outputs/`.
+- If the user asks a question, wants brainstorming, or has not asked to save anything, answer in chat only.
+- If editing source code, schemas, skills, commands, hooks, or docs, edit the relevant project files directly.
+- If unsure whether something should be saved, keep it in chat and ask before creating a file.
 
-**Beads (`bd`)** is the single task system.
+**Output path:** `brain/outputs/{YYYY-MM-DD}-{slug}.md`
 
+**Required frontmatter:**
+```yaml
+---
+schema_version: 1.1.0
+date: YYYY-MM-DD
+type: research
+status: draft
+tags:
+  - date/YYYY-MM-DD
+  - output
+  - output/research
+  - status/draft
+---
+```
+</outputs>
+
+<context_engineering>
+The context window is a public good. Every token competes for attention.
+
+**Progressive Disclosure:**
+- Load metadata first (~50 tokens)
+- Load skill content only when triggered (~1,500 tokens)
+- Load references only when workflows require them (0 tokens until needed)
+
+**Sub-Agent Rule:**
+Only use sub-agents when the user explicitly asks for parallel agent work. Prefer beads for durable task tracking and concise local reads for ordinary cleanup.
+
+**Context Resumption:**
+After context compaction or session resume, verify actual file state (`git status`, read files) before trusting completion claims from summaries. Summaries may report "done" when work is staged but uncommitted.
+
+</context_engineering>
+
+<task_management>
+**Beads (`bd`)** is the single task system. All work—human and agent—lives here.
+
+| Assignee | Use For | Example |
+|----------|---------|---------|
+| `human` | Tasks requiring user action | "Review PR", "Approve design" |
+| `agent` | Tasks Claude executes | "Implement feature", "Fix bug" |
+
+**Core workflow:**
 ```bash
 bd ready                    # What can I work on?
 bd update <id> --status=in_progress
+# ... do the work ...
 bd close <id>
 bd sync                     # Push to git
 ```
 
-Rules: create beads for multi-step/multi-session work. `--assignee=agent` for agent, `--assignee=human` for human. Dependencies: `bd dep add <blocker> <blocked-by>`.
+**TodoWrite** is optional—use it to show the user progress during long sessions. It's ephemeral (memory only).
 
-## Commands
+**Rules:**
+- Create beads for multi-step work, discovered tasks, anything that might span sessions
+- Use `--assignee=agent` for agent work, `--assignee=human` for human work
+- Dependencies: `bd dep add <blocker> <blocked-by>` when tasks must sequence
+</task_management>
 
+<commands>
 | Command | Purpose |
 |---------|---------|
-| `/task` | Task + decision tracing |
-| `/today` | Daily note workflow |
-| `/weekly` | Weekly review |
-| `/commit` | Git commit |
-| `/migrate` | Schema migrations |
+| `/task` | Start tracked work |
+| `/today` | Create or open today's daily note |
+| `/weekly` | Weekly review process |
+| `/create-skill` | Create or modify Claude Code skills |
+| `/create-hooks:create-hook` | Create, edit, analyze, or debug hooks from the create-hooks plugin |
+| `/ideate` | Generate and winnow improvement ideas |
+| `/refine` | Iteratively refine plans or beads |
+| `/commit` | Create an atomic git commit |
+| `/migrate` | Run schema migrations |
+</commands>
 
-## Evolution
-
-System learns from decisions. `/task` completes → `decision-traces` skill captures choices → traces identify improvement targets → skills upgrade.
-
-Litmus: only trace choices between alternatives that change future behavior with non-obvious reasoning.
-
-## Behaviors
-
-- Start simple. Sharp knife first. Complexity only after simpler approach fails.
-- Before acting: query system for context (entities, calls, prior outputs).
-- Use skills; don't reinvent workflows.
-- Parallel over sequential for independent work.
-- Beads for persistence on multi-step/multi-session tasks.
+<behaviors>
+- **Start simple:** Default to simpler approach. Build sharp knife first. Add complexity only when constraints prove insufficient in practice.
+- **Wait for failure:** Before adding infrastructure (new hooks, state directories, multi-file solutions), require the simpler fix to fail first through actual use.
+- **Before acting:** Query the system for relevant context (entities, calls, prior outputs).
+- **Use skills:** Invoke available skills rather than reinventing workflows.
+- **Parallel over sequential:** Run independent tool calls in parallel.
+- **Use beads for persistence:** Multi-step work, API-heavy tasks, anything that might span sessions—create beads so progress isn't lost.
+</behaviors>

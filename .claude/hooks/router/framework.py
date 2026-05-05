@@ -15,7 +15,10 @@ import sys
 import traceback
 from typing import Optional
 
-from .models import Decision, HandlerConfig, HandlerResult
+try:
+    from .models import Decision, HandlerConfig, HandlerResult
+except ImportError:
+    from models import Decision, HandlerConfig, HandlerResult
 
 
 def parse_stdin() -> dict:

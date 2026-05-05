@@ -153,7 +153,7 @@ frontmatter:
         - high: Direct request, clear deadline, explicit question
         - medium: Implied action, FYI that might need response
         - low: Possibly actionable, unclear
-        Used by /today to route: high → tasks, medium/low → triage
+        Legacy routing field retained for older vaults
 
     # Automation metadata
     automated:

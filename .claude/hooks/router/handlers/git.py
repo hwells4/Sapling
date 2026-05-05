@@ -4,13 +4,16 @@ import os
 import subprocess
 import sys
 
-from ..models import HandlerResult
+try:
+    from ..models import HandlerResult
+except ImportError:
+    from models import HandlerResult
 
 
 def _run_shell(script_name: str, timeout: int = 30) -> HandlerResult:
     """Run a shell script from the hooks directory."""
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
-    script_path = os.path.join(project_dir, ".claude", "hooks", script_name)
+    script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", script_name)
 
     if not os.path.exists(script_path):
         return HandlerResult(stderr_message=f"[git] {script_name} not found")

@@ -1,6 +1,6 @@
 # Trace Schema - Decisions, Hypotheses, and Outcomes
 # Location: brain/traces/YYYY-MM-DD-{slug}.md
-# Created by: /task command, manual
+# Created by: legacy learning workflows, manual
 
 schema_version: 1.2.0
 changelog:
@@ -18,7 +18,7 @@ name: trace
 description: Learning loop records - decisions made, predictions tested, outcomes observed
 location: brain/traces/
 filename_pattern: "YYYY-MM-DD-{slug}.md"
-created_by: /task command, decision-traces skill, manual
+created_by: legacy learning workflows, manual
 
 purpose: |
   Traces capture learning that informs future agent behavior:

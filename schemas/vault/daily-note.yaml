@@ -101,7 +101,7 @@ body_sections:
   - name: decisions_made
     heading: "## Decisions Made"
     required: false
-    description: Links to decision traces created today
+    description: Links to notable artifacts created today
 
   - name: reflection
     heading: "## Evening Reflection"

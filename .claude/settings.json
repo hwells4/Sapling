@@ -1,49 +1,82 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "VAULT_PATH": "${cwd}/brain",
+    "SAPLING_HOOKS_PROFILE": "recommended",
+    "SAPLING_ENABLE_DAILY_HOOK": "1",
+    "SAPLING_ENABLE_SESSION_LOG": "1",
+    "SAPLING_ENABLE_SKILL_ROUTER": "1",
+    "SAPLING_ENABLE_MEMORY_HOOK": "1",
+    "SAPLING_ENABLE_GIT_HOOKS": "0"
+  },
   "hooks": {
-    "SessionStart": [{
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/session_start.py",
-        "timeout": 35
-      }]
-    }],
-    "PreToolUse": [{
-      "matcher": "Write|Edit|Skill",
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/pre_tool_use.py",
-        "timeout": 35
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "Write|Edit",
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/post_tool_use.py",
-        "timeout": 35
-      }]
-    }],
-    "Stop": [{
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/stop.py",
-        "timeout": 25
-      }]
-    }],
-    "PreCompact": [{
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/pre_compact.py",
-        "timeout": 25
-      }]
-    }],
-    "UserPromptSubmit": [{
-      "hooks": [{
-        "type": "command",
-        "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/router/user_prompt_submit.py",
-        "timeout": 10
-      }]
-    }]
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/pre_compact.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/session_start.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/pre_tool_use.py\"",
+            "timeout": 25
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/post_tool_use.py\"",
+            "timeout": 25
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/stop.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/router/user_prompt_submit.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

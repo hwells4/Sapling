@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PostToolUse event router: schema migration, chatroom, calibration."""
+"""PostToolUse event router: schema migration and prose checks."""
 
 import os
 import sys
@@ -9,8 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from router.framework import dispatch
 from router.models import HandlerConfig
 from router.handlers.schema_migration import schema_update_prompt
-from router.handlers.chatroom import chatroom_state_sync
-from router.handlers.calibration import calibration_stats_updater
+from router.handlers.prose import prose_lint
 
 HANDLERS = [
     HandlerConfig(
@@ -19,14 +18,9 @@ HANDLERS = [
         name="schema-update-prompt",
     ),
     HandlerConfig(
-        fn=chatroom_state_sync,
-        matcher=r"Write|Edit",
-        name="chatroom-state-sync",
-    ),
-    HandlerConfig(
-        fn=calibration_stats_updater,
+        fn=prose_lint,
         matcher=r"^Write$",
-        name="calibration-stats-updater",
+        name="prose-lint",
     ),
 ]
 

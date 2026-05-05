@@ -1,13 +1,13 @@
 ---
 name: onboard
-description: Onboard new users to Personal OS. Collects context through interview, lets user choose a creature companion, and populates context files.
+description: Onboard new users to SaplingOS. Collects context, configures local hook support, and populates context files.
 context_budget:
   skill_md: 200
   max_references: 4
 ---
 
 <objective>
-Guide new users through Personal OS setup: collect identity/business/voice context through sequential questions, let them choose an elemental creature companion, and populate context files.
+Guide new users through SaplingOS setup: collect identity/business/voice context through sequential questions, configure machine-local hooks, and populate context files.
 </objective>
 
 <usage>
@@ -66,12 +66,12 @@ Only proceed if both checks pass.
 8. Primary use case (skippable): what they want help with
 9. Writing samples (skippable) → analyze → voice-and-style.md
 10. Image generation setup (optional) → Gemini API key
-11. Call recording setup (optional) → Granola sync daemon
+11. Local hooks setup → run `.claude/hooks/setup-local-hooks.py`
 12. Generate context files from collected data
-13. Explain how /task, /calibrate, /today work
-14. Show creature + personalized welcome banner
+13. Explain how /today, beads, and /task work
+14. Show personalized welcome banner
 15. GitHub CLI auth (optional): `gh auth login` for GitHub features
-16. ⭐ Ask about starring the repo (optional): auto-star if authed, else manual link
+16. Ask about starring the repo (optional): auto-star if authed, else manual link
 17. Commit with /commit
 18. Suggest `/today` to start first daily note
 </quick_start>
@@ -107,26 +107,19 @@ User selects an elemental egg. The creature inside hatches after first calibrati
 Creature art stored in `.claude/creatures/{name}/{stage}.txt`
 </creatures>
 
-<granola_setup>
-**Step 11: Call Recording Setup (Optional)**
+<hook_setup>
+**Step 11: Local Hook Setup**
 
-Check if Granola is installed:
-```bash
-[ -f "$HOME/Library/Application Support/Granola/cache-v3.json" ] && echo "installed"
-```
+Explain that Sapling registers its core hooks in the project, then uses a local profile to tune behavior for each machine. Offer one profile:
 
-If installed, ask via AskUserQuestion:
-> "Granola detected! Want to auto-sync meeting notes to your vault? (Recommended)"
-> - Yes, set it up
-> - No, skip
+| Profile | Command | Use for |
+|---------|---------|---------|
+| minimal | `python3 .claude/hooks/setup-local-hooks.py --profile minimal` | Safest setup: daily note only |
+| recommended | `python3 .claude/hooks/setup-local-hooks.py --profile recommended` | Default: daily note, schema/prose checks, skill routing when supported |
+| full | `python3 .claude/hooks/setup-local-hooks.py --profile full` | Includes git auto-commit/push hooks; only use when explicitly requested |
 
-If yes:
-```bash
-cd services/granola-sync && ./install.sh
-```
-
-If not installed, skip silently (don't mention Granola to users who don't have it).
-</granola_setup>
+Default to `recommended`. Do not enable `full` unless the user explicitly chooses it.
+</hook_setup>
 
 <context_files>
 Files populated during onboarding:
@@ -163,7 +156,7 @@ Templates in: `.claude/skills/onboard/templates/`
 - [ ] User's name collected
 - [ ] Creature selected and stored in .claude/stats.yaml
 - [ ] At least one context file populated (or all skipped with TODOs)
-- [ ] System explanation delivered (/task, /calibrate, /today)
+- [ ] System explanation delivered (/today, beads, /task)
 - [ ] Welcome banner displayed with creature and name
 - [ ] Changes committed with /commit
 - [ ] User guided to next step (/today)

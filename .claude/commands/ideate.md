@@ -1,3 +1,8 @@
+---
+description: Generate and winnow improvement ideas
+argument-hint: [optional plan file or project context]
+---
+
 # /ideate - Generate Best Improvement Ideas
 
 Run the Idea Wizard: generate 30 ideas, think through each, winnow to the very best 5.

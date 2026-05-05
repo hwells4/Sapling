@@ -1,15 +1,17 @@
 """Continuation state: save/load across compaction."""
 
-import glob as glob_mod
 import json
 import os
 import re
 from datetime import datetime
 from pathlib import Path
 
-from ..config import CHATROOM_PREFIX, DAILY_NOTE_TEMPLATE, STATE_DIR
-from ..models import HandlerResult
+try:
+    from ..models import HandlerResult
+except ImportError:
+    from models import HandlerResult
 
+STATE_DIR = Path(os.environ.get("CLAUDE_PROJECT_DIR", ".")) / ".claude" / "state"
 STATE_FILE = STATE_DIR / "continuation.md"
 
 
@@ -19,13 +21,6 @@ def save_continuation_state(input_data: dict) -> HandlerResult:
     compaction_type = input_data.get("matcher", "auto")
 
     today = datetime.now().strftime("%Y-%m-%d")
-    chatroom_path = ""
-    chatroom_glob = Path(os.environ.get("CLAUDE_PROJECT_DIR", ".")) / CHATROOM_PREFIX / f"{today}*.md"
-    chatrooms = glob_mod.glob(str(chatroom_glob))
-    if chatrooms:
-        chatroom_path = chatrooms[-1]
-
-    daily_note_ref = f"{DAILY_NOTE_TEMPLATE}{today}.md"
 
     state_content = f"""---
 saved_at: {datetime.now().isoformat()}
@@ -47,14 +42,12 @@ This file was auto-saved before context compaction. Read this to resume your wor
 Check these locations for in-progress work:
 
 1. **Todo list:** The TodoWrite tool may have tracked progress
-2. **Daily note:** `{daily_note_ref}`
-{f'3. **Active chatroom:** `{chatroom_path}`' if chatroom_path else ''}
+2. **Daily note:** `brain/notes/daily/{today}.md`
 
 ## Post-Compaction Instructions
 
 1. Read the daily note to understand what was being worked on
-2. If there was a chatroom, check its status
-3. Continue from where you left off
+2. Continue from where you left off
 """
 
     STATE_DIR.mkdir(parents=True, exist_ok=True)

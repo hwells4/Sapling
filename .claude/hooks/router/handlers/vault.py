@@ -8,8 +8,10 @@ import json
 import os
 import subprocess
 
-from ..config import STATS_FILE, VAULT_PREFIX
-from ..models import Decision, HandlerResult
+try:
+    from ..models import Decision, HandlerResult
+except ImportError:
+    from models import Decision, HandlerResult
 
 
 def stats_protection(input_data: dict) -> HandlerResult:
@@ -22,10 +24,10 @@ def stats_protection(input_data: dict) -> HandlerResult:
 
     file_path = tool_input.get("file_path", "")
 
-    if STATS_FILE in file_path:
+    if ".claude/stats.yaml" in file_path:
         return HandlerResult(
             decision=Decision.BLOCK,
-            reason="stats.yaml is updated automatically by the calibration hook. To update stats, run /calibrate which processes traces and updates stats automatically.",
+            reason="stats.yaml is managed by Sapling onboarding and calibration workflows. Use /onboard for setup changes instead of editing it directly.",
         )
 
     return None
@@ -45,11 +47,11 @@ def validate_vault_schema(input_data: dict) -> HandlerResult:
     tool_input = input_data.get("tool_input", {})
     file_path = tool_input.get("file_path", "")
 
-    if VAULT_PREFIX not in file_path or not file_path.endswith(".md"):
+    if "brain/" not in file_path or not file_path.endswith(".md"):
         return None
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
-    script_path = os.path.join(project_dir, ".claude", "hooks", "validate-edits.py")
+    script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", "validate-vault-schema.py")
 
     if not os.path.exists(script_path):
         return None

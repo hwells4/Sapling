@@ -1,3 +1,8 @@
+---
+description: Iteratively refine plans or beads until plateau
+argument-hint: [optional count, "beads", or plan file]
+---
+
 # /refine - Iterative Plan/Bead Refinement Loop
 
 Run the refinement loop: iteratively improve beads or plans until plateau.

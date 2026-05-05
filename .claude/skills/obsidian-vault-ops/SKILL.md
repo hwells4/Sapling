@@ -16,16 +16,20 @@ brain/
 ├── notes/weekly/         # YYYY-Www.md weekly notes
 ├── calls/                # Call notes (flat)
 ├── outputs/              # Deliverables
-├── traces/               # Decision traces
+├── traces/               # Legacy learning traces
 ├── library/              # Reference material (posts, etc.)
 ├── context/              # AI context files
-├── triage/               # Unclassified items
 └── templates/            # File templates
 entities/                 # People and companies (flat, no type subfolders)
 schemas/                  # Authoritative schema definitions (YAML)
 ```
 
 ## File Operations
+
+### Generated Outputs
+When creating a durable artifact for the user, write it to `brain/outputs/YYYY-MM-DD-{slug}.md` using `schemas/vault/output.yaml`.
+
+If the user did not ask to save the artifact, keep it in chat. Do not create generated drafts, plans, reports, or research notes in arbitrary folders.
 
 ### Reading Notes
 - Use Glob to find files: `brain/notes/daily/*.md`, `entities/*.md`

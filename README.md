@@ -35,6 +35,28 @@ claude
 - Installs the recommended local hook profile
 - Explains the core workflows: `/today`, `/task`, beads, and durable outputs
 
+## Structure
+
+Sapling keeps personal knowledge in `brain/` and validates durable files with schemas in `schemas/`.
+
+```text
+Sapling/
+├── brain/
+│   ├── calls/            # Call notes and meeting records
+│   ├── context/          # Personal context: identity, business, voice, preferences
+│   ├── entities/         # People and companies
+│   ├── library/          # Reference material and retrospectives
+│   ├── logs/             # Activity tracking for automations, summaries, and review
+│   └── outputs/          # Durable deliverables: posts, PRDs, emails, reports
+├── schemas/
+│   ├── vault/            # File schemas for brain/ content
+│   └── tags/             # Shared tag taxonomy
+└── .claude/
+    ├── commands/         # Slash commands
+    ├── hooks/            # Local automation and validation hooks
+    └── skills/           # Reusable workflows
+```
+
 ## Hooks
 
 Hooks are the core of Sapling. The recommended profile enables schema/prose checks, skill routing, session logging, daily log setup, memory when supported, and git auto-commit/push.

@@ -17,7 +17,7 @@ Never output questions as text in your response. If you need information from th
 
 A technical spec that gives an AI coding agent enough context to:
 1. Understand what we're building and why
-2. Break it into Linear issues
+2. Break it into beads
 3. Execute without coming back for clarification
 
 This is NOT a traditional enterprise PRD for stakeholder alignment. It's a planning document for execution.
@@ -37,7 +37,7 @@ Before asking questions, quickly check for relevant context:
 ```
 - brain/entities/ for client/stakeholder info
 - brain/calls/ for relevant discussions
-- Linear for related projects/issues
+- Beads for related projects/issues
 ```
 
 This takes 30 seconds, not a full discovery phase. Just grep for obvious matches.
@@ -107,7 +107,7 @@ tags:
 
 ## What This Skill Does NOT Do
 
-- Generate Linear issues (separate step)
+- Generate beads (separate step)
 - Validate business case or market fit
 - Require stakeholder sign-off
 - Follow a rigid 34-question framework

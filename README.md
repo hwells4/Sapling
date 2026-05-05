@@ -40,7 +40,11 @@ claude
 | `/onboard` | Initial setup - populate context |
 | `/today` | Create/open today's daily note |
 | `/task` | Start tracked work |
-| `/commit` | Git commit with Linear issue sync |
+| `/create-skill` | Create or modify Claude Code skills |
+| `/create-hook` | Create, edit, analyze, or debug hooks |
+| `/ideate` | Generate and winnow improvement ideas |
+| `/refine` | Iteratively refine plans or beads |
+| `/commit` | Create an atomic git commit |
 | `/push` | Push to remote |
 
 ## Directory Structure

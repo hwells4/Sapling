@@ -127,9 +127,12 @@ bd sync                     # Push to git
 | `/task` | Start tracked work |
 | `/today` | Create or open today's daily note |
 | `/weekly` | Weekly review process |
-| `/commit` | Git commit with Linear sync |
+| `/create-skill` | Create or modify Claude Code skills |
+| `/create-hook` | Create, edit, analyze, or debug hooks |
+| `/ideate` | Generate and winnow improvement ideas |
+| `/refine` | Iteratively refine plans or beads |
+| `/commit` | Create an atomic git commit |
 | `/migrate` | Run schema migrations |
-| `/create-skill` | Create new skills |
 </commands>
 
 <behaviors>

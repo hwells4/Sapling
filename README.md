@@ -2,32 +2,37 @@
 
 A personal operating system for Claude Code: local knowledge, hooks, and durable outputs.
 
-Run `/onboard` first. It checks the local repo, reads project docs like `README.md`, `AGENTS.md`, and `CLAUDE.md`, configures hooks, and creates your starting context.
+Run onboarding first. It checks the local repo, reads project docs like `README.md`, `AGENTS.md`, and `CLAUDE.md`, configures hooks, and creates your starting context.
 
 ## Quick Start
 
-*Required: Claude Code, Python 3.8+, and Homebrew on macOS for the Beads install command below.*
+*Required: Claude Code and Python 3.8+. Onboarding checks Beads and can help install or initialize it.*
 
-### 1. Clone And Set Up
+### 1. Clone Sapling
 
 ```bash
 git clone https://github.com/hwells4/Sapling.git
 cd Sapling
-
-brew tap steveyegge/beads && brew install bd
-bd onboard
 ```
 
-### 2. Run Onboarding
+### 2. Open Claude Code
 
 ```bash
 claude
-/onboard
 ```
+
+### 3. Run Onboarding
+
+```text
+/onboarding
+```
+
+`/onboard` also works.
 
 ## What Onboarding Does
 
 - Checks required tools and local project docs
+- Installs or initializes Beads when needed, with your approval
 - Creates or updates `brain/context/`
 - Installs the recommended local hook profile
 - Explains the core workflows: `/today`, `/task`, beads, and durable outputs
@@ -57,7 +62,8 @@ Hook authoring lives in the maintained `create-hooks` plugin:
 
 | Command | Description |
 |---------|-------------|
-| `/onboard` | First-run setup |
+| `/onboarding` | First-run setup |
+| `/onboard` | Alias for `/onboarding` |
 | `/today` | Create or open today's daily note |
 | `/task` | Start tracked work |
 | `/create-skill` | Create or modify Claude Code skills |

@@ -1,7 +1,7 @@
 # Fresh Start Onboarding Workflow
 
 <objective>
-Complete onboarding flow for new users. Collects context through interactive questions, stores creature selection, and populates context files. Uses AskUserQuestion throughout for a smooth, clickable experience.
+Complete onboarding flow for new users. Checks local setup, collects context through interactive questions, stores creature selection, and populates context files. Uses AskUserQuestion throughout for a smooth, clickable experience.
 </objective>
 
 <workflow>

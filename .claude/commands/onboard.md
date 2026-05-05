@@ -1,6 +1,6 @@
 # Onboard Command
 
-Interactive onboarding for new Sapling OS users. Checks local setup, reads project context, collects user context, and configures hooks.
+Short alias for `/onboarding`. Checks local setup, reads project context, collects user context, and configures hooks.
 
 ## Usage
 
@@ -8,6 +8,7 @@ Interactive onboarding for new Sapling OS users. Checks local setup, reads proje
 /onboard              # Start fresh onboarding
 /onboard --creature   # Just change creature selection
 /onboard --reset      # Re-run full onboarding (overwrites existing)
+/onboarding           # Equivalent long-form command
 ```
 
 ## What Happens

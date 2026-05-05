@@ -12,6 +12,7 @@ Guide new users through SaplingOS setup: verify local prerequisites, read availa
 
 <usage>
 ```
+/onboarding           # Start fresh onboarding
 /onboard              # Start fresh onboarding
 /onboard --creature   # Just change creature selection
 /onboard --reset      # Re-run full onboarding (overwrites existing)
@@ -27,10 +28,10 @@ Guide new users through SaplingOS setup: verify local prerequisites, read availa
 </essential_principles>
 
 <dependencies>
-**Run these checks before anything else. Block onboarding if critical deps missing.**
+**Run these checks before asking personal setup questions.**
 
 ```bash
-# Beads (required) - task tracking
+# Beads - task tracking
 which bd >/dev/null 2>&1 || echo "MISSING: bd"
 
 # PyYAML (required) - schema validation
@@ -38,25 +39,27 @@ python3 -c "import yaml" 2>/dev/null || echo "MISSING: pyyaml"
 ```
 
 **If Beads missing:**
-> Beads is required for task tracking. Install it with:
+> Sapling uses Beads for task tracking. Want me to install it now?
 > ```
 > brew tap steveyegge/beads
 > brew install bd
 > ```
-> Then run `/onboard` again.
+> If you skip this, onboarding can continue, but `/task` and durable issue tracking will not be ready.
+
+If user approves, run the install command, then continue. If `bd` is available, offer to run `bd onboard` to show the current Beads agent instructions and confirm the repo is ready for Beads-backed work. Do not make users run `bd onboard` manually before Sapling onboarding.
 
 **If PyYAML missing:**
 > PyYAML is required for schema validation. Install it with:
 > ```
 > pip install pyyaml
 > ```
-> Then run `/onboard` again.
+> Then run `/onboarding` again.
 
-Only proceed if both checks pass.
+Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly skipped during onboarding.
 </dependencies>
 
 <quick_start>
-1. **Check dependencies and local docs** — block if missing (see `<dependencies>`)
+1. **Check dependencies and local docs** — handle Beads setup inside onboarding; block only if Python/PyYAML are missing
 2. Read available local context: README.md, AGENTS.md, CLAUDE.md, and existing brain/context files when present
 3. Check if context files exist → route appropriately
 4. Get their name via AskUserQuestion
@@ -156,6 +159,7 @@ Templates in: `.claude/skills/onboard/templates/`
 - [ ] User's name collected
 - [ ] Creature selected and stored in .claude/stats.yaml
 - [ ] At least one context file populated (or all skipped with TODOs)
+- [ ] Beads checked, installed, initialized, or explicitly skipped
 - [ ] System explanation delivered (/today, beads, /task)
 - [ ] Welcome banner displayed with creature and name
 - [ ] Changes committed with /commit

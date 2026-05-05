@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
+This project uses **bd** (beads) for issue tracking. User setup happens through `/onboarding`; agents can run `bd onboard` only when they need the latest Beads instruction snippet.
 
 ## Quick Reference
 

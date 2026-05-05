@@ -7,7 +7,7 @@ context_budget:
 ---
 
 <objective>
-Guide new users through SaplingOS setup: collect identity/business/voice context through sequential questions, configure machine-local hooks, and populate context files.
+Guide new users through SaplingOS setup: verify local prerequisites, read available project context, collect identity/business/voice context through sequential questions, configure machine-local hooks, and populate context files.
 </objective>
 
 <usage>
@@ -56,24 +56,25 @@ Only proceed if both checks pass.
 </dependencies>
 
 <quick_start>
-1. **Check dependencies** — block if missing (see `<dependencies>`)
-2. Check if context files exist → route appropriately
-3. Get their name via AskUserQuestion
-4. Welcome with rundown of what's coming (~3-5 min)
-5. Creature selection (required): Fire egg, Water egg, or Nature egg
-6. Business context (skippable): website URL or quick questions
-7. Role selection (skippable): founder, engineer, designer, etc.
-8. Primary use case (skippable): what they want help with
-9. Writing samples (skippable) → analyze → voice-and-style.md
-10. Image generation setup (optional) → Gemini API key
-11. Local hooks setup → run `.claude/hooks/setup-local-hooks.py`
-12. Generate context files from collected data
-13. Explain how /today, beads, and /task work
-14. Show personalized welcome banner
-15. GitHub CLI auth (optional): `gh auth login` for GitHub features
-16. Ask about starring the repo (optional): auto-star if authed, else manual link
-17. Commit with /commit
-18. Suggest `/today` to start first daily note
+1. **Check dependencies and local docs** — block if missing (see `<dependencies>`)
+2. Read available local context: README.md, AGENTS.md, CLAUDE.md, and existing brain/context files when present
+3. Check if context files exist → route appropriately
+4. Get their name via AskUserQuestion
+5. Welcome with rundown of what's coming (~3-5 min)
+6. Creature selection (required): Fire egg, Water egg, or Nature egg
+7. Business context (skippable): website URL or quick questions
+8. Role selection (skippable): founder, engineer, designer, etc.
+9. Primary use case (skippable): what they want help with
+10. Writing samples (skippable) → analyze → voice-and-style.md
+11. Image generation setup (optional) → Gemini API key
+12. Local hooks setup → run `.claude/hooks/setup-local-hooks.py`
+13. Generate context files from collected data
+14. Explain how /today, beads, and /task work
+15. Show personalized welcome banner
+16. GitHub CLI auth (optional): `gh auth login` for GitHub features
+17. Ask about starring the repo (optional): auto-star if authed, else manual link
+18. Commit with /commit
+19. Suggest `/today` to start first daily note
 </quick_start>
 
 <routing>
@@ -114,11 +115,10 @@ Explain that Sapling registers its core hooks in the project, then uses a local 
 
 | Profile | Command | Use for |
 |---------|---------|---------|
-| minimal | `python3 .claude/hooks/setup-local-hooks.py --profile minimal` | Safest setup: daily note only |
-| recommended | `python3 .claude/hooks/setup-local-hooks.py --profile recommended` | Default: daily note, schema/prose checks, skill routing when supported |
-| full | `python3 .claude/hooks/setup-local-hooks.py --profile full` | Includes git auto-commit/push hooks; only use when explicitly requested |
+| recommended | `python3 .claude/hooks/setup-local-hooks.py --profile recommended` | Default: daily note, schema/prose checks, skill routing, and git auto-commit/push |
+| no-git | `python3 .claude/hooks/setup-local-hooks.py --profile no-git` | Keeps core hooks, but disables git auto-commit/push |
 
-Default to `recommended`. Do not enable `full` unless the user explicitly chooses it.
+Default to `recommended`. Do not offer a schema-less or daily-note-only profile.
 </hook_setup>
 
 <context_files>

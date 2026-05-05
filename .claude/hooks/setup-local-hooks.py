@@ -20,10 +20,10 @@ def build_settings(profile: str) -> dict:
         "VAULT_PATH": "${cwd}/brain",
         "SAPLING_HOOKS_PROFILE": profile,
         "SAPLING_ENABLE_DAILY_HOOK": "1",
-        "SAPLING_ENABLE_SESSION_LOG": "1" if profile in {"recommended", "full"} else "0",
-        "SAPLING_ENABLE_SKILL_ROUTER": "1" if profile in {"recommended", "full"} else "0",
-        "SAPLING_ENABLE_MEMORY_HOOK": "1" if profile in {"recommended", "full"} and has_memory_tool else "0",
-        "SAPLING_ENABLE_GIT_HOOKS": "1" if profile == "full" else "0",
+        "SAPLING_ENABLE_SESSION_LOG": "1",
+        "SAPLING_ENABLE_SKILL_ROUTER": "1",
+        "SAPLING_ENABLE_MEMORY_HOOK": "1" if has_memory_tool else "0",
+        "SAPLING_ENABLE_GIT_HOOKS": "1" if profile == "recommended" else "0",
     }
 
     return {
@@ -36,9 +36,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--profile",
-        choices=("minimal", "recommended", "full"),
+        choices=("recommended", "no-git"),
         default="recommended",
-        help="Hook profile to write. Default: recommended.",
+        help="Hook profile to write. Default: recommended, with git automation enabled.",
     )
     parser.add_argument(
         "--print",
@@ -56,10 +56,12 @@ def main() -> int:
 
     SETTINGS_PATH.write_text(rendered)
     print(f"Wrote {SETTINGS_PATH.relative_to(ROOT)} with '{args.profile}' hook profile.")
-    if settings["env"]["SAPLING_ENABLE_MEMORY_HOOK"] == "0" and args.profile in {"recommended", "full"}:
+    if settings["env"]["SAPLING_ENABLE_MEMORY_HOOK"] == "0":
         print("Memory hook disabled because neither qmd nor cm was found on PATH.")
-    if args.profile != "full":
-        print("Git auto-commit/push hook behavior is disabled. Use --profile full only if you want it.")
+    if settings["env"]["SAPLING_ENABLE_GIT_HOOKS"] == "1":
+        print("Git auto-commit/push hook behavior is enabled. Use --profile no-git to opt out while keeping core hooks.")
+    else:
+        print("Git auto-commit/push hook behavior is disabled.")
     return 0
 
 

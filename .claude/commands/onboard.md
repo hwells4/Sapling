@@ -1,6 +1,6 @@
 # Onboard Command
 
-Interactive onboarding for new Sapling OS users. Collects context through an interview and configures local hook support.
+Interactive onboarding for new Sapling OS users. Checks local setup, reads project context, collects user context, and configures hooks.
 
 ## Usage
 
@@ -13,6 +13,7 @@ Interactive onboarding for new Sapling OS users. Collects context through an int
 ## What Happens
 
 ### Phase 1: Welcome & Introduction
+- Check required local tools and project docs before asking questions
 - Get your name and give you a quick rundown
 - Choose your elemental companion (Fire/Water/Nature)
 - Creature starts as an egg, evolves as you use the system
@@ -28,10 +29,10 @@ Interactive onboarding for new Sapling OS users. Collects context through an int
 - Walks you through getting a Gemini API key from Google
 
 ### Phase 3.5: Local Hook Setup (Recommended)
-- Explain that hooks are core Sapling behavior and can be tuned per machine
-- Offer `minimal`, `recommended`, and `full` profiles
+- Explain that hooks are core Sapling behavior, including schema/prose checks and skill routing
+- Offer `recommended` automation by default, with `no-git` only for users who do not want auto-commit/push
 - Run `.claude/hooks/setup-local-hooks.py --profile {choice}`
-- Use `recommended` unless the user wants no hooks or explicitly wants git auto-commit/push
+- Use `recommended` unless the user explicitly wants less automation
 
 ### Phase 4: File Generation
 Creates context files in `brain/context/`:

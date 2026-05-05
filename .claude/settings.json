@@ -7,7 +7,7 @@
     "SAPLING_ENABLE_SESSION_LOG": "1",
     "SAPLING_ENABLE_SKILL_ROUTER": "1",
     "SAPLING_ENABLE_MEMORY_HOOK": "1",
-    "SAPLING_ENABLE_GIT_HOOKS": "0"
+    "SAPLING_ENABLE_GIT_HOOKS": "1"
   },
   "hooks": {
     "PreCompact": [

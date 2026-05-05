@@ -248,19 +248,16 @@ header: "Hooks"
 multiSelect: false
 options:
   - label: "Recommended"
-    description: "Daily note, schema/prose checks, and skill routing when supported"
-  - label: "Minimal"
-    description: "Safest setup: daily note session hook only"
-  - label: "Full automation"
-    description: "Adds git auto-commit/push hooks; only choose this if you want that"
+    description: "Daily note, schema/prose checks, skill routing, and git auto-commit/push"
+  - label: "No git automation"
+    description: "Keep core schema/prose/skill hooks, but disable auto-commit/push"
 ```
 
 Run the selected command:
 
 ```bash
 python3 .claude/hooks/setup-local-hooks.py --profile recommended
-python3 .claude/hooks/setup-local-hooks.py --profile minimal
-python3 .claude/hooks/setup-local-hooks.py --profile full
+python3 .claude/hooks/setup-local-hooks.py --profile no-git
 ```
 
 Confirm that `.claude/settings.local.json` was written. If the script reports missing optional tools, continue; it disables unsupported hooks automatically.

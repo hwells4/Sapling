@@ -62,8 +62,8 @@ Run `/migrate` to update old files to the current schema version. This keeps you
 | `library` | `brain/library/` | Saved articles, resources |
 | `output` | `brain/outputs/` | Deliverables (posts, PRDs, emails) |
 | `trace` | `brain/traces/` | Decision traces for calibration |
-| `daily-note` | `brain/notes/daily/` | Daily notes |
-| `weekly-note` | `brain/notes/weekly/` | Weekly reviews |
+| `daily-log` | `brain/logs/daily/` | Daily logs |
+| `weekly-log` | `brain/logs/weekly/` | Weekly reviews |
 
 ## Commands
 

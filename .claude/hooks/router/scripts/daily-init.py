@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 """
-Ensure today's daily note exists, creating from schema if needed.
+Ensure today's daily log exists, creating from schema if needed.
 
-Called by session-init.sh on startup to guarantee a daily note is ready.
-Reads the template from schemas/vault/daily-note.yaml so schema changes
+Called by session-init.sh on startup to guarantee a daily log is ready.
+Reads the template from schemas/vault/daily-log.yaml so schema changes
 propagate automatically.
 """
 
@@ -70,8 +70,8 @@ def extract_example_from_schema(schema_path: Path) -> str | None:
     return "\n".join(example_lines).strip()
 
 
-def generate_daily_note(date: datetime, template: str) -> str:
-    """Generate a daily note by replacing placeholders in the template."""
+def generate_daily_log(date: datetime, template: str) -> str:
+    """Generate a daily log by replacing placeholders in the template."""
     import re
 
     yesterday = date - timedelta(days=1)
@@ -95,10 +95,10 @@ def generate_daily_note(date: datetime, template: str) -> str:
     note = note.replace("2025-12-27", date_str)
 
     # Replace week reference (handles different week numbers)
-    note = re.sub(r"\[\[notes/weekly/\d{4}-W\d{2}\]\]", f"[[notes/weekly/{week}]]", note)
+    note = re.sub(r"\[\[logs/weekly/\d{4}-W\d{2}\]\]", f"[[logs/weekly/{week}]]", note)
 
     # Replace month reference
-    note = re.sub(r"\[\[notes/monthly/\d{4}-\d{2}\]\]", f"[[notes/monthly/{month}]]", note)
+    note = re.sub(r"\[\[logs/monthly/\d{4}-\d{2}\]\]", f"[[logs/monthly/{month}]]", note)
 
     # Replace the title line (Friday, December 27, 2025)
     day_pattern = r"# \w+, \w+ \d+, \d+"
@@ -165,29 +165,29 @@ def main():
     today = datetime.now()
     date_str = today.strftime("%Y-%m-%d")
 
-    daily_note_path = Path(project_dir) / "brain" / "notes" / "daily" / f"{date_str}.md"
-    schema_path = Path(project_dir) / "schemas" / "vault" / "daily-note.yaml"
+    daily_log_path = Path(project_dir) / "brain" / "logs" / "daily" / f"{date_str}.md"
+    schema_path = Path(project_dir) / "schemas" / "vault" / "daily-log.yaml"
 
-    # Check if daily note already exists
-    if daily_note_path.exists():
-        print(f"  Daily note: {daily_note_path.relative_to(project_dir)}")
+    # Check if daily log already exists
+    if daily_log_path.exists():
+        print(f"  Daily log: {daily_log_path.relative_to(project_dir)}")
         sys.exit(0)
 
     # Extract template from schema
     template = extract_example_from_schema(schema_path)
     if not template:
-        print(f"  Warning: Could not read daily note schema from {schema_path}")
+        print(f"  Warning: Could not read daily log schema from {schema_path}")
         sys.exit(1)
 
-    # Generate the note
-    note_content = generate_daily_note(today, template)
+    # Generate the log
+    log_content = generate_daily_log(today, template)
 
     # Ensure directory exists
-    daily_note_path.parent.mkdir(parents=True, exist_ok=True)
+    daily_log_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Write the note
-    daily_note_path.write_text(note_content)
-    print(f"  Daily note: {daily_note_path.relative_to(project_dir)} (created)")
+    # Write the log
+    daily_log_path.write_text(log_content)
+    print(f"  Daily log: {daily_log_path.relative_to(project_dir)} (created)")
 
     sys.exit(0)
 

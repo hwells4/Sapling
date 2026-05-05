@@ -14,7 +14,7 @@ except ImportError:
 # Map skill names to their schema files and which example block to extract
 SKILL_SCHEMAS = {
     "weekly": {
-        "schema": "schemas/vault/weekly-note.yaml",
+        "schema": "schemas/vault/weekly-log.yaml",
         "example_key": "example:",
     },
     "scrape-linkedin": {

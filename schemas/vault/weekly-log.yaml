@@ -1,5 +1,5 @@
-# Weekly Note Schema - Weekly Review and Planning
-# Location: brain/notes/weekly/YYYY-Www.md
+# Weekly Log Schema - Weekly Review and Planning
+# Location: brain/logs/weekly/YYYY-Www.md
 # Created by: /weekly command or manually
 
 schema_version: 1.0.0
@@ -8,9 +8,9 @@ changelog:
     date: 2025-12-27
     changes: Initial schema definition
 
-name: weekly-note
+name: weekly-log
 description: Weekly review, patterns, and planning
-location: brain/notes/weekly/
+location: brain/logs/weekly/
 filename_pattern: "YYYY-Www.md"
 created_by: /weekly command
 
@@ -41,18 +41,18 @@ frontmatter:
   optional:
     year:
       type: wikilink
-      target: notes/yearly/
-      description: Link to containing yearly note
+      target: logs/yearly/
+      description: Link to containing yearly log
 
     quarter:
       type: wikilink
-      target: notes/quarterly/
-      description: Link to containing quarterly note
+      target: logs/quarterly/
+      description: Link to containing quarterly log
 
     month:
       type: wikilink
-      target: notes/monthly/
-      description: Link to containing monthly note
+      target: logs/monthly/
+      description: Link to containing monthly log
 
 body_sections:
   - name: title
@@ -69,11 +69,11 @@ body_sections:
     required: true
     description: Links to each day of the week
     format: |
-      - [[notes/daily/YYYY-MM-DD|Monday]]
-      - [[notes/daily/YYYY-MM-DD|Tuesday]]
-      - [[notes/daily/YYYY-MM-DD|Wednesday]]
-      - [[notes/daily/YYYY-MM-DD|Thursday]]
-      - [[notes/daily/YYYY-MM-DD|Friday]]
+      - [[logs/daily/YYYY-MM-DD|Monday]]
+      - [[logs/daily/YYYY-MM-DD|Tuesday]]
+      - [[logs/daily/YYYY-MM-DD|Wednesday]]
+      - [[logs/daily/YYYY-MM-DD|Thursday]]
+      - [[logs/daily/YYYY-MM-DD|Friday]]
 
   - name: outputs_created
     heading: "## Outputs Created"
@@ -112,9 +112,9 @@ example: |
   schema_version: 1.0.0
   date: 2025-12-23
   type: weekly
-  year: "[[notes/yearly/2025]]"
-  quarter: "[[notes/quarterly/2025-Q4]]"
-  month: "[[notes/monthly/2025-12]]"
+  year: "[[logs/yearly/2025]]"
+  quarter: "[[logs/quarterly/2025-Q4]]"
+  month: "[[logs/monthly/2025-12]]"
   tags: [date/2025-12-23, weekly]
   ---
 
@@ -124,11 +124,11 @@ example: |
   Complete Personal OS architecture and begin migration
 
   ## Daily Links
-  - [[notes/daily/2025-12-23|Monday]]
-  - [[notes/daily/2025-12-24|Tuesday]]
-  - [[notes/daily/2025-12-25|Wednesday]]
-  - [[notes/daily/2025-12-26|Thursday]]
-  - [[notes/daily/2025-12-27|Friday]]
+  - [[logs/daily/2025-12-23|Monday]]
+  - [[logs/daily/2025-12-24|Tuesday]]
+  - [[logs/daily/2025-12-25|Wednesday]]
+  - [[logs/daily/2025-12-26|Thursday]]
+  - [[logs/daily/2025-12-27|Friday]]
 
   ## Outputs Created
   ```dataview

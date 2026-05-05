@@ -14,7 +14,7 @@ PROJECT_DIR = Path(os.environ.get("CLAUDE_PROJECT_DIR", "."))
 VAULT_PREFIX = "brain/"
 CHATROOM_PREFIX = "brain/traces/agents/"
 CALIBRATION_OUTPUT_PREFIX = "brain/outputs/calibrations/"
-DAILY_NOTE_TEMPLATE = "brain/notes/daily/"
+DAILY_LOG_TEMPLATE = "brain/logs/daily/"
 
 # Schema paths
 SCHEMA_DIR = "schemas/vault/"
@@ -32,9 +32,9 @@ SAFE_DIRS = ["brain/", "schemas/", ".claude/", ".beads/"]
 # Commit message area mappings (path prefix -> area name)
 # Used by git-smart-stage.sh via commit-areas.conf, but also available to Python handlers
 COMMIT_AREAS = {
-    "brain/notes/daily/": "daily notes",
-    "brain/notes/weekly/": "weekly notes",
-    "brain/notes/": "notes",
+    "brain/logs/daily/": "daily logs",
+    "brain/logs/weekly/": "weekly logs",
+    "brain/logs/": "logs",
     "brain/entities/": "entities",
     "brain/calls/": "calls",
     "brain/outputs/": "outputs",

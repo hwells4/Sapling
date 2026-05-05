@@ -27,7 +27,7 @@ purpose: |
   - Recurring tasks (templates that spawn items)
   - Manual captures (quick notes, ideas that need action)
 
-  Items persist with status changes. Daily notes query the inbox
+  Items persist with status changes. Daily logs query the inbox
   to show what needs attention today.
 
 frontmatter:

@@ -33,8 +33,8 @@ def get_schema_path(file_path: str) -> str | None:
         ("brain/library/", "schemas/vault/library.yaml"),
         ("brain/outputs/", "schemas/vault/output.yaml"),
         ("brain/traces/", "schemas/vault/trace.yaml"),
-        ("brain/notes/daily/", "schemas/vault/daily-note.yaml"),
-        ("brain/notes/weekly/", "schemas/vault/weekly-note.yaml"),
+        ("brain/logs/daily/", "schemas/vault/daily-log.yaml"),
+        ("brain/logs/weekly/", "schemas/vault/weekly-log.yaml"),
     ]
 
     for folder, schema in folder_to_schema:

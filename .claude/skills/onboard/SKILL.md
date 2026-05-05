@@ -76,7 +76,7 @@ Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly 
 16. GitHub CLI auth (optional): `gh auth login` for GitHub features
 17. Ask about starring the repo (optional): auto-star if authed, else manual link
 18. Commit with /commit
-19. Suggest `/today` to start first daily note
+19. Suggest `/today` to start first daily log
 </quick_start>
 
 <routing>
@@ -117,10 +117,10 @@ Explain that Sapling registers its core hooks in the project, then uses a local 
 
 | Profile | Command | Use for |
 |---------|---------|---------|
-| recommended | `python3 .claude/hooks/setup-local-hooks.py --profile recommended` | Default: daily note, schema/prose checks, skill routing, and git auto-commit/push |
+| recommended | `python3 .claude/hooks/setup-local-hooks.py --profile recommended` | Default: daily log, schema/prose checks, skill routing, and git auto-commit/push |
 | no-git | `python3 .claude/hooks/setup-local-hooks.py --profile no-git` | Keeps core hooks, but disables git auto-commit/push |
 
-Default to `recommended`. Do not offer a schema-less or daily-note-only profile.
+Default to `recommended`. Do not offer schema-less or reduced hook profiles.
 </hook_setup>
 
 <context_files>

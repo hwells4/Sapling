@@ -1,6 +1,6 @@
-# Daily Note Schema - Task Container and Daily Ledger
-# Location: brain/notes/daily/YYYY-MM-DD.md
-# Created by: /daily command or manually
+# Daily Log Schema - Task Container and Daily Ledger
+# Location: brain/logs/daily/YYYY-MM-DD.md
+# Created by: /today command or manually
 
 schema_version: 1.0.0
 changelog:
@@ -8,11 +8,11 @@ changelog:
     date: 2025-12-27
     changes: Initial schema definition
 
-name: daily-note
+name: daily-log
 description: Container for daily tasks, focus, and ledger of everything created
-location: brain/notes/daily/
+location: brain/logs/daily/
 filename_pattern: "YYYY-MM-DD.md"
-created_by: /daily command
+created_by: /today command
 
 frontmatter:
   required:
@@ -25,7 +25,7 @@ frontmatter:
     date:
       type: date
       format: YYYY-MM-DD
-      description: The date this note represents
+      description: The date this log represents
 
     type:
       type: literal
@@ -41,13 +41,13 @@ frontmatter:
   optional:
     week:
       type: wikilink
-      target: notes/weekly/
-      description: Link to containing weekly note
+      target: logs/weekly/
+      description: Link to containing weekly log
 
     month:
       type: wikilink
-      target: notes/monthly/
-      description: Link to containing monthly note
+      target: logs/monthly/
+      description: Link to containing monthly log
 
     energy:
       type: number
@@ -130,8 +130,8 @@ example: |
   schema_version: 1.0.0
   date: 2025-12-27
   type: daily
-  week: "[[notes/weekly/2025-W52]]"
-  month: "[[notes/monthly/2025-12]]"
+  week: "[[logs/weekly/2025-W52]]"
+  month: "[[logs/monthly/2025-12]]"
   tags: [date/2025-12-27, daily]
   ---
 

@@ -49,8 +49,8 @@ const INCLUDE_TIMESTAMP = true; // Add timestamp to commit message
 ### Automatic Messages
 Based on your changes:
 ```
-Daily note for 2024-01-15 + entity updates
-- Added: brain/notes/daily/2024-01-15.md
+Daily log for 2024-01-15 + entity updates
+- Added: brain/logs/daily/2024-01-15.md
 - Modified: brain/entities/language-learning.md
 - Modified: brain/context/goals.md
 ```
@@ -77,7 +77,7 @@ if (AUTO_PULL_FIRST) {
 
 ### Change Summary
 Analyzes your changes:
-- Daily notes added
+- Daily logs added
 - Projects modified
 - Goals updated
 - Templates changed
@@ -92,7 +92,7 @@ Analyzes your changes:
 
 ### Morning Routine
 ```bash
-claude code /daily          # Create daily note
+claude code /today          # Create daily log
 # ... work on notes ...
 claude code /push "Morning planning complete"
 ```
@@ -168,7 +168,7 @@ git config user.email "your.email@example.com"
 
 ### Good Messages
 - ✅ "Completed Q1 planning and project kickoff"
-- ✅ "Daily note: Fixed bug in authentication"
+- ✅ "Daily log: Fixed bug in authentication"
 - ✅ "Weekly review - adjusted monthly goals"
 
 ### Avoid
@@ -249,7 +249,7 @@ git lfs track "*.pdf"
 ```
 
 ## Related Commands
-- `/daily` - Create daily note
+- `/today` - Create daily log
 - `/weekly` - Run weekly review
 - `/onboard` - Load context
 

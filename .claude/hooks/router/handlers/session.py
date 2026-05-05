@@ -1,4 +1,4 @@
-"""Session handlers: init, daily note, dedup cleanup."""
+"""Session handlers: init, daily log, dedup cleanup."""
 
 import os
 import subprocess
@@ -12,7 +12,7 @@ except ImportError:
 
 
 def session_init(input_data: dict) -> HandlerResult:
-    """SessionStart: run session-init.sh (sets env, creates daily note)."""
+    """SessionStart: run session-init.sh (sets env, creates daily log)."""
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
     script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", "session-init.sh")
 

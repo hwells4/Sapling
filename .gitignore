@@ -31,11 +31,11 @@ node_modules/
 .obsidian/workspaces.json
 
 # Personal brain content (user-specific, not boilerplate)
-brain/notes/daily/
-brain/notes/weekly/
-brain/notes/monthly/
-brain/notes/quarterly/
-brain/notes/yearly/
+brain/logs/daily/
+brain/logs/weekly/
+brain/logs/monthly/
+brain/logs/quarterly/
+brain/logs/yearly/
 brain/plans/
 brain/context/about-me.md
 brain/context/business.md

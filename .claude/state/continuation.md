@@ -18,11 +18,11 @@ This file was auto-saved before context compaction. Read this to resume your wor
 Check these locations for in-progress work:
 
 1. **Todo list:** The TodoWrite tool may have tracked progress
-2. **Daily note:** `brain/notes/daily/`
+2. **Daily log:** `brain/logs/daily/`
 
 
 ## Post-Compaction Instructions
 
-1. Read the daily note to understand what was being worked on
+1. Read the daily log to understand what was being worked on
 2. If there was a chatroom, check its status
 3. Continue from where you left off

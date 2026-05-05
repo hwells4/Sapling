@@ -136,9 +136,9 @@ build_commit_msg() {
     local areas
     areas=$(git diff --cached --name-only | while IFS= read -r path; do
         case "$path" in
-            brain/notes/daily/*)  echo "daily notes" ;;
-            brain/notes/weekly/*) echo "weekly notes" ;;
-            brain/notes/*)        echo "notes" ;;
+            brain/logs/daily/*)  echo "daily logs" ;;
+            brain/logs/weekly/*) echo "weekly logs" ;;
+            brain/logs/*)        echo "logs" ;;
             brain/entities/*)     echo "entities" ;;
             brain/calls/*)        echo "calls" ;;
             brain/outputs/*)      echo "outputs" ;;

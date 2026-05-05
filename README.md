@@ -37,7 +37,7 @@ claude
 
 ## Hooks
 
-Hooks are the core of Sapling. The recommended profile enables schema/prose checks, skill routing, session logging, daily-note setup, memory when supported, and git auto-commit/push.
+Hooks are the core of Sapling. The recommended profile enables schema/prose checks, skill routing, session logging, daily log setup, memory when supported, and git auto-commit/push.
 
 ```bash
 python3 .claude/hooks/setup-local-hooks.py
@@ -61,7 +61,7 @@ Hook authoring lives in the maintained `create-hooks` plugin:
 | Command | Description |
 |---------|-------------|
 | `/onboard` | First-run setup |
-| `/today` | Create or open today's daily note |
+| `/today` | Create or open today's daily log |
 | `/task` | Start tracked work |
 | `/create-skill` | Create or modify Claude Code skills |
 | `/ideate` | Generate and winnow improvement ideas |

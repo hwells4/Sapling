@@ -96,7 +96,7 @@ frontmatter:
 
     task_ref:
       type: wikilink
-      description: Link to originating task in daily note (e.g., [[notes/daily/2025-12-27#^task-abc]])
+      description: Link to originating task in daily log (e.g., [[logs/daily/2025-12-27#^task-abc]])
 
     published_url:
       type: url
@@ -138,7 +138,7 @@ example: |
   projects: []
   hypothesis: "[[hypotheses/2025-12-27-short-posts-engagement]]"
   trace: "[[traces/2025-12-27-linkedin-vibe-coding]]"
-  task_ref: "[[notes/daily/2025-12-27#^task-abc]]"
+  task_ref: "[[logs/daily/2025-12-27#^task-abc]]"
   published_url: null
   tags:
     - date/2025-12-27

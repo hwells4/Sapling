@@ -125,7 +125,7 @@ bd sync                     # Push to git
 | Command | Purpose |
 |---------|---------|
 | `/task` | Start tracked work |
-| `/today` | Create or open today's daily note |
+| `/today` | Create or open today's daily log |
 | `/weekly` | Weekly review process |
 | `/create-skill` | Create or modify Claude Code skills |
 | `/create-hooks:create-hook` | Create, edit, analyze, or debug hooks from the create-hooks plugin |

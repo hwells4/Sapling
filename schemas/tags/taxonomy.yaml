@@ -28,10 +28,10 @@ namespaces:
     used_by: [library]
   daily:
     pattern: "daily"
-    used_by: [daily-note]
+    used_by: [daily-log]
   weekly:
     pattern: "weekly"
-    used_by: [weekly-note]
+    used_by: [weekly-log]
 
   # Entity namespaces — derived from frontmatter people/companies
   person:

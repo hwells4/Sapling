@@ -43,7 +43,7 @@ Creates context files in `brain/context/`:
 
 ### Phase 5: Explain the System
 - How context files work
-- How `/today` opens the daily note
+- How `/today` opens the daily log
 - How beads tracks real work
 - How `/task` can be used for larger tracked workflows
 
@@ -73,7 +73,7 @@ If onboarding is interrupted, progress is saved to `.claude/onboard-state.json`.
 
 ## Related Commands
 
-- `/today` - Create your first daily note (suggested after onboard)
+- `/today` - Create your first daily log (suggested after onboard)
 - `/task` - Start tracked work
 
 ---

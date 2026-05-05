@@ -1,7 +1,7 @@
-"""Session logger: records session activity to daily note via git stats.
+"""Session logger: records session activity to daily log via git stats.
 
 Hooks into SessionStart (record start state) and Stop/PreCompact (append log
-entry to daily note before auto-commit stages it). Single commit, no loops.
+entry to daily log before auto-commit stages it). Single commit, no loops.
 
 All git operations fail gracefully — no env vars or config required.
 """
@@ -23,9 +23,9 @@ except ImportError:
 # --- Area classification (mirrors git-smart-stage.sh build_commit_msg) ---
 
 AREA_MAP = [
-    ("brain/notes/daily/", "daily notes"),
-    ("brain/notes/weekly/", "weekly notes"),
-    ("brain/notes/", "notes"),
+    ("brain/logs/daily/", "daily logs"),
+    ("brain/logs/weekly/", "weekly logs"),
+    ("brain/logs/", "logs"),
     ("brain/entities/", "entities"),
     ("brain/calls/", "calls"),
     ("brain/outputs/", "outputs"),
@@ -61,11 +61,11 @@ def _state_path() -> Path:
     return Path(_project_dir()) / ".claude" / "state" / "session-log.json"
 
 
-def _daily_note_path(date_str: str | None = None) -> Path | None:
-    """Find today's daily note. Returns None if it doesn't exist."""
+def _daily_log_path(date_str: str | None = None) -> Path | None:
+    """Find today's daily log. Returns None if it doesn't exist."""
     if date_str is None:
         date_str = datetime.now().strftime("%Y-%m-%d")
-    path = Path(_project_dir()) / "brain" / "notes" / "daily" / f"{date_str}.md"
+    path = Path(_project_dir()) / "brain" / "logs" / "daily" / f"{date_str}.md"
     return path if path.exists() else None
 
 
@@ -115,7 +115,7 @@ def _is_noise(path: str) -> bool:
 
 
 def _get_session_changes(
-    start_commit: str | None, daily_note_rel: str | None = None
+    start_commit: str | None, daily_log_rel: str | None = None
 ) -> dict:
     """Get all session changes: tracked diffs + untracked new files.
 
@@ -127,8 +127,8 @@ def _get_session_changes(
     """
     STATUS_LABELS = {"A": "new", "D": "deleted", "R": "renamed", "C": "copied"}
     exclude = set(_SELF_PATHS)
-    if daily_note_rel:
-        exclude.add(daily_note_rel)
+    if daily_log_rel:
+        exclude.add(daily_log_rel)
 
     result: dict = {"files": [], "insertions": 0, "deletions": 0}
     seen_paths: set[str] = set()
@@ -223,7 +223,7 @@ def _format_file_list(files: list[tuple[str, str]]) -> list[str]:
 def _format_stats_line(
     total_files: int, insertions: int, deletions: int, areas: list[str]
 ) -> str:
-    """Format the backtick stats line for the daily note."""
+    """Format the backtick stats line for the daily log."""
     if total_files == 0:
         return "`0 files changed · (no changes)`"
 
@@ -260,9 +260,9 @@ def session_log_start(input_data: dict) -> HandlerResult:
 
 
 def log_session_summary(input_data: dict) -> HandlerResult:
-    """Stop/PreCompact: append session stats to today's daily note.
+    """Stop/PreCompact: append session stats to today's daily log.
 
-    Runs BEFORE git_auto_commit_stop so the updated daily note gets
+    Runs BEFORE git_auto_commit_stop so the updated daily log gets
     included in the same commit. Single commit, no loop.
     """
     try:
@@ -275,23 +275,23 @@ def log_session_summary(input_data: dict) -> HandlerResult:
                 stderr_message="[session-log] Already logged, skipping"
             )
 
-        # Must have a daily note to write to
+        # Must have a daily log to write to
         log_date = state.get("date", datetime.now().strftime("%Y-%m-%d"))
-        daily_note = _daily_note_path(log_date)
-        if not daily_note:
+        daily_log = _daily_log_path(log_date)
+        if not daily_log:
             return HandlerResult(
-                stderr_message="[session-log] No daily note, skipping"
+                stderr_message="[session-log] No daily log, skipping"
             )
 
-        # Relative path of the daily note (to exclude from change list)
+        # Relative path of the daily log (to exclude from change list)
         try:
-            daily_note_rel = str(daily_note.relative_to(_project_dir()))
+            daily_log_rel = str(daily_log.relative_to(_project_dir()))
         except ValueError:
-            daily_note_rel = None
+            daily_log_rel = None
 
         # Gather session changes
         start_commit = state.get("start_commit")
-        changes = _get_session_changes(start_commit, daily_note_rel)
+        changes = _get_session_changes(start_commit, daily_log_rel)
         all_paths = [path for _, path in changes["files"]]
 
         # Skip if truly nothing happened
@@ -329,8 +329,8 @@ def log_session_summary(input_data: dict) -> HandlerResult:
             entry_lines.append("")
         entry_lines.extend([stats_line, ""])
 
-        # Read daily note and append
-        content = daily_note.read_text()
+        # Read daily log and append
+        content = daily_log.read_text()
 
         if "## Session Log" in content:
             log_pos = content.index("## Session Log")
@@ -347,7 +347,7 @@ def log_session_summary(input_data: dict) -> HandlerResult:
             section = "\n## Session Log\n\n" + "\n".join(entry_lines)
             content = content.rstrip("\n") + "\n" + section
 
-        daily_note.write_text(content)
+        daily_log.write_text(content)
 
         # Mark logged
         if session_id:

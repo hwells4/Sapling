@@ -248,7 +248,7 @@ header: "Hooks"
 multiSelect: false
 options:
   - label: "Recommended"
-    description: "Daily note, schema/prose checks, skill routing, and git auto-commit/push"
+    description: "Daily log, schema/prose checks, skill routing, and git auto-commit/push"
   - label: "No git automation"
     description: "Keep core schema/prose/skill hooks, but disable auto-commit/push"
 ```
@@ -298,8 +298,8 @@ How Sapling OS Works:
    These files help me understand you. I reference them when helping
    with tasks, writing in your voice, or making recommendations.
 
-2. **Daily Notes** (/today)
-   Start with /today to create or open the current daily note.
+2. **Daily Logs** (/today)
+   Start with /today to create or open the current daily log.
    This becomes the memory that makes me more useful over time.
 
 3. **Tasks** (beads)
@@ -428,7 +428,7 @@ Invoke `/commit` - it will create an appropriate commit message.
 ```
 Ready to get started? Here's what to do next:
 
-  /today     - Create your first daily note
+  /today     - Create your first daily log
   bd ready   - See available tracked work
   /task      - Start a larger tracked task
 

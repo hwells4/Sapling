@@ -1,6 +1,6 @@
 # Onboard Command
 
-Short alias for `/onboarding`. Checks local setup, reads project context, collects user context, and configures hooks.
+First-run setup for SaplingOS. Checks local setup, reads project context, collects user context, and configures hooks.
 
 ## Usage
 
@@ -8,7 +8,6 @@ Short alias for `/onboarding`. Checks local setup, reads project context, collec
 /onboard              # Start fresh onboarding
 /onboard --creature   # Just change creature selection
 /onboard --reset      # Re-run full onboarding (overwrites existing)
-/onboarding           # Equivalent long-form command
 ```
 
 ## What Happens

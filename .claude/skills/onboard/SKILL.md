@@ -12,7 +12,6 @@ Guide new users through SaplingOS setup: verify local prerequisites, read availa
 
 <usage>
 ```
-/onboarding           # Start fresh onboarding
 /onboard              # Start fresh onboarding
 /onboard --creature   # Just change creature selection
 /onboard --reset      # Re-run full onboarding (overwrites existing)
@@ -53,7 +52,7 @@ If user approves, run the install command, then continue. If `bd` is available, 
 > ```
 > pip install pyyaml
 > ```
-> Then run `/onboarding` again.
+> Then run `/onboard` again.
 
 Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly skipped during onboarding.
 </dependencies>

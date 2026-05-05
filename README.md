@@ -2,7 +2,7 @@
 
 A personal operating system for Claude Code: local knowledge, hooks, and durable outputs.
 
-Run onboarding first. It checks the local repo, reads project docs like `README.md`, `AGENTS.md`, and `CLAUDE.md`, configures hooks, and creates your starting context.
+Run `/onboard` first. It checks the local repo, reads project docs like `README.md`, `AGENTS.md`, and `CLAUDE.md`, configures hooks, and creates your starting context.
 
 ## Quick Start
 
@@ -24,10 +24,8 @@ claude
 ### 3. Run Onboarding
 
 ```text
-/onboarding
+/onboard
 ```
-
-`/onboard` also works.
 
 ## What Onboarding Does
 
@@ -62,8 +60,7 @@ Hook authoring lives in the maintained `create-hooks` plugin:
 
 | Command | Description |
 |---------|-------------|
-| `/onboarding` | First-run setup |
-| `/onboard` | Alias for `/onboarding` |
+| `/onboard` | First-run setup |
 | `/today` | Create or open today's daily note |
 | `/task` | Start tracked work |
 | `/create-skill` | Create or modify Claude Code skills |

@@ -137,11 +137,9 @@ build_commit_msg() {
             brain/entities/*)     echo "entities" ;;
             brain/calls/*)        echo "calls" ;;
             brain/outputs/*)      echo "outputs" ;;
-            brain/traces/*)       echo "traces" ;;
             brain/library/*)      echo "library" ;;
             brain/templates/*)    echo "templates" ;;
             brain/context/*)      echo "context" ;;
-            brain/inbox/*)        echo "inbox" ;;
             brain/*)              echo "brain" ;;
             schemas/*)            echo "schemas" ;;
             .claude/*)            echo "claude config" ;;

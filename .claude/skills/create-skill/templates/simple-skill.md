@@ -46,12 +46,12 @@ context_budget:
 
 ---
 
-## Example: Decision Traces Skill
+## Example: Decision Summary Skill
 
 ```markdown
 ---
-name: decision-traces
-description: Extract meaningful decisions from completed tasks. Use after task completion to capture learnings that help future agents.
+name: decision-summary
+description: Summarize meaningful decisions from completed tasks. Use after task completion to capture learnings that help future agents.
 context_budget:
   skill_md: 100
 ---
@@ -63,7 +63,7 @@ Extract decisions made during a task that would help future agents make better c
 <quick_start>
 1. Review the task conversation
 2. Identify decision points
-3. Write decisions to trace file
+3. Write decisions to a durable output when the user wants them saved
 </quick_start>
 
 <process>
@@ -79,14 +79,14 @@ Extract decisions made during a task that would help future agents make better c
    - Why (the rationale)
    - Context that informed it
 
-3. **Write to trace** [LOW freedom]
-   Append to the trace file at exact path specified.
+3. **Write summary** [LOW freedom]
+   If saving is requested, write to `brain/outputs/YYYY-MM-DD-decision-summary.md`.
    Use format: ### Decision: {title}\n**Rationale:** {why}
 </process>
 
 <success_criteria>
 - [ ] 2-5 meaningful decisions extracted
 - [ ] Each has clear rationale
-- [ ] Written to correct trace file
+- [ ] Written to chat or the requested output file
 </success_criteria>
 ```

@@ -80,11 +80,10 @@ body_sections:
         format: |
           - [ ] /task {description} ^task-{id}
             - **Output:** [[outputs/...]]
-            - **Hypothesis:** [[hypotheses/...]]
       - heading: "### Async"
         description: Tasks done outside the system
         format: "- [ ] {description}"
-      - heading: "### Triage"
+      - heading: "### Needs Input"
         description: Items needing human guidance
         format: "- [ ] {description}"
 
@@ -121,7 +120,6 @@ task_syntax: |
   Tasks use this format for linking:
   - [ ] /task {description} ^{block-id}
     - **Output:** [[outputs/...]]
-    - **Hypothesis:** [[hypotheses/...]]
 
   The ^{block-id} enables direct linking from outputs back to originating task.
 
@@ -153,7 +151,7 @@ example: |
   - [ ] Call Jane re: January timeline
   - [ ] Review Linear PRD comments
 
-  ### Triage
+  ### Needs Input
   - [ ] Classifier found unknown domain - review
 
   ## Created Today
@@ -164,7 +162,7 @@ example: |
   ```
 
   ## Decisions Made
-  - [[traces/2025-12-27-architecture-decisions]]
+  - Created [[outputs/2025-12-27-architecture-plan]]
 
   ## Evening Reflection
   **Energy:** 4/5

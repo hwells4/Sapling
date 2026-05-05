@@ -84,16 +84,6 @@ frontmatter:
       items: wikilink
       description: Related projects
 
-    hypothesis:
-      type: wikilink
-      target: hypotheses/
-      description: Hypothesis being tested by this output
-
-    trace:
-      type: wikilink
-      target: traces/
-      description: Decision trace from creation process
-
     task_ref:
       type: wikilink
       description: Link to originating task in daily log (e.g., [[logs/daily/2025-12-27#^task-abc]])
@@ -112,12 +102,6 @@ body_sections:
     required: true
     description: The actual deliverable content
 
-  - name: hypothesis_link
-    heading: "## Hypothesis"
-    required: false
-    description: Link to hypothesis being tested
-    format: "Testing: [[hypotheses/{slug}]]"
-
   - name: outcome
     heading: "## Outcome"
     required: false
@@ -125,7 +109,7 @@ body_sections:
     format: |
       - **Published:** {date or null}
       - **Engagement:** {metrics or null}
-      - **Hypothesis result:** {pending|confirmed|falsified}
+      - **Result:** {pending|successful|needs-follow-up}
 
 example: |
   ---
@@ -136,8 +120,6 @@ example: |
   people: ["[[entities/jane-smith]]"]
   companies: ["[[entities/acme-corp]]"]
   projects: []
-  hypothesis: "[[hypotheses/2025-12-27-short-posts-engagement]]"
-  trace: "[[traces/2025-12-27-linkedin-vibe-coding]]"
   task_ref: "[[logs/daily/2025-12-27#^task-abc]]"
   published_url: null
   tags:
@@ -155,10 +137,7 @@ example: |
 
   ---
 
-  ## Hypothesis
-  Testing: [[hypotheses/2025-12-27-short-posts-engagement]]
-
   ## Outcome
   - **Published:** null
   - **Engagement:** null
-  - **Hypothesis result:** pending
+  - **Result:** pending

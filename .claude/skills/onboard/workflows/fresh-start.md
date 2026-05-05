@@ -1,7 +1,7 @@
 # Fresh Start Onboarding Workflow
 
 <objective>
-Complete onboarding flow for new users. Checks local setup, collects context through interactive questions, stores creature selection, and populates context files. Uses AskUserQuestion throughout for a smooth, clickable experience.
+Complete onboarding flow for new users. Checks local setup, collects context through interactive questions, configures hooks, and populates context files. Uses AskUserQuestion throughout for a smooth, clickable experience.
 </objective>
 
 <workflow>
@@ -35,44 +35,17 @@ This setup takes about 3-5 minutes. I'm going to ask you a few questions
 to tailor this system to your preferences and get you started on the right foot.
 
 Here's what we'll cover:
-  1. Pick your companion creature (the fun part!)
-  2. Learn a bit about your work
-  3. Set up optional features and local hooks
-  4. Generate your personal context files
+  1. Learn a bit about your work
+  2. Set up optional features and local hooks
+  3. Generate your personal context files
 
-Everything except the creature is skippable—you can always add more later.
+Every personal context question is skippable—you can always add more later.
 Ready? Let's go!
 ```
 
-### Step 3: Creature Selection (Required)
-Use AskUserQuestion:
-
-```yaml
-question: "Choose your elemental egg. It will hatch into your companion creature after your first calibration."
-header: "Creature"
-multiSelect: false
-options:
-  - label: "🔥 Fire Egg"
-    description: "Hatches into Ember. Burns through blockers, iterates fast."
-  - label: "💧 Water Egg"
-    description: "Hatches into Drift. Flows around obstacles, adaptable."
-  - label: "🌿 Nature Egg"
-    description: "Hatches into Bloom. Grows organically, cultivates knowledge."
-```
-
-**On selection:**
-1. Map selection to creature name (ember/drift/bloom)
-2. Update `.claude/stats.yaml`:
-   ```yaml
-   creature: ember  # or drift/bloom
-   creature_selected_at: 2025-01-08
-   ```
-3. Show creature egg art from `.claude/creatures/{name}/egg.txt`
-4. Brief message: "Great choice! {Creature} will grow alongside you."
-
 ## Phase 2: Understanding Your Work
 
-### Step 4: Business Context
+### Step 3: Business Context
 Use AskUserQuestion:
 
 ```yaml
@@ -116,7 +89,7 @@ Store response for business.md.
 
 **If "No, this is personal use":** Mark `business_skipped: true`, continue
 
-### Step 5: Your Role
+### Step 4: Your Role
 Use AskUserQuestion:
 
 ```yaml
@@ -136,7 +109,7 @@ options:
 
 Store for about-me.md.
 
-### Step 6: Primary Use Case
+### Step 5: Primary Use Case
 Use AskUserQuestion:
 
 ```yaml
@@ -156,7 +129,7 @@ options:
 
 Store for preferences.md.
 
-### Step 7: Writing Samples (Optional)
+### Step 6: Writing Samples (Optional)
 Use AskUserQuestion:
 
 ```yaml
@@ -180,7 +153,7 @@ options:
 
 ## Phase 3: Optional Features
 
-### Step 8: Image Generation Setup
+### Step 7: Image Generation Setup
 Use AskUserQuestion:
 
 ```yaml
@@ -232,7 +205,7 @@ options:
 
 **If "Skip":** Mark `image_gen_skipped: true`, continue
 
-### Step 8.5: Local Hook Setup
+### Step 8: Local Hook Setup
 Explain:
 
 ```
@@ -306,9 +279,9 @@ How Sapling OS Works:
    Beads tracks active work across sessions. Run bd ready to see what
    can be worked next, and bd close when work is complete.
 
-4. **Advanced Learning** (/task)
-   If you want Sapling to learn from choices over time, /task can capture
-   meaningful decisions as part of larger tracked work.
+4. **Durable Outputs** (brain/outputs/)
+   Drafts, PRDs, proposals, research summaries, and other durable work
+   should be saved as outputs instead of scattered across the repo.
 
 The more you use it, the better it gets.
 ```
@@ -317,12 +290,12 @@ The more you use it, the better it gets.
 ```
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║   🎉 WELCOME TO SAPLING OS, {NAME}!                          ║
+║   WELCOME TO SAPLING OS, {NAME}!                              ║
 ║                                                               ║
-║   Your creature: {emoji} {CREATURE_NAME} (Egg)                ║
 ║   Context files: {count}/4 created                            ║
+║   Hooks profile: {profile}                                    ║
 ║                                                               ║
-║   Complete tasks with /task to hatch your egg!                ║
+║   Start with /today, then use /task for tracked work.          ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
@@ -387,16 +360,16 @@ options:
    ```
 
 2. **If authenticated:**
-   ```bash
-   gh api -X PUT /user/starred/anthropics/sapling-os
-   ```
+  ```bash
+  gh api -X PUT /user/starred/hwells4/Sapling
+  ```
    - On success: "Done! Thanks for the support! ⭐"
    - On failure: Provide manual link as fallback
 
 3. **If NOT authenticated or `gh` unavailable:**
    ```
    No worries! You can star it manually here:
-   https://github.com/anthropics/sapling-os
+   https://github.com/hwells4/Sapling
 
    Just click the ⭐ Star button in the top right!
    ```
@@ -412,7 +385,6 @@ Use the `/commit` skill to save all onboarding files:
 
 **Files to stage:**
 - `brain/context/*.md` - Generated context files
-- `.claude/stats.yaml` - Creature selection and timestamps
 
 **Do NOT stage:**
 - `.env.local` - Contains API keys
@@ -432,7 +404,7 @@ Ready to get started? Here's what to do next:
   bd ready   - See available tracked work
   /task      - Start a larger tracked task
 
-Your egg is waiting. Let's get to work!
+You're set up and ready to work.
 ```
 </workflow>
 
@@ -443,8 +415,7 @@ Save state after each step to `.claude/onboard-state.json`:
 {
   "started_at": "2025-01-08T10:00:00Z",
   "name": "Harrison",
-  "creature": "ember",
-  "completed_steps": ["name", "welcome", "creature", "business", "role", "usecase", "writing", "image_gen", "github_auth", "star_repo"],
+  "completed_steps": ["name", "welcome", "business", "role", "usecase", "writing", "image_gen", "hooks", "github_auth", "star_repo"],
   "collected_data": {
     "company_url": "https://example.com",
     "company_extracted": {...},

@@ -22,7 +22,7 @@ Verify that a skill's content is still accurate. Skills reference external APIs,
    | API/Service | Attio, Stripe | Context7 + WebSearch |
    | CLI Tools | git, npm | Run commands |
    | Framework | Rails, React | Context7 docs |
-   | Pure Process | decision-traces | No external deps |
+   | Pure Process | decision-summary | No external deps |
 
 3. **Extract verifiable claims** [MEDIUM freedom]
    Scan for:

@@ -12,13 +12,10 @@ PROJECT_DIR = Path(os.environ.get("CLAUDE_PROJECT_DIR", "."))
 
 # Vault structure prefixes (used in path matching)
 VAULT_PREFIX = "brain/"
-CHATROOM_PREFIX = "brain/traces/agents/"
-CALIBRATION_OUTPUT_PREFIX = "brain/outputs/calibrations/"
 DAILY_LOG_TEMPLATE = "brain/logs/daily/"
 
 # Schema paths
 SCHEMA_DIR = "schemas/vault/"
-MIGRATION_DIR = "schemas/migrations/"
 
 # Stats file (protected from direct writes)
 STATS_FILE = ".claude/stats.yaml"
@@ -38,11 +35,9 @@ COMMIT_AREAS = {
     "brain/entities/": "entities",
     "brain/calls/": "calls",
     "brain/outputs/": "outputs",
-    "brain/traces/": "traces",
     "brain/library/": "library",
     "brain/templates/": "templates",
     "brain/context/": "context",
-    "brain/inbox/": "inbox",
     "brain/": "brain",
     "schemas/": "schemas",
     ".claude/": "claude config",

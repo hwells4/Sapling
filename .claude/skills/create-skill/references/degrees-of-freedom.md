@@ -172,4 +172,4 @@ Do not use --force or --amend.
 2. Match specificity to fragility
 3. Creative = high freedom (principles)
 4. Mechanical = low freedom (scripts)
-5. Test across models to verify calibration
+5. Test across models to verify consistent behavior

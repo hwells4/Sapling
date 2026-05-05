@@ -117,14 +117,14 @@ def generate_daily_log(date: datetime, template: str) -> str:
         flags=re.DOTALL,
     )
     note = re.sub(
-        r"### Async\n.*?(?=### Triage)",
+        r"### Async\n.*?(?=### Needs Input)",
         "### Async\n*None yet*\n\n",
         note,
         flags=re.DOTALL,
     )
     note = re.sub(
-        r"### Triage\n.*?(?=## Created Today)",
-        "### Triage\n*None yet*\n\n",
+        r"### Needs Input\n.*?(?=## Created Today)",
+        "### Needs Input\n*None yet*\n\n",
         note,
         flags=re.DOTALL,
     )

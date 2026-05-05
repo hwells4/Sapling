@@ -11,8 +11,8 @@ You manage this system: a structured vault (`brain/`), reusable workflows (`.cla
 - `brain/entities/` → People and companies
 - `brain/calls/` → Call notes
 - `brain/outputs/` → Deliverables (posts, PRDs, emails)
-- `brain/traces/` → Legacy learning traces
-- `brain/inbox/` → Legacy inbox items; prefer beads for active tasks
+- `brain/logs/` → Daily and weekly operating logs
+- `brain/library/` → Reference material and retrospectives
 - `brain/context/` → Identity, business, voice
 
 **By Tag (most flexible):**
@@ -40,7 +40,7 @@ grep -r "\[\[entities/john-doe\]\]" brain/
 
 **Source of Truth:**
 - **Beads** owns: All tasks (human and agent), dependencies, work status
-- **Obsidian (brain/)** owns: Knowledge—entities, calls, outputs, traces, context
+- **Obsidian (brain/)** owns: Knowledge: context, entities, calls, library, logs, and outputs
 </querying>
 
 <tools>
@@ -132,7 +132,6 @@ bd sync                     # Push to git
 | `/ideate` | Generate and winnow improvement ideas |
 | `/refine` | Iteratively refine plans or beads |
 | `/commit` | Create an atomic git commit |
-| `/migrate` | Run schema migrations |
 </commands>
 
 <behaviors>

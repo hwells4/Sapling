@@ -15,7 +15,7 @@ Create a simple, single-file skill (max 150 lines) for straightforward tasks.
 - Task has one clear workflow
 - No need for sub-agents or context isolation
 - No shared references across use cases
-- Examples: decision-traces, goal-tracking, basic utilities
+- Examples: decision-summary, goal-tracking, basic utilities
 </when_to_use>
 
 <process>

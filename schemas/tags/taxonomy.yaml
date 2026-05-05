@@ -17,12 +17,6 @@ namespaces:
   output:
     pattern: "output"
     used_by: [output]
-  trace:
-    pattern: "trace"
-    used_by: [trace]
-  inbox:
-    pattern: "inbox"
-    used_by: [inbox]
   library:
     pattern: "library"
     used_by: [library]
@@ -52,29 +46,11 @@ namespaces:
     description: Subject matter. Check existing usage before creating new topics.
   output_type:
     pattern: "output/{type}"
-    values: [linkedin-post, email, proposal, prd, script, article, client-update, research, calibration]
+    values: [linkedin-post, email, proposal, prd, script, article, client-update, research]
     extensible: true
   status:
     pattern: "status/{status}"
     values: [draft, review, published, sent, archived, done, cancelled, testing, verified, falsified]
-  source:
-    pattern: "source/{source}"
-    values: [call, email, recurring, manual]
-    used_by: [inbox]
-  urgency:
-    pattern: "urgency/{level}"
-    values: [critical, high, normal, low]
-    used_by: [inbox]
-
-  # Trace-specific
-  domain:
-    pattern: "domain/{domain}"
-    values: [content, process, client, technical, sales]
-    used_by: [trace]
-  pattern:
-    pattern: "pattern/{slug}"
-    description: Reusable decision pattern name
-    used_by: [trace]
   signal:
     pattern: "signal/{type}-{value}"
     description: Client signals from calls

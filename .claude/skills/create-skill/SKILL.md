@@ -93,7 +93,7 @@ Ask the user which they need, or infer from their request.
 Help user select archetype:
 
 **Simple** - Single SKILL.md (max 150 lines)
-- Decision traces, goal tracking, basic utilities
+- Decision summaries, goal tracking, basic utilities
 - No sub-components needed
 - One clear workflow
 

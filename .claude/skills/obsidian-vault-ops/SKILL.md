@@ -16,7 +16,6 @@ brain/
 ├── logs/weekly/         # YYYY-Www.md weekly logs
 ├── calls/                # Call notes (flat)
 ├── outputs/              # Deliverables
-├── traces/               # Legacy learning traces
 ├── library/              # Reference material (posts, etc.)
 ├── context/              # AI context files
 └── templates/            # File templates

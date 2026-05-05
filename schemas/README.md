@@ -25,12 +25,12 @@ Each file type has a YAML schema defining:
 
 ```
 schemas/vault/
-├── call.yaml       # Call notes
-├── entity.yaml     # People, companies
-├── library.yaml    # Saved content
-├── output.yaml     # Posts, PRDs, deliverables
-├── trace.yaml      # Decision traces
-└── ...
+├── call.yaml        # Call notes
+├── daily-log.yaml   # Daily operating log
+├── entity.yaml      # People, companies
+├── library.yaml     # Saved content
+├── output.yaml      # Posts, PRDs, deliverables
+└── weekly-log.yaml  # Weekly review log
 ```
 
 ### 2. Schema Hook
@@ -38,20 +38,6 @@ schemas/vault/
 When Claude creates or edits files in `brain/`, a hook validates the output against the schema. If something's wrong, it catches it immediately.
 
 This means you never end up with malformed files—Claude writes it right the first time, every time.
-
-### 3. Migrations (`migrations/`)
-
-When a schema updates (new fields, renamed fields, restructured data), a migration is generated:
-
-```
-migrations/
-├── trace-1.0.0-to-1.1.0.md
-├── trace-1.1.0-to-1.2.0.md
-├── library-legacy-to-1.2.0.md
-└── ...
-```
-
-Run `/migrate` to update old files to the current schema version. This keeps your entire vault consistent even as the system evolves.
 
 ## Quick Reference
 
@@ -61,14 +47,8 @@ Run `/migrate` to update old files to the current schema version. This keeps you
 | `entity` | `brain/entities/` | People and company profiles |
 | `library` | `brain/library/` | Saved articles, resources |
 | `output` | `brain/outputs/` | Deliverables (posts, PRDs, emails) |
-| `trace` | `brain/traces/` | Decision traces for calibration |
 | `daily-log` | `brain/logs/daily/` | Daily logs |
 | `weekly-log` | `brain/logs/weekly/` | Weekly reviews |
-
-## Commands
-
-- `/migrate` - Run pending migrations on outdated files
-- `/migrate --detect` - Show which files need migration
 
 ## Adding New Schemas
 

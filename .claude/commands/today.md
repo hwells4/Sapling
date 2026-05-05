@@ -4,7 +4,7 @@ description: Create or open today's daily log
 
 # /today
 
-Create or open today's daily log without scanning email or inbox queues.
+Create or open today's daily log without scanning external task queues.
 
 ## Execute
 

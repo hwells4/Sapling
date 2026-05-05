@@ -29,10 +29,8 @@ def get_schema_path(file_path: str) -> str | None:
     folder_to_schema = [
         ("brain/calls/", "schemas/vault/call.yaml"),
         ("brain/entities/", "schemas/vault/entity.yaml"),
-        ("brain/inbox/", "schemas/vault/inbox.yaml"),
         ("brain/library/", "schemas/vault/library.yaml"),
         ("brain/outputs/", "schemas/vault/output.yaml"),
-        ("brain/traces/", "schemas/vault/trace.yaml"),
         ("brain/logs/daily/", "schemas/vault/daily-log.yaml"),
         ("brain/logs/weekly/", "schemas/vault/weekly-log.yaml"),
     ]
@@ -118,7 +116,7 @@ def extract_example_from_schema(schema_path: str) -> str | None:
     with open(schema_path) as f:
         content = f.read()
 
-    # Find an example block (example: or example_trace: etc)
+    # Find an example block (example: or example_* variants)
     import re
 
     match = re.search(r"^(example\w*):\s*\|", content, re.MULTILINE)

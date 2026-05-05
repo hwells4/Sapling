@@ -1,9 +1,5 @@
 # Personal OS Statistics
 # Created during /onboard
 
-# Creature companion (set during onboarding)
-creature: null              # ember | drift | bloom
-creature_selected_at: null  # ISO date when creature was chosen
-
 # Onboarding
 onboarded_at: null

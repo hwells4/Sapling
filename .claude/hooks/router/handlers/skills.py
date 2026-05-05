@@ -110,7 +110,7 @@ def inject_skill_context(input_data: dict) -> HandlerResult:
     example = _extract_example_block(schema_path, config["example_key"])
 
     if example:
-        context = f"TEMPLATE from {config['schema']}:\n```yaml\n{example}\n```\nUse this template structure for the trace file."
+        context = f"TEMPLATE from {config['schema']}:\n```yaml\n{example}\n```\nUse this template structure for the target file."
         return HandlerResult(additional_context=context)
 
     return None

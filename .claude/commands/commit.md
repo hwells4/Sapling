@@ -29,7 +29,7 @@ Common verbs: `add`, `fix`, `update`, `refactor`, `implement`, `configure`
 
 ## Examples
 
-- `add: user onboarding flow with creature selection`
+- `add: user onboarding flow`
 - `fix: date parsing in call transcript processor`
 - `implement: skill healing workflow with approval gates`
 - `update: voice examples with 10 new LinkedIn posts`

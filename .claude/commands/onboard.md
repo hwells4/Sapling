@@ -6,7 +6,6 @@ First-run setup for SaplingOS. Checks local setup, reads project context, collec
 
 ```
 /onboard              # Start fresh onboarding
-/onboard --creature   # Just change creature selection
 /onboard --reset      # Re-run full onboarding (overwrites existing)
 ```
 
@@ -15,8 +14,6 @@ First-run setup for SaplingOS. Checks local setup, reads project context, collec
 ### Phase 1: Welcome & Introduction
 - Check required local tools and project docs before asking questions
 - Get your name and give you a quick rundown
-- Choose your elemental companion (Fire/Water/Nature)
-- Creature starts as an egg, evolves as you use the system
 
 ### Phase 2: Understanding Your Work (All Skippable)
 - Business context (website or quick questions)
@@ -49,21 +46,11 @@ Creates context files in `brain/context/`:
 
 ### Phase 6: Commit & Finish
 - Uses `/commit` to save all generated files
-- Shows your creature and next steps
-
-## Creatures
-
-| Element | Egg | Creature | Theme |
-|---------|-----|----------|-------|
-| Fire | Red/Orange | **Ember** | Burns through blockers, iterates fast |
-| Water | Blue | **Drift** | Flows around obstacles, adaptable |
-| Nature | Green | **Bloom** | Grows organically, cultivates knowledge |
-
-Creatures are selected during onboarding and stored in `.claude/stats.yaml`.
+- Shows next steps
 
 ## Files Modified
 
-- `.claude/stats.yaml` - Creature selection and onboard timestamp
+- `.claude/stats.yaml` - Onboard timestamp
 - `brain/context/*.md` - Context files
 - `.env.local` - API keys (if image generation enabled)
 

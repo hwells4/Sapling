@@ -1,0 +1,29 @@
+{
+  "providers": {
+    "openrouter": {
+      "models": [
+        {
+          "id": "google/gemini-3.5-flash",
+          "name": "Google: Gemini 3.5 Flash",
+          "api": "openai-completions",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 1.5,
+            "output": 9,
+            "cacheRead": 0.15,
+            "cacheWrite": 0.0833
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 65536,
+          "compat": {
+            "thinkingFormat": "openrouter"
+          }
+        }
+      ]
+    }
+  }
+}

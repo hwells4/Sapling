@@ -15,6 +15,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_SCRIPT="$SCRIPT_DIR/skill-router.py"
 RULES_FILE="$SCRIPT_DIR/skill-rules.json"
 GENERATE_SCRIPT="$SCRIPT_DIR/generate-rules.py"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-${CODEX_PROJECT_DIR:-${PI_PROJECT_DIR:-$(pwd)}}}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 # Check if Python is available
 if ! command -v python3 &>/dev/null; then
@@ -27,7 +29,7 @@ if [[ ! -f "$PYTHON_SCRIPT" ]]; then
 fi
 
 # Auto-generate rules if they don't exist or skills have changed
-SKILLS_DIR="$CLAUDE_PROJECT_DIR/.claude/skills"
+SKILLS_DIR="$PROJECT_DIR/.claude/skills"
 REGENERATE=false
 
 if [[ ! -f "$RULES_FILE" ]]; then

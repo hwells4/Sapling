@@ -6,7 +6,8 @@
 #   1. echo to stderr (visible in Claude session output)
 #   2. append to project hook state (persistent record)
 
-GIT_SYNC_FAILURE_LOG="${GIT_SYNC_FAILURE_LOG:-${CLAUDE_PROJECT_DIR:-.}/.claude/state/git-sync-failures.log}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-${CODEX_PROJECT_DIR:-${PI_PROJECT_DIR:-.}}}"
+GIT_SYNC_FAILURE_LOG="${GIT_SYNC_FAILURE_LOG:-$PROJECT_DIR/.claude/state/git-sync-failures.log}"
 
 notify_push_failure() {
     local reason="$1"

@@ -313,7 +313,15 @@ def main():
                     ["python3", str(generate_script)],
                     capture_output=True,
                     timeout=5,
-                    env={**os.environ, "CLAUDE_PROJECT_DIR": os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())},
+                    env={
+                        **os.environ,
+                        "CLAUDE_PROJECT_DIR": (
+                            os.environ.get("CLAUDE_PROJECT_DIR")
+                            or os.environ.get("CODEX_PROJECT_DIR")
+                            or os.environ.get("PI_PROJECT_DIR")
+                            or os.getcwd()
+                        ),
+                    },
                 )
             except Exception:
                 pass

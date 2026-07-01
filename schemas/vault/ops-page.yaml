@@ -1,0 +1,92 @@
+# Ops Page Schema - Active Operating Cockpit
+# Location: brain/ops/{slug}.md
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-07-01
+    changes: Initial schema for active ops pages
+
+name: ops-page
+description: Active queue, commitment list, or operating page
+location: brain/ops/
+filename_pattern: "{slug}.md"
+created_by: agent or manual operation
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date created
+
+    updated:
+      type: date
+      format: YYYY-MM-DD
+      description: Last material update
+
+    type:
+      type: string
+      description: Ops page type such as inbox, commitments, pr-queue, review
+
+    status:
+      type: enum
+      values: [active, archived]
+      description: Current state
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "ops"
+        - "ops/{type}"
+        - "status/{status}"
+
+body_sections:
+  - name: title
+    heading: "# {Title}"
+    required: true
+    description: Name of the queue or operating page
+
+  - name: active
+    heading: "## Active"
+    required: true
+    description: Items currently being worked
+
+  - name: waiting
+    heading: "## Waiting"
+    required: false
+    description: Items waiting on someone or something
+
+  - name: archived
+    heading: "## Archived"
+    required: false
+    description: Closed items retained for reference
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2026-07-01
+  updated: 2026-07-01
+  type: pr-queue
+  status: active
+  tags:
+    - date/2026-07-01
+    - ops
+    - ops/pr-queue
+    - status/active
+  ---
+
+  # PR Queue
+
+  ## Active
+
+  ## Waiting
+
+  ## Archived

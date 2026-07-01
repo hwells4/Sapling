@@ -35,8 +35,8 @@ User describes what they want to build. Could be:
 
 Before asking questions, quickly check for relevant context:
 ```
-- brain/entities/ for client/stakeholder info
-- brain/calls/ for relevant discussions
+- brain/wiki/ for durable project, client, people, and company context
+- brain/raw/ for relevant calls, PRs, transcripts, and imported source material
 - Beads for related projects/issues
 ```
 
@@ -88,10 +88,13 @@ brain/outputs/{YYYY-MM-DD}-{project-slug}-prd.md
 Frontmatter:
 ```yaml
 ---
+schema_version: 1.2.0
 date: {YYYY-MM-DD}
 type: prd
 status: draft
 tags:
+  - date/{YYYY-MM-DD}
+  - output
   - output/prd
   - status/draft
 ---

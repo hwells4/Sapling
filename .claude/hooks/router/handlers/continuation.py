@@ -11,7 +11,12 @@ try:
 except ImportError:
     from models import HandlerResult
 
-STATE_DIR = Path(os.environ.get("CLAUDE_PROJECT_DIR", ".")) / ".claude" / "state"
+STATE_DIR = Path(
+    os.environ.get("CLAUDE_PROJECT_DIR")
+    or os.environ.get("CODEX_PROJECT_DIR")
+    or os.environ.get("PI_PROJECT_DIR")
+    or "."
+) / ".claude" / "state"
 STATE_FILE = STATE_DIR / "continuation.md"
 
 
@@ -42,7 +47,7 @@ This file was auto-saved before context compaction. Read this to resume your wor
 Check these locations for in-progress work:
 
 1. **Todo list:** The TodoWrite tool may have tracked progress
-2. **Daily log:** `brain/logs/daily/{today}.md`
+2. **Daily log:** `brain/ops/daily/{today}.md`
 
 ## Post-Compaction Instructions
 

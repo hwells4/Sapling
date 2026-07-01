@@ -1,111 +1,109 @@
 ---
 name: obsidian-vault-ops
-description: Read and write Obsidian vault files, manage wiki-links, process markdown with YAML frontmatter. Use when working with vault file operations, creating logs, or managing links.
+description: Read and write Sapling brain files, manage wiki-links, and process markdown with YAML frontmatter. Use when working with vault file operations, creating logs, or managing links.
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Obsidian Vault Operations Skill
 
-Core operations for reading, writing, and managing files in an Obsidian vault.
+Core operations for reading, writing, and managing files in a Sapling brain.
 
 ## Vault Structure
 
-```
+```text
 brain/
-├── logs/daily/          # YYYY-MM-DD.md daily logs
-├── logs/weekly/         # YYYY-Www.md weekly logs
-├── calls/                # Call notes (flat)
-├── outputs/              # Deliverables
-├── library/              # Reference material (posts, etc.)
-├── context/              # AI context files
-└── templates/            # File templates
-entities/                 # People and companies (flat, no type subfolders)
-schemas/                  # Authoritative schema definitions (YAML)
+|-- raw/                  # Source material: calls, email, GitHub PRs, imports, web clips
+|-- wiki/                 # Durable business memory and first-class pages
+|-- ops/                  # Daily logs, reviews, commitments, inboxes, PR queue
+`-- outputs/              # Deliverables and generated artifacts
+schemas/                  # Authoritative schema definitions
 ```
+
+Legacy folders such as `brain/logs`, `brain/entities`, `brain/calls`, `brain/library`, and `brain/context` may exist during migration. Prefer the new structure for new files.
 
 ## File Operations
 
 ### Generated Outputs
-When creating a durable artifact for the user, write it to `brain/outputs/YYYY-MM-DD-{slug}.md` using `schemas/vault/output.yaml`.
+
+When creating a durable artifact for the user, write it to `brain/outputs/YYYY-MM-DD-{slug}.md` or an appropriate typed subfolder using `schemas/vault/output.yaml`.
 
 If the user did not ask to save the artifact, keep it in chat. Do not create generated drafts, plans, reports, or research logs in arbitrary folders.
 
-### Reading Logs
-- Use Glob to find files: `brain/logs/daily/*.md`, `entities/*.md`
-- Read CLAUDE.md first for vault context
-- Check for wiki-links to related logs
+### Raw Sources
 
-### Creating Logs
-1. Check if log already exists
-2. Use the appropriate command (e.g., `/today`, `/weekly`) - templates are injected by hooks
-3. Add YAML frontmatter with date and tags
-4. Insert wiki-links to related logs
+Use `brain/raw/{source}/` for source material that should not be rewritten into polished memory. Examples:
 
-### Editing Logs
-- Preserve YAML frontmatter structure
-- Maintain existing wiki-links
-- Use consistent heading hierarchy
-- Apply standard tag format
+- `brain/raw/calls/`
+- `brain/raw/emails/`
+- `brain/raw/github/{owner-repo}/prs/{number}.md`
+- `brain/raw/web/`
+
+Use `schemas/vault/raw-source.yaml`.
+
+### Wiki Pages
+
+Use `brain/wiki/` for durable business knowledge:
+
+- `brain/wiki/people/`
+- `brain/wiki/companies/`
+- `brain/wiki/clients/`
+- `brain/wiki/projects/`
+- `brain/wiki/offers/`
+- `brain/wiki/commitments/`
+- `brain/wiki/decisions/`
+- `brain/wiki/operating-model/`
+
+Use `schemas/vault/wiki-page.yaml`. Include `source_refs` back to raw evidence whenever possible.
+
+### Ops
+
+Use `brain/ops/` for active operating state:
+
+- Daily log: `brain/ops/daily/YYYY-MM-DD.md`
+- Weekly review: `brain/ops/weekly/YYYY-Www.md`
+- Active commitments: `brain/ops/commitments.md`
+- PR review queue: `brain/ops/pr-queue.md`
+- Triage inbox: `brain/ops/inbox.md`
+
+Ops pages should stay concise and link to wiki pages and outputs.
 
 ## Wiki-Link Format
 
 ```markdown
-[[Note Name]]                    # Simple link
-[[Note Name|Display Text]]       # Link with alias
-[[Note Name#Section]]            # Link to section
-[[entities/person-slug]]         # Link to entity (flat structure)
+[[wiki/projects/sapling]]                 # Durable project page
+[[wiki/people/jane-smith|Jane Smith]]     # Link with alias
+[[raw/github/org-repo/prs/42]]            # Raw PR source
+[[ops/pr-queue]]                          # Active operating queue
+[[outputs/2026-07-01-example-prd]]        # Durable output
 ```
-
-## YAML Frontmatter
-
-Standard frontmatter structure:
-```yaml
----
-date: 2024-01-15
-tags: [tag1, tag2]
-status: active
----
-```
-
-## Template Variables
-
-When processing templates, replace:
-- `{{date}}` - Today's date (YYYY-MM-DD)
-- `{{date:format}}` - Formatted date
-- `{{date-1}}` - Yesterday
-- `{{date+1}}` - Tomorrow
-- `{{time}}` - Current time
 
 ## Common Patterns
 
 ### Daily Log Creation
-1. Calculate today's date in YYYY-MM-DD format
-2. Check if `brain/logs/daily/{date}.md` exists
-3. If not, use `/today` command (template is injected automatically by hook)
-4. Write to `brain/logs/daily/{date}.md`
 
-**Note:** Use `/today` command which receives injected templates - don't read schemas manually.
+1. Calculate today's date in `YYYY-MM-DD` format.
+2. Check if `brain/ops/daily/{date}.md` exists.
+3. If not, use `/today` or the daily-log schema example.
+4. Write to `brain/ops/daily/{date}.md`.
 
-### Entity Linking
-- People and companies use flat entity structure
-- Link format: `[[entities/{slug}|Display Name]]`
-- No type subfolders (not `entities/people/` or `entities/companies/`)
+### PR Review Context
 
-### Finding Related Logs
-1. Extract key terms from current log
-2. Search vault for matching content
-3. Suggest wiki-links to related logs
+1. Save raw PR context to `brain/raw/github/{owner-repo}/prs/{number}.md`.
+2. Add the active item to `brain/ops/pr-queue.md`.
+3. Update `brain/wiki/projects/{project}.md`.
+4. Save review output to `brain/outputs/pr-reviews/YYYY-MM-DD-{repo}-pr-{number}.md`.
 
-### Tag Operations
-- Priority: `#priority/high`, `#priority/medium`, `#priority/low`
-- Status: `#active`, `#waiting`, `#completed`, `#archived`
-- Context: `#work`, `#personal`, `#health`, `#learning`
+### Finding Related Context
+
+1. Search `brain/wiki/` first for durable context.
+2. Search `brain/raw/` for evidence and source detail.
+3. Search `brain/outputs/` for past deliverables.
+4. Search legacy folders only when migrating old vault content.
 
 ## Best Practices
 
-1. Always check CLAUDE.md for vault-specific conventions
-2. Preserve existing structure when editing
-3. Use relative paths for internal links
-4. Add frontmatter to new logs
-5. Use commands (e.g., `/today`, `/weekly`) which receive injected templates from hooks
-6. Entities are flat - use `entities/{slug}` not `entities/people/{slug}`
+1. Read `AGENTS.md` for the canonical Sapling contract.
+2. Preserve YAML frontmatter.
+3. Use schemas before inventing new fields.
+4. Link raw evidence to wiki pages with `source_refs`.
+5. Do not store durable business facts only in ops pages.

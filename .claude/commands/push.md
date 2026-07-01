@@ -50,9 +50,9 @@ const INCLUDE_TIMESTAMP = true; // Add timestamp to commit message
 Based on your changes:
 ```
 Daily log for 2024-01-15 + entity updates
-- Added: brain/logs/daily/2024-01-15.md
-- Modified: brain/entities/language-learning.md
-- Modified: brain/context/goals.md
+- Added: brain/ops/daily/2024-01-15.md
+- Modified: brain/wiki/projects/language-learning.md
+- Modified: brain/wiki/operating-model/goals.md
 ```
 
 ### With Timestamp

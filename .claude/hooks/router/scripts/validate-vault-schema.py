@@ -22,15 +22,26 @@ except ImportError:
 
 def get_schema_path(file_path: str) -> str | None:
     """Map file path to its corresponding schema file."""
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
+    project_dir = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
 
     # Mapping from folder patterns to schema files
     # NOTE: Order matters! More specific paths must come first
     folder_to_schema = [
+        ("brain/ops/daily/", "schemas/vault/daily-log.yaml"),
+        ("brain/ops/weekly/", "schemas/vault/weekly-log.yaml"),
+        ("brain/ops/", "schemas/vault/ops-page.yaml"),
+        ("brain/raw/", "schemas/vault/raw-source.yaml"),
+        ("brain/wiki/", "schemas/vault/wiki-page.yaml"),
+        ("brain/outputs/", "schemas/vault/output.yaml"),
+        # Legacy Sapling/HarryOS paths kept for migration compatibility.
         ("brain/calls/", "schemas/vault/call.yaml"),
         ("brain/entities/", "schemas/vault/entity.yaml"),
         ("brain/library/", "schemas/vault/library.yaml"),
-        ("brain/outputs/", "schemas/vault/output.yaml"),
         ("brain/logs/daily/", "schemas/vault/daily-log.yaml"),
         ("brain/logs/weekly/", "schemas/vault/weekly-log.yaml"),
     ]

@@ -1,13 +1,13 @@
 ---
 name: onboard
-description: Onboard new users to SaplingOS. Collects context, configures local hook support, and populates context files.
+description: Onboard new users to SaplingOS. Collects context, configures local hook support, and populates operating-model wiki files.
 context_budget:
   skill_md: 200
   max_references: 4
 ---
 
 <objective>
-Guide new users through SaplingOS setup: verify local prerequisites, read available project context, collect identity/business/voice context through sequential questions, configure machine-local hooks, and populate context files.
+Guide new users through SaplingOS setup: verify local prerequisites, read available project context, collect identity/business/voice context through sequential questions, configure machine-local hooks, and populate operating-model wiki files.
 </objective>
 
 <usage>
@@ -57,8 +57,8 @@ Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly 
 
 <quick_start>
 1. **Check dependencies and local docs** — handle Beads setup inside onboarding; block only if Python/PyYAML are missing
-2. Read available local context: README.md, AGENTS.md, CLAUDE.md, and existing brain/context files when present
-3. Check if context files exist → route appropriately
+2. Read available local context: README.md, AGENTS.md, CLAUDE.md, and existing `brain/wiki/operating-model` files when present
+3. Check if operating-model files exist -> route appropriately
 4. Get their name via AskUserQuestion
 5. Welcome with rundown of what's coming (~3-5 min)
 6. Business context (skippable): website URL or quick questions
@@ -67,7 +67,7 @@ Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly 
 9. Writing samples (skippable) → analyze → voice-and-style.md
 10. Image generation setup (optional) → Gemini API key
 11. Local hooks setup → run `.claude/hooks/setup-local-hooks.py`
-12. Generate context files from collected data
+12. Generate operating-model wiki files from collected data
 13. Explain how /today, beads, and /task work
 14. Show personalized welcome banner
 15. GitHub CLI auth (optional): `gh auth login` for GitHub features
@@ -79,8 +79,8 @@ Only block on Python/PyYAML. Beads can be installed, initialized, or explicitly 
 <routing>
 | Condition | Workflow |
 |-----------|----------|
-| No context files exist | workflows/fresh-start.md |
-| Context files exist, no --reset | Ask: overwrite/merge/cancel |
+| No operating-model files exist | workflows/fresh-start.md |
+| Operating-model files exist, no --reset | Ask: overwrite/merge/cancel |
 | --reset flag | workflows/fresh-start.md (force) |
 | Resume from interrupted | Load .claude/onboard-state.json, continue |
 </routing>
@@ -103,10 +103,10 @@ Files populated during onboarding:
 
 | File | Primary Source | Fallback |
 |------|---------------|----------|
-| brain/context/about-me.md | Name + Role questions | Defaults |
-| brain/context/business.md | Company website | Business type Qs |
-| brain/context/voice-and-style.md | Writing samples | Template only |
-| brain/context/preferences.md | Use case selection | Defaults |
+| brain/wiki/operating-model/about-me.md | Name + Role questions | Defaults |
+| brain/wiki/operating-model/business.md | Company website | Business type Qs |
+| brain/wiki/operating-model/voice-and-style.md | Writing samples | Template only |
+| brain/wiki/operating-model/preferences.md | Use case selection | Defaults |
 
 Templates in: `.claude/skills/onboard/templates/`
 </context_files>
@@ -130,7 +130,7 @@ Templates in: `.claude/skills/onboard/templates/`
 
 <success_criteria>
 - [ ] User's name collected
-- [ ] At least one context file populated (or all skipped with TODOs)
+- [ ] At least one operating-model wiki file populated (or all skipped with TODOs)
 - [ ] Beads checked, installed, initialized, or explicitly skipped
 - [ ] System explanation delivered (/today, beads, /task)
 - [ ] Welcome banner displayed with name and hook profile

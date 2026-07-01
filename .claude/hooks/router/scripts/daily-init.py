@@ -86,30 +86,40 @@ def generate_daily_log(date: datetime, template: str) -> str:
 
     note = template
 
-    # Replace navigation FIRST using placeholders to avoid collision
-    # The example uses 2025-12-26 (prev) and 2025-12-28 (next) for 2025-12-27
-    note = note.replace("[[2025-12-26]]", "[[__YESTERDAY__]]")
-    note = note.replace("[[2025-12-28]]", "[[__TOMORROW__]]")
+    # Infer the example date from schema frontmatter instead of hardcoding it.
+    example_date = None
+    match = re.search(r"^date:\s*(\d{4}-\d{2}-\d{2})", note, re.MULTILINE)
+    if match:
+        try:
+            example_date = datetime.strptime(match.group(1), "%Y-%m-%d")
+        except ValueError:
+            example_date = None
 
-    # Now replace all instances of the example date (2025-12-27) with today
-    note = note.replace("2025-12-27", date_str)
+    if example_date:
+        example_date_str = example_date.strftime("%Y-%m-%d")
+        example_yesterday = (example_date - timedelta(days=1)).strftime("%Y-%m-%d")
+        example_tomorrow = (example_date + timedelta(days=1)).strftime("%Y-%m-%d")
+
+        # Replace navigation first using placeholders to avoid collisions.
+        note = note.replace(example_yesterday, "__YESTERDAY__")
+        note = note.replace(example_tomorrow, "__TOMORROW__")
+        note = note.replace(example_date_str, date_str)
+        note = note.replace("__YESTERDAY__", yesterday_str)
+        note = note.replace("__TOMORROW__", tomorrow_str)
 
     # Replace week reference (handles different week numbers)
-    note = re.sub(r"\[\[logs/weekly/\d{4}-W\d{2}\]\]", f"[[logs/weekly/{week}]]", note)
+    note = re.sub(r"\[\[ops/weekly/\d{4}-W\d{2}\]\]", f"[[ops/weekly/{week}]]", note)
+    note = re.sub(r"\[\[logs/weekly/\d{4}-W\d{2}\]\]", f"[[ops/weekly/{week}]]", note)
 
     # Replace month reference
-    note = re.sub(r"\[\[logs/monthly/\d{4}-\d{2}\]\]", f"[[logs/monthly/{month}]]", note)
+    note = re.sub(r"\[\[ops/monthly/\d{4}-\d{2}\]\]", f"[[ops/monthly/{month}]]", note)
+    note = re.sub(r"\[\[logs/monthly/\d{4}-\d{2}\]\]", f"[[ops/monthly/{month}]]", note)
 
     # Replace the title line (Friday, December 27, 2025)
     day_pattern = r"# \w+, \w+ \d+, \d+"
     note = re.sub(day_pattern, f"# {day_name}", note)
 
-    # Now resolve the navigation placeholders
-    note = note.replace("[[__YESTERDAY__]]", f"[[{yesterday_str}]]")
-    note = note.replace("[[__TOMORROW__]]", f"[[{tomorrow_str}]]")
-
-    # Clear out the example content - start fresh
-    # Replace example tasks with empty sections
+    # Clear out the example content - start fresh.
     note = re.sub(
         r"### In-System\n.*?(?=### Async)",
         "### In-System\n*None yet*\n\n",
@@ -156,16 +166,27 @@ def generate_daily_log(date: datetime, template: str) -> str:
 
     # Clear focus section
     note = re.sub(r"## Focus\n.*?(?=## Tasks)", "## Focus\n\n", note, flags=re.DOTALL)
+    note = re.sub(
+        r"## Focus\n.*?(?=## Commitments)",
+        "## Focus\n\n",
+        note,
+        flags=re.DOTALL,
+    )
 
     return note
 
 
 def main():
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
     today = datetime.now()
     date_str = today.strftime("%Y-%m-%d")
 
-    daily_log_path = Path(project_dir) / "brain" / "logs" / "daily" / f"{date_str}.md"
+    daily_log_path = Path(project_dir) / "brain" / "ops" / "daily" / f"{date_str}.md"
     schema_path = Path(project_dir) / "schemas" / "vault" / "daily-log.yaml"
 
     # Check if daily log already exists

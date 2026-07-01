@@ -11,9 +11,18 @@ except ImportError:
     from models import HandlerResult
 
 
+def _project_dir() -> str:
+    return (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
+
+
 def session_init(input_data: dict) -> HandlerResult:
     """SessionStart: run session-init.sh (sets env, creates daily log)."""
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = _project_dir()
     script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", "session-init.sh")
 
     if not os.path.exists(script_path):
@@ -44,7 +53,7 @@ def session_init(input_data: dict) -> HandlerResult:
 
 def dedup_cleanup(input_data: dict) -> HandlerResult:
     """SessionStart[startup]: clean up memory dedup state files."""
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = _project_dir()
     dedup_dir = Path(project_dir) / ".claude" / "state" / "memory-dedup"
 
     if dedup_dir.exists():

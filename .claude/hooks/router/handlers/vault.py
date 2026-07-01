@@ -50,7 +50,12 @@ def validate_vault_schema(input_data: dict) -> HandlerResult:
     if "brain/" not in file_path or not file_path.endswith(".md"):
         return None
 
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
     script_path = os.path.join(project_dir, ".claude", "hooks", "router", "scripts", "validate-vault-schema.py")
 
     if not os.path.exists(script_path):

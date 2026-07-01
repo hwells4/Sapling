@@ -98,7 +98,12 @@ def _query_semantic(prompt: str) -> str:
 
 def _keyword_fallback(prompt: str) -> str:
     """Fallback keyword search when qmd unavailable."""
-    cwd = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    cwd = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
     memories_dir = Path(cwd) / "brain" / "memories"
 
     if not memories_dir.exists():

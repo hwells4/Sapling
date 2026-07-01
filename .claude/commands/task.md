@@ -100,14 +100,16 @@ When creating files in `brain/outputs/`, derive entity tags from frontmatter:
 
 ```yaml
 # If frontmatter has:
-people: ["[[entities/jane-smith]]"]
-companies: ["[[entities/brown-robin]]"]
+people: ["[[wiki/people/jane-smith]]"]
+companies: ["[[wiki/companies/brown-robin]]"]
 
 # Then tags MUST include:
 tags:
   - person/jane-smith
   - company/brown-robin
 ```
+
+When task work creates durable business knowledge, update `brain/wiki/` in the same pass. Use `brain/raw/` for source evidence, `brain/ops/` for active queues, and `brain/outputs/` for the finished deliverable.
 
 ---
 

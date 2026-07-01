@@ -1,59 +1,32 @@
 # Schemas
 
-Schemas keep Sapling OS greppable and searchable as it scales.
+Schemas keep Sapling greppable, parseable, and safe for agents to update.
 
-## Why Schemas?
+Every durable markdown file in `brain/` should have frontmatter that matches a schema in `schemas/vault/`. The hook validator uses these schemas to catch malformed files before they become permanent context.
 
-Every file in `brain/` follows a schema. This means:
-
-- **Consistent structure** - Files of the same type always have the same frontmatter fields
-- **Searchable** - You can `grep` for any field across hundreds of files
-- **Parseable** - Scripts can reliably extract and process data
-- **Validated** - The schema hook ensures Claude always writes files correctly
-
-Without schemas, your vault becomes a mess of inconsistent formats that breaks tooling.
-
-## How It Works
-
-### 1. Schema Definitions (`vault/`)
-
-Each file type has a YAML schema defining:
-- Required and optional frontmatter fields
-- Field types and validation rules
-- File location and naming patterns
-- Purpose and usage notes
-
-```
-schemas/vault/
-├── call.yaml        # Call notes
-├── daily-log.yaml   # Daily operating log
-├── entity.yaml      # People, companies
-├── library.yaml     # Saved content
-├── output.yaml      # Posts, PRDs, deliverables
-└── weekly-log.yaml  # Weekly review log
-```
-
-### 2. Schema Hook
-
-When Claude creates or edits files in `brain/`, a hook validates the output against the schema. If something's wrong, it catches it immediately.
-
-This means you never end up with malformed files—Claude writes it right the first time, every time.
-
-## Quick Reference
+## Current Brain Schemas
 
 | Schema | Location | Purpose |
 |--------|----------|---------|
-| `call` | `brain/calls/` | Call notes and meeting records |
-| `entity` | `brain/entities/` | People and company profiles |
-| `library` | `brain/library/` | Saved articles, resources |
-| `output` | `brain/outputs/` | Deliverables (posts, PRDs, emails) |
-| `daily-log` | `brain/logs/daily/` | Daily logs |
-| `weekly-log` | `brain/logs/weekly/` | Weekly reviews |
+| `raw-source` | `brain/raw/` | Source material, imports, transcripts, PR payloads |
+| `wiki-page` | `brain/wiki/` | Durable business memory and first-class pages |
+| `daily-log` | `brain/ops/daily/` | Daily operating log |
+| `weekly-log` | `brain/ops/weekly/` | Weekly review |
+| `ops-page` | `brain/ops/` | Active inboxes, commitments, and PR queues |
+| `output` | `brain/outputs/` | Deliverables and generated artifacts |
+
+## Legacy Schemas
+
+The older `call`, `entity`, and `library` schemas remain for migration compatibility with existing HarryOS/Sapling vaults. New installs should prefer:
+
+- `brain/raw/calls/` instead of `brain/calls/`
+- `brain/wiki/people/` and `brain/wiki/companies/` instead of `brain/entities/`
+- `brain/raw/web/` or `brain/wiki/content/` instead of `brain/library/`
+- `brain/wiki/operating-model/` instead of `brain/context/`
 
 ## Adding New Schemas
 
-1. Create `schemas/vault/{name}.yaml` with full definition
-2. Include `schema_version`, `changelog`, field definitions
-3. The hook picks it up automatically
-
-See existing schemas for the format.
+1. Create `schemas/vault/{name}.yaml`.
+2. Include `schema_version`, `changelog`, `frontmatter.required`, and an `example` block.
+3. Update `.claude/hooks/router/scripts/validate-vault-schema.py` if the new schema maps to a new folder.
+4. Update `schemas/tags/taxonomy.yaml` with any new tag namespaces.

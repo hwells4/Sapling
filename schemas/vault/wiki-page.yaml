@@ -1,0 +1,124 @@
+# Wiki Page Schema - Durable Business Memory
+# Location: brain/wiki/{type}/{slug}.md
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-07-01
+    changes: Initial first-class wiki page schema
+
+name: wiki-page
+description: Durable business context distilled from raw sources and operating work
+location: brain/wiki/
+filename_pattern: "{type}/{slug}.md"
+created_by: agent or manual curation
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date this page was created
+
+    updated:
+      type: date
+      format: YYYY-MM-DD
+      description: Last material update
+
+    type:
+      type: string
+      description: Page type such as person, company, client, project, offer, commitment, decision, operating-model
+
+    status:
+      type: enum
+      values: [active, draft, review, archived, done, blocked]
+      description: Current state
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "wiki"
+        - "wiki/{type}"
+        - "status/{status}"
+
+  optional:
+    aliases:
+      type: array
+      items: string
+      description: Alternate names for search and Obsidian
+
+    source_refs:
+      type: array
+      items: wikilink
+      target: brain/raw/
+      description: Raw sources that support the page
+
+    related_pages:
+      type: array
+      items: wikilink
+      target: brain/wiki/
+      description: Related wiki pages
+
+    owner:
+      type: wikilink
+      target: brain/wiki/people/
+      description: Primary owner for project, client, commitment, or decision pages
+
+body_sections:
+  - name: summary
+    heading: "# {Title}"
+    required: true
+    description: Stable summary of what this page is and why it matters
+
+  - name: current_state
+    heading: "## Current State"
+    required: false
+    description: The latest useful truth for agents and humans
+
+  - name: links
+    heading: "## Links"
+    required: false
+    description: Relevant raw sources, ops pages, outputs, and external URLs
+
+  - name: history
+    heading: "## History"
+    required: false
+    description: Notable changes, decisions, and evidence trail
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2026-07-01
+  updated: 2026-07-01
+  type: project
+  status: active
+  aliases: [Example Project]
+  source_refs:
+    - "[[raw/github/hwells4-example/prs/42]]"
+  related_pages:
+    - "[[wiki/decisions/example-agent-contract]]"
+  tags:
+    - date/2026-07-01
+    - wiki
+    - wiki/project
+    - status/active
+    - project/example
+  ---
+
+  # Example Project
+
+  ## Current State
+  Short durable summary of the project.
+
+  ## Links
+  - PR queue: [[ops/pr-queue]]
+
+  ## History
+  - 2026-07-01: Created from PR 42 context.

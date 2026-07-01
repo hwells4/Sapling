@@ -1,7 +1,14 @@
 ---
+schema_version: 1.0.0
 date: {{DATE}}
-tags: [context, preferences]
+updated: {{DATE}}
+type: operating-model
 status: active
+tags:
+  - date/{{DATE}}
+  - wiki
+  - wiki/operating-model
+  - status/active
 ---
 
 # Preferences

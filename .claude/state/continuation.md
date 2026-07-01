@@ -18,7 +18,7 @@ This file was auto-saved before context compaction. Read this to resume your wor
 Check these locations for in-progress work:
 
 1. **Todo list:** The TodoWrite tool may have tracked progress
-2. **Daily log:** `brain/logs/daily/`
+2. **Daily log:** `brain/ops/daily/`
 
 
 ## Post-Compaction Instructions

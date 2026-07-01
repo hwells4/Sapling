@@ -1,5 +1,5 @@
-# Tag Taxonomy — Sapling OS
-# All valid tag namespaces. Agents: use existing tags before inventing new ones.
+# Tag Taxonomy - Sapling OS
+# Use existing namespaces before inventing new ones.
 
 namespaces:
   date:
@@ -7,70 +7,86 @@ namespaces:
     required_by: all schemas
     description: ISO date for temporal queries
 
-  # Type literals (one per file)
-  call:
-    pattern: "call"
-    used_by: [call]
-  entity:
-    pattern: "entity"
-    used_by: [entity]
+  raw:
+    pattern: "raw"
+    used_by: [raw-source]
+    description: Source material marker
+
+  source:
+    pattern: "source/{type}"
+    used_by: [raw-source]
+    values: [call, email, github-pr, transcript, web, import]
+    extensible: true
+
+  wiki:
+    pattern: "wiki"
+    used_by: [wiki-page]
+    description: Durable business memory marker
+
+  wiki_type:
+    pattern: "wiki/{type}"
+    used_by: [wiki-page]
+    values: [person, company, client, opportunity, engagement, project, offer, commitment, decision, case-study, content, operating-model]
+    extensible: true
+
+  ops:
+    pattern: "ops"
+    used_by: [daily-log, weekly-log, ops-page]
+    description: Active operating cockpit marker
+
+  ops_type:
+    pattern: "ops/{type}"
+    used_by: [ops-page]
+    values: [inbox, commitments, pr-queue, review]
+    extensible: true
+
   output:
     pattern: "output"
     used_by: [output]
-  library:
-    pattern: "library"
-    used_by: [library]
+    description: Durable deliverable marker
+
   daily:
     pattern: "daily"
     used_by: [daily-log]
+
   weekly:
     pattern: "weekly"
     used_by: [weekly-log]
 
-  # Entity namespaces — derived from frontmatter people/companies
   person:
     pattern: "person/{slug}"
-    description: Tag for every person referenced in file
-    derive_from: "people: [[entities/{slug}]] → person/{slug}"
+    description: Person referenced or represented by a wiki page
+
   company:
     pattern: "company/{slug}"
-    description: Tag for every company referenced in file
-    derive_from: "companies: [[entities/{slug}]] → company/{slug}"
+    description: Company referenced or represented by a wiki page
+
   client:
     pattern: "client/{slug}"
     description: Client relationship tag
 
-  # Content classification
+  project:
+    pattern: "project/{slug}"
+    description: Product, repo, client project, internal initiative, or engagement workstream
+
+  opportunity:
+    pattern: "opportunity/{slug}"
+    description: Sales, partnership, hiring, content, or investment opportunity
+
+  offer:
+    pattern: "offer/{slug}"
+    description: Productized service or business offer
+
   topic:
     pattern: "topic/{slug}"
     description: Subject matter. Check existing usage before creating new topics.
-  output_type:
-    pattern: "output/{type}"
-    values: [linkedin-post, email, proposal, prd, script, article, client-update, research]
-    extensible: true
+
   status:
     pattern: "status/{status}"
-    values: [draft, review, published, sent, archived, done, cancelled, testing, verified, falsified]
-  signal:
-    pattern: "signal/{type}-{value}"
-    description: Client signals from calls
-    used_by: [call]
+    values: [active, draft, review, final, published, sent, archived, done, blocked, captured, processed]
+    extensible: true
 
-  # Library-specific
-  library_origin:
-    pattern: "library/{origin}"
-    values: [external, internal]
-    used_by: [library]
-  author:
-    pattern: "author/{slug}"
-    used_by: [library]
-
-  # Entity type literals
-  person_literal:
-    pattern: "person"
-    description: Entity type marker for people
-    used_by: [entity]
-  company_literal:
-    pattern: "company"
-    description: Entity type marker for companies
-    used_by: [entity]
+  output_type:
+    pattern: "output/{type}"
+    values: [pr-review, prd, email, proposal, research, strategy-memo, client-update, linkedin-post, script]
+    extensible: true

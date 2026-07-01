@@ -57,7 +57,12 @@ def find_vale() -> str | None:
 
 def run_vale(file_path: str) -> dict:
     """Run Vale on file and return parsed results."""
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
+    project_dir = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or ""
+    )
     vale_config = os.path.join(project_dir, ".vale.ini")
 
     # Check if vale config exists

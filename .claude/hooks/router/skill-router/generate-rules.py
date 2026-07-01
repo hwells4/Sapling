@@ -239,7 +239,12 @@ def generate_rules(project_dir: str) -> dict:
 
 def main():
     """Generate skill-rules.json and write to disk."""
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
 
     rules = generate_rules(project_dir)
 

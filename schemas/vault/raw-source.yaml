@@ -1,0 +1,111 @@
+# Raw Source Schema - Evidence and Imported Context
+# Location: brain/raw/{source}/{YYYY-MM-DD}-{slug}.md
+
+schema_version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-07-01
+    changes: Initial raw source schema for Sapling wiki-centered brain
+
+name: raw-source
+description: Source material captured before it is distilled into wiki memory
+location: brain/raw/
+filename_pattern: "{source}/{YYYY-MM-DD}-{slug}.md"
+created_by: agent, importer, or manual capture
+
+frontmatter:
+  required:
+    schema_version:
+      type: string
+      format: semver
+      description: Schema version used to create this file
+      current: 1.0.0
+
+    date:
+      type: date
+      format: YYYY-MM-DD
+      description: Date captured or imported
+
+    type:
+      type: string
+      description: Source type such as call, email, github-pr, transcript, web, import
+
+    source:
+      type: string
+      description: Origin system or location
+
+    status:
+      type: enum
+      values: [captured, processed, archived]
+      description: Processing state
+
+    tags:
+      type: array
+      required_patterns:
+        - "date/YYYY-MM-DD"
+        - "raw"
+        - "source/{type}"
+        - "status/{status}"
+
+  optional:
+    source_url:
+      type: url
+      description: Original URL when available
+
+    owner_repo:
+      type: string
+      description: GitHub owner/repo for PR or issue sources
+
+    pr_number:
+      type: number
+      description: GitHub PR number when relevant
+
+    related_pages:
+      type: array
+      items: wikilink
+      target: brain/wiki/
+      description: Wiki pages updated or informed by this source
+
+body_sections:
+  - name: source_summary
+    heading: "# {Title}"
+    required: true
+    description: Short neutral summary of the source
+
+  - name: raw_content
+    heading: "## Raw Content"
+    required: false
+    description: Raw transcript, excerpt, metadata, or imported payload
+
+  - name: extraction_notes
+    heading: "## Extraction Notes"
+    required: false
+    description: Candidate facts, decisions, commitments, or links to promote into wiki pages
+
+example: |
+  ---
+  schema_version: 1.0.0
+  date: 2026-07-01
+  type: github-pr
+  source: github
+  status: captured
+  owner_repo: hwells4/example
+  pr_number: 42
+  source_url: https://github.com/hwells4/example/pull/42
+  related_pages:
+    - "[[wiki/projects/example]]"
+  tags:
+    - date/2026-07-01
+    - raw
+    - source/github-pr
+    - status/captured
+    - project/example
+  ---
+
+  # hwells4/example PR 42
+
+  ## Raw Content
+  PR title, branch, diff summary, checks, comments, and review metadata.
+
+  ## Extraction Notes
+  - Update [[wiki/projects/example]] with the architectural decision if merged.

@@ -96,7 +96,7 @@ Maximum: 400 words. Focus on actionable insights.
 ```
 You are a call research agent finding relevant discussions.
 
-Search brain/calls/ for calls tagged with or mentioning: {topic}
+Search brain/raw/calls/ for calls tagged with or mentioning: {topic}
 
 Your task:
 1. Search call notes for topic mentions
@@ -121,7 +121,7 @@ Multi-agent coordination uses Task tools natively: TaskCreate for dependencies, 
 ```
 Phase 1: Parallel Spawn
 ├── Library Agent → searches library/posts/
-├── Call Agent → searches brain/calls/
+├── Call Agent → searches brain/raw/calls/
 └── Style Agent → reviews voice patterns
 
 Phase 2: Coordination (optional)

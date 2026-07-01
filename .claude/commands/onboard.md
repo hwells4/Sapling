@@ -32,7 +32,7 @@ First-run setup for SaplingOS. Checks local setup, reads project context, collec
 - Use `recommended` unless the user explicitly wants less automation
 
 ### Phase 4: File Generation
-Creates context files in `brain/context/`:
+Creates operating-model wiki files in `brain/wiki/operating-model/`:
 - `about-me.md` - Your identity and background
 - `business.md` - Company and client info
 - `voice-and-style.md` - Writing preferences
@@ -51,7 +51,7 @@ Creates context files in `brain/context/`:
 ## Files Modified
 
 - `.claude/stats.yaml` - Onboard timestamp
-- `brain/context/*.md` - Context files
+- `brain/wiki/operating-model/*.md` - Operating-model context files
 - `.env.local` - API keys (if image generation enabled)
 
 ## Resume Support

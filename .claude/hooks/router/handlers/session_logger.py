@@ -23,18 +23,23 @@ except ImportError:
 # --- Area classification (mirrors git-smart-stage.sh build_commit_msg) ---
 
 AREA_MAP = [
-    ("brain/logs/daily/", "daily logs"),
-    ("brain/logs/weekly/", "weekly logs"),
-    ("brain/logs/", "logs"),
-    ("brain/entities/", "entities"),
-    ("brain/calls/", "calls"),
+    ("brain/ops/daily/", "daily logs"),
+    ("brain/ops/weekly/", "weekly logs"),
+    ("brain/ops/", "ops"),
+    ("brain/wiki/", "wiki"),
+    ("brain/raw/", "raw sources"),
     ("brain/outputs/", "outputs"),
-    ("brain/library/", "library"),
-    ("brain/templates/", "templates"),
-    ("brain/context/", "context"),
+    ("brain/logs/", "legacy logs"),
+    ("brain/entities/", "legacy entities"),
+    ("brain/calls/", "legacy calls"),
+    ("brain/library/", "legacy library"),
+    ("brain/context/", "legacy context"),
     ("brain/", "brain"),
     ("schemas/", "schemas"),
     (".claude/", "claude config"),
+    (".agents/", "codex config"),
+    (".codex/", "codex config"),
+    (".pi/", "pi config"),
     (".beads/", "beads"),
     ("services/", "services"),
     ("plans/", "plans"),
@@ -52,7 +57,12 @@ _MAX_FILE_LIST = 20
 
 
 def _project_dir() -> str:
-    return os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    return (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or os.getcwd()
+    )
 
 
 def _state_path() -> Path:
@@ -63,7 +73,7 @@ def _daily_log_path(date_str: str | None = None) -> Path | None:
     """Find today's daily log. Returns None if it doesn't exist."""
     if date_str is None:
         date_str = datetime.now().strftime("%Y-%m-%d")
-    path = Path(_project_dir()) / "brain" / "logs" / "daily" / f"{date_str}.md"
+    path = Path(_project_dir()) / "brain" / "ops" / "daily" / f"{date_str}.md"
     return path if path.exists() else None
 
 

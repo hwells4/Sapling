@@ -3,7 +3,9 @@
 # Runs on every session start/resume/compact/clear
 set -euo pipefail
 
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-${CODEX_PROJECT_DIR:-${PI_PROJECT_DIR:-.}}}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 0
 
 # Must be a git repo
 [ -d .git ] || exit 0
@@ -93,7 +95,7 @@ if [ -n "$REMOTE" ] && [ "$LOCAL" != "$REMOTE" ]; then
 
                 # Spawn background agent to handle conflict
                 if command -v tmux &>/dev/null; then
-                    AGENT_CMD="cd '$CLAUDE_PROJECT_DIR' && claude --dangerously-skip-permissions -p 'Git merge conflict detected. Files with conflicts: ${CONFLICT_LIST:-unknown}. Please: 1) Run git status to see the state 2) Examine the conflicting files 3) Resolve the conflicts by choosing the right content 4) Stage and commit the resolution 5) Push to remote. Be careful — read both versions before choosing.'"
+                    AGENT_CMD="cd '$PROJECT_DIR' && claude --dangerously-skip-permissions -p 'Git merge conflict detected. Files with conflicts: ${CONFLICT_LIST:-unknown}. Please: 1) Run git status to see the state 2) Examine the conflicting files 3) Resolve the conflicts by choosing the right content 4) Stage and commit the resolution 5) Push to remote. Be careful - read both versions before choosing.'"
                     tmux new-session -d -s "git-conflict-resolver" bash -c "$AGENT_CMD" 2>/dev/null \
                         && REPORT="$REPORT Spawned conflict resolver agent (tmux: git-conflict-resolver)." \
                         || REPORT="$REPORT Could not spawn agent. Resolve manually."

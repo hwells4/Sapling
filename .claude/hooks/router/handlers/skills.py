@@ -28,13 +28,23 @@ SKILL_SCHEMAS = {
 }
 
 
+def _project_dir(default: str | None = None) -> str:
+    fallback = os.getcwd() if default is None else default
+    return (
+        os.environ.get("CLAUDE_PROJECT_DIR")
+        or os.environ.get("CODEX_PROJECT_DIR")
+        or os.environ.get("PI_PROJECT_DIR")
+        or fallback
+    )
+
+
 def skill_router(input_data: dict) -> HandlerResult:
     """UserPromptSubmit: evaluate prompt for skill activation suggestions."""
     prompt = input_data.get("prompt", "")
     if not prompt or not prompt.strip():
         return None
 
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
+    project_dir = _project_dir()
     router_dir = Path(project_dir) / ".claude" / "hooks" / "router" / "skill-router"
     rules_path = router_dir / "skill-rules.json"
     generate_script = router_dir / "generate-rules.py"
@@ -104,7 +114,7 @@ def inject_skill_context(input_data: dict) -> HandlerResult:
         return None
 
     config = SKILL_SCHEMAS[skill_name]
-    project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
+    project_dir = _project_dir("")
     schema_path = os.path.join(project_dir, config["schema"])
 
     example = _extract_example_block(schema_path, config["example_key"])

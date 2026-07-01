@@ -1,5 +1,5 @@
 #!/bin/bash
-# Session initialization hook for Obsidian PKM vault
+# Session initialization hook for Sapling brain
 # Sets up environment variables and ensures daily log exists
 
 # Set vault path (defaults to current directory)
@@ -11,7 +11,7 @@ export YESTERDAY=$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%
 export CURRENT_WEEK=$(date +%Y-W%V)
 
 # Daily log path
-export DAILY_LOG="$VAULT_PATH/brain/logs/daily/$TODAY.md"
+export DAILY_LOG="$VAULT_PATH/brain/ops/daily/$TODAY.md"
 
 # Verify vault structure
 if [ ! -d "$VAULT_PATH/brain" ] || [ ! -f "$VAULT_PATH/CLAUDE.md" ]; then
@@ -20,7 +20,7 @@ fi
 
 # Output session info
 echo ""
-echo "Launching your Personal OS"
+echo "Launching SaplingOS"
 echo "  Today: $TODAY"
 
 # Ensure daily log exists (creates from schema if missing)

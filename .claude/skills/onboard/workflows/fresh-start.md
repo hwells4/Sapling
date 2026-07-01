@@ -1,7 +1,7 @@
 # Fresh Start Onboarding Workflow
 
 <objective>
-Complete onboarding flow for new users. Checks local setup, collects context through interactive questions, configures hooks, and populates context files. Uses AskUserQuestion throughout for a smooth, clickable experience.
+Complete onboarding flow for new users. Checks local setup, collects context through interactive questions, configures hooks, and populates operating-model wiki files. Uses AskUserQuestion throughout for a smooth, clickable experience.
 </objective>
 
 <workflow>
@@ -37,7 +37,7 @@ to tailor this system to your preferences and get you started on the right foot.
 Here's what we'll cover:
   1. Learn a bit about your work
   2. Set up optional features and local hooks
-  3. Generate your personal context files
+  3. Generate your personal operating-model wiki files
 
 Every personal context question is skippable—you can always add more later.
 Ready? Let's go!
@@ -235,10 +235,10 @@ python3 .claude/hooks/setup-local-hooks.py --profile no-git
 
 Confirm that `.claude/settings.local.json` was written. If the script reports missing optional tools, continue; it disables unsupported hooks automatically.
 
-## Phase 4: Generate Context Files
+## Phase 4: Generate Operating-Model Wiki Files
 
 ### Step 9: Generate Files
-Create files in `brain/context/` using templates from `templates/`:
+Create files in `brain/wiki/operating-model/` using templates from `templates/`:
 
 **about-me.md:**
 - Name from Step 1
@@ -267,7 +267,7 @@ Create files in `brain/context/` using templates from `templates/`:
 ```
 How Sapling OS Works:
 
-1. **Your Context Files** (brain/context/)
+1. **Your Operating Model** (brain/wiki/operating-model/)
    These files help me understand you. I reference them when helping
    with tasks, writing in your voice, or making recommendations.
 
@@ -384,7 +384,7 @@ No problem at all! You're completely set up and ready to go.
 Use the `/commit` skill to save all onboarding files:
 
 **Files to stage:**
-- `brain/context/*.md` - Generated context files
+- `brain/wiki/operating-model/*.md` - Generated operating-model wiki files
 
 **Do NOT stage:**
 - `.env.local` - Contains API keys

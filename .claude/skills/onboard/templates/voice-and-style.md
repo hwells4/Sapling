@@ -1,7 +1,15 @@
 ---
+schema_version: 1.0.0
 date: {{DATE}}
-tags: [context, voice, content]
+updated: {{DATE}}
+type: operating-model
 status: active
+tags:
+  - date/{{DATE}}
+  - wiki
+  - wiki/operating-model
+  - status/active
+  - topic/voice
 ---
 
 # Voice & Style Guide

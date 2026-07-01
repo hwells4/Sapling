@@ -7,7 +7,7 @@
 if [ -n "${SAPLING_SAFE_DIRS:-}" ]; then
     read -ra SAFE_DIRS <<< "$SAPLING_SAFE_DIRS"
 else
-    SAFE_DIRS=(brain/ schemas/ .claude/ .beads/)
+    SAFE_DIRS=(brain/ schemas/ .claude/ .agents/ .codex/ .pi/ .beads/ docs/)
 fi
 
 # Max file size for auto-staging new files (1MB)
@@ -136,20 +136,26 @@ build_commit_msg() {
     local areas
     areas=$(git diff --cached --name-only | while IFS= read -r path; do
         case "$path" in
-            brain/logs/daily/*)  echo "daily logs" ;;
-            brain/logs/weekly/*) echo "weekly logs" ;;
-            brain/logs/*)        echo "logs" ;;
-            brain/entities/*)     echo "entities" ;;
-            brain/calls/*)        echo "calls" ;;
-            brain/outputs/*)      echo "outputs" ;;
-            brain/library/*)      echo "library" ;;
-            brain/templates/*)    echo "templates" ;;
-            brain/context/*)      echo "context" ;;
-            brain/*)              echo "brain" ;;
-            schemas/*)            echo "schemas" ;;
-            .claude/*)            echo "config" ;;
-            .beads/*)             echo "beads" ;;
-            *)                    echo "${path%%/*}" ;;
+            brain/ops/daily/*)   echo "daily logs" ;;
+            brain/ops/weekly/*)  echo "weekly logs" ;;
+            brain/ops/*)         echo "ops" ;;
+            brain/wiki/*)        echo "wiki" ;;
+            brain/raw/*)         echo "raw sources" ;;
+            brain/outputs/*)     echo "outputs" ;;
+            brain/logs/*)        echo "legacy logs" ;;
+            brain/entities/*)    echo "legacy entities" ;;
+            brain/calls/*)       echo "legacy calls" ;;
+            brain/library/*)     echo "legacy library" ;;
+            brain/context/*)     echo "legacy context" ;;
+            brain/*)             echo "brain" ;;
+            schemas/*)           echo "schemas" ;;
+            .claude/*)           echo "claude config" ;;
+            .agents/*)           echo "codex config" ;;
+            .codex/*)            echo "codex config" ;;
+            .pi/*)               echo "pi config" ;;
+            .beads/*)            echo "beads" ;;
+            docs/*)              echo "docs" ;;
+            *)                   echo "${path%%/*}" ;;
         esac
     done | sort -u | paste -sd, - | sed 's/,/, /g')
     echo "update ${areas:-files}"

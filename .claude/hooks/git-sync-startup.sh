@@ -3,7 +3,9 @@
 # Runs on every session start/resume/compact/clear
 set -euo pipefail
 
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-${CODEX_PROJECT_DIR:-${PI_PROJECT_DIR:-.}}}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 0
 
 # Must be a git repo
 [ -d .git ] || exit 0

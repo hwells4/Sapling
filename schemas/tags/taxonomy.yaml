@@ -26,7 +26,7 @@ namespaces:
   wiki_type:
     pattern: "wiki/{type}"
     used_by: [wiki-page]
-    values: [person, company, client, opportunity, engagement, project, offer, commitment, decision, case-study, content, operating-model]
+    values: [index, log, person, company, client, project, topic, decision, operating-model]
     extensible: true
 
   ops:

@@ -34,7 +34,7 @@ In Codex or Pi, read `AGENTS.md` first, then run the same workflows through chat
 Sapling/
 |-- brain/
 |   |-- raw/              # Ingested source material: calls, email, PRs, web clips, transcripts
-|   |-- wiki/             # First-class business pages: clients, projects, offers, decisions
+|   |-- wiki/             # LLM-maintained markdown wiki
 |   |-- ops/              # Operating cockpit: daily logs, weekly reviews, commitments, PR queue
 |   `-- outputs/          # Durable deliverables: PRDs, posts, emails, reports, reviews
 |-- schemas/
@@ -51,20 +51,17 @@ Raw is append-only source context. Put meeting notes, transcripts, email exports
 
 ### `brain/wiki/`
 
-Wiki is the operating memory. This is where first-class business pages live:
+Wiki is the operating memory. These are starter areas, not a fixed ontology:
 
 - `brain/wiki/clients/`
 - `brain/wiki/projects/`
-- `brain/wiki/engagements/`
-- `brain/wiki/opportunities/`
-- `brain/wiki/offers/`
+- `brain/wiki/topics/`
 - `brain/wiki/people/`
 - `brain/wiki/companies/`
-- `brain/wiki/commitments/`
 - `brain/wiki/decisions/`
 - `brain/wiki/operating-model/`
 
-If a concept should survive beyond one session, it belongs in the wiki.
+If a concept should survive beyond one session, it belongs in the wiki. Create pages and folders as they become useful; do not model every possible topic in advance. Keep `brain/wiki/index.md` as the content catalog and `brain/wiki/log.md` as the chronological record of ingests, queries, and maintenance.
 
 ### `brain/ops/`
 
@@ -82,6 +79,7 @@ Do not merge unrelated project code into Sapling. Instead, ingest PR context:
 - Active queue: `brain/ops/pr-queue.md`
 - Project memory: `brain/wiki/projects/{project}.md`
 - Review deliverables: `brain/outputs/pr-reviews/YYYY-MM-DD-{repo}-pr-{number}.md`
+- Wiki audit trail: `brain/wiki/log.md`
 
 This gives agents one place to review cross-project work, update project context, and preserve decisions without turning Sapling into a monorepo.
 

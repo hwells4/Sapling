@@ -27,23 +27,33 @@ brain/outputs/  # finished deliverables
 - Put deliverables in `brain/outputs/`.
 - If source material creates a durable fact, update the wiki page and link back to the raw source with `source_refs`.
 - If an ops page contains a fact that should matter next month, promote it into `brain/wiki/`.
+- Keep `brain/wiki/index.md` as the content catalog and `brain/wiki/log.md` as the chronological audit trail.
 
-## First-Class Wiki Pages
+## Wiki Pages
 
-Use these folders for durable business pages:
+Use these as starter wiki areas, not as a closed ontology:
 
 - `brain/wiki/people/`
 - `brain/wiki/companies/`
 - `brain/wiki/clients/`
-- `brain/wiki/opportunities/`
-- `brain/wiki/engagements/`
 - `brain/wiki/projects/`
-- `brain/wiki/offers/`
-- `brain/wiki/commitments/`
+- `brain/wiki/topics/`
 - `brain/wiki/decisions/`
-- `brain/wiki/case-studies/`
-- `brain/wiki/content/`
 - `brain/wiki/operating-model/`
+
+Create pages as needed. A new page is appropriate when a source introduces a distinct entity, project, decision, topic, or concept that should be linked from elsewhere. Do not predefine every topic.
+
+## Ingest Workflow
+
+When ingesting a source:
+
+1. Save the original source in `brain/raw/`.
+2. Read `brain/wiki/index.md`.
+3. Update existing wiki pages where the source changes the durable understanding.
+4. Create new pages only when they will be useful to link from elsewhere.
+5. Add `source_refs` back to the raw source.
+6. Update `brain/wiki/index.md`.
+7. Append a short entry to `brain/wiki/log.md`.
 
 ## PR Review Workflow
 
@@ -54,6 +64,7 @@ When reviewing or tracking a PR from any repo:
 3. Update `brain/wiki/projects/{project}.md` with durable project context.
 4. Save review output to `brain/outputs/pr-reviews/YYYY-MM-DD-{repo}-pr-{number}.md`.
 5. Save lasting technical or business decisions in `brain/wiki/decisions/`.
+6. Update `brain/wiki/index.md` and append to `brain/wiki/log.md`.
 
 Do not merge unrelated project code into Sapling just to make it reviewable.
 
@@ -63,9 +74,11 @@ When migrating old HarryOS or legacy Sapling content:
 
 1. Import original material into `brain/raw/imports/` or the closest raw source folder.
 2. Create or update matching wiki pages.
-3. Move active open loops into `brain/ops/commitments.md`, `brain/ops/inbox.md`, or `brain/ops/pr-queue.md`.
-4. Preserve old paths only as temporary references.
-5. Use schemas before inventing new frontmatter.
+3. Create emergent topic pages in `brain/wiki/topics/` only when useful.
+4. Move active open loops into `brain/ops/commitments.md`, `brain/ops/inbox.md`, or `brain/ops/pr-queue.md`.
+5. Update `brain/wiki/index.md` and append to `brain/wiki/log.md`.
+6. Preserve old paths only as temporary references.
+7. Use schemas before inventing new frontmatter.
 
 ## Search Order
 

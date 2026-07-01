@@ -19,6 +19,8 @@ Sapling uses the lightweight version:
 - `scripts/check-agent-surface-parity.py` checks that the shared Sapling skill is identical across Claude, Codex, and Pi.
 - `.codex/hooks.json` reuses the Claude hook router instead of duplicating hook logic.
 
+This follows Karpathy's LLM Wiki pattern: raw sources stay immutable, the LLM maintains an interlinked markdown wiki, and the schema/instructions tell the LLM how to do that maintenance. Sapling adds `ops/` and `outputs/` for business execution, but the wiki should stay simple and emergent.
+
 ## Brain Contract
 
 ```text
@@ -42,18 +44,10 @@ brain/outputs/  # finished deliverables
 
 `brain/wiki/`:
 
-- People
-- Companies
-- Clients
-- Opportunities
-- Engagements
-- Projects
-- Offers
-- Commitments
-- Decisions
-- Case studies
-- Content ideas and durable content memory
-- Operating model pages such as about-me, business, preferences, and voice
+- `index.md` as the content catalog
+- `log.md` as the chronological audit trail
+- Starter folders for people, companies, clients, projects, topics, decisions, and operating model context
+- Emergent pages and folders when repeated use proves they are worth linking from elsewhere
 
 `brain/ops/`:
 
@@ -83,6 +77,7 @@ Do not merge source code repos into Sapling. Import context:
 3. Update durable project memory in `brain/wiki/projects/{project}.md`.
 4. Save the review artifact in `brain/outputs/pr-reviews/YYYY-MM-DD-{repo}-pr-{number}.md`.
 5. Promote lasting decisions into `brain/wiki/decisions/`.
+6. Update `brain/wiki/index.md` and append to `brain/wiki/log.md`.
 
 ## HarryOS Migration Sequence
 
@@ -101,3 +96,4 @@ Do not merge source code repos into Sapling. Import context:
 - Finished artifacts belong in `brain/outputs/`.
 - Beads owns tasks and dependencies.
 - Agents should update wiki context when PRs, calls, or outputs change the durable understanding of a project.
+- Do not predefine every topic. Let useful pages emerge, then standardize only what repeats.

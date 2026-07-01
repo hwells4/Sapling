@@ -5,7 +5,7 @@ schema_version: 1.0.0
 changelog:
   - version: 1.0.0
     date: 2026-07-01
-    changes: Initial first-class wiki page schema
+    changes: Initial durable wiki page schema
 
 name: wiki-page
 description: Durable business context distilled from raw sources and operating work

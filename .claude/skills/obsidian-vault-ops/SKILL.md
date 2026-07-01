@@ -13,7 +13,7 @@ Core operations for reading, writing, and managing files in a Sapling brain.
 ```text
 brain/
 |-- raw/                  # Source material: calls, email, GitHub PRs, imports, web clips
-|-- wiki/                 # Durable business memory and first-class pages
+|-- wiki/                 # Durable markdown wiki and emergent concepts
 |-- ops/                  # Daily logs, reviews, commitments, inboxes, PR queue
 `-- outputs/              # Deliverables and generated artifacts
 schemas/                  # Authoritative schema definitions

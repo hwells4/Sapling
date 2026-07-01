@@ -8,7 +8,7 @@ Use the brain in four layers:
 
 ```text
 brain/raw/      # source material, imports, transcripts, emails, PR payloads
-brain/wiki/     # durable business knowledge and first-class pages
+brain/wiki/     # LLM-maintained durable markdown wiki
 brain/ops/      # active operating cockpit, queues, reviews, daily logs
 brain/outputs/  # finished deliverables and generated artifacts
 ```
@@ -23,24 +23,32 @@ brain/outputs/  # finished deliverables and generated artifacts
 - `brain/outputs/` owns deliverables. Save durable work here with output schema frontmatter.
 - `.beads/` owns tasks, dependencies, and multi-session work state.
 
-## First-Class Wiki Pages
+## Wiki Pages
 
-Use these folders for business pages:
+Use these as starter wiki areas, not as a closed ontology:
 
 - `brain/wiki/people/`
 - `brain/wiki/companies/`
 - `brain/wiki/clients/`
-- `brain/wiki/opportunities/`
-- `brain/wiki/engagements/`
 - `brain/wiki/projects/`
-- `brain/wiki/offers/`
-- `brain/wiki/commitments/`
+- `brain/wiki/topics/`
 - `brain/wiki/decisions/`
-- `brain/wiki/case-studies/`
-- `brain/wiki/content/`
 - `brain/wiki/operating-model/`
 
-Create a page when a person, company, project, client, offer, decision, or commitment becomes useful for future work. Link back to raw sources with `source_refs`.
+Create pages as the wiki needs them. New page types and folders are allowed when a recurring concept, entity, object, or relationship becomes useful to link from elsewhere. Do not predefine every topic up front.
+
+Every ingest should update `brain/wiki/index.md` and append to `brain/wiki/log.md`.
+
+## Ingest Workflow
+
+When adding a raw source:
+
+1. Save the original source in `brain/raw/`.
+2. Read `brain/wiki/index.md` to find relevant existing pages.
+3. Update existing wiki pages or create new pages only where useful.
+4. Link wiki claims back to raw evidence with `source_refs`.
+5. Update `brain/wiki/index.md` with new or materially changed pages.
+6. Append a short entry to `brain/wiki/log.md`.
 
 ## Ops Pages
 
@@ -63,6 +71,7 @@ When asked to review or track PRs from any project, do not merge project code in
 3. Update the relevant project page in `brain/wiki/projects/{project}.md`.
 4. Save the review artifact in `brain/outputs/pr-reviews/YYYY-MM-DD-{repo}-pr-{number}.md`.
 5. Capture lasting decisions in `brain/wiki/decisions/` when needed.
+6. Update `brain/wiki/index.md` and append to `brain/wiki/log.md`.
 
 ## Output Policy
 

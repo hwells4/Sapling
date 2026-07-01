@@ -9,7 +9,7 @@ Every durable markdown file in `brain/` should have frontmatter that matches a s
 | Schema | Location | Purpose |
 |--------|----------|---------|
 | `raw-source` | `brain/raw/` | Source material, imports, transcripts, PR payloads |
-| `wiki-page` | `brain/wiki/` | Durable business memory and first-class pages |
+| `wiki-page` | `brain/wiki/` | Durable wiki pages and emergent concepts |
 | `daily-log` | `brain/ops/daily/` | Daily operating log |
 | `weekly-log` | `brain/ops/weekly/` | Weekly review |
 | `ops-page` | `brain/ops/` | Active inboxes, commitments, and PR queues |

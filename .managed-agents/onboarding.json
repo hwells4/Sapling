@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "status": "baseline_ready",
+  "repo": "hwells4/Sapling",
+  "branch": "main",
+  "generatedAt": "2026-06-16T19:49:02.713601Z",
+  "baseline": {
+    "managedAgentsHooks": true,
+    "piSettings": true,
+    "piInstructions": true,
+    "piSkills": 1,
+    "piExtensions": 0
+  },
+  "sourceConfigs": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    ".env.example",
+    ".gitignore",
+    ".claude/settings.json",
+    ".claude/commands/*.md",
+    ".claude/hooks/**",
+    ".claude/skills/**",
+    ".claude/state/continuation.md",
+    ".pi/settings.json",
+    ".pi/extensions/**",
+    ".pi/skills/**",
+    "schemas/vault/output.yaml",
+    "schemas/tags/taxonomy.yaml"
+  ],
+  "followUps": [
+    {
+      "title": "Move Linear MCP access to Managed Agents secrets",
+      "whyItMatters": "This lets Managed Agents use Linear without storing a private token in repository files.",
+      "recommendedAction": "Configure Linear MCP with a secret-backed token and keep only non-secret connection details in version control.",
+      "needsUserApproval": true
+    },
+    {
+      "title": "Choose which Claude commands should become Pi workflows",
+      "whyItMatters": "Porting the useful commands makes future Managed Agents sessions feel like the current Claude workflow.",
+      "recommendedAction": "Review the migration plan and convert approved commands into Pi skills or prompt templates.",
+      "needsUserApproval": true
+    },
+    {
+      "title": "Review Git automation before recreating it",
+      "whyItMatters": "The existing Claude setup can stage, commit, sync, and push automatically; copying that behavior without approval could surprise users.",
+      "recommendedAction": "Design an explicit Managed Agents Git workflow with the level of automation the user wants.",
+      "needsUserApproval": true
+    },
+    {
+      "title": "Port safe vault guardrails",
+      "whyItMatters": "Schema validation and output-location reminders help keep the knowledge vault consistent.",
+      "recommendedAction": "Rebuild the safe parts of the Claude hook router as Pi-friendly validation commands or skills.",
+      "needsUserApproval": true
+    },
+    {
+      "title": "Enable image generation only with approved secrets",
+      "whyItMatters": "The visuals workflow needs a Gemini key and should not store API keys in the repository.",
+      "recommendedAction": "Add GEMINI_API_KEY through Managed Agents secrets before porting the image-generation skill.",
+      "needsUserApproval": true
+    }
+  ],
+  "verification": {
+    "commandsRun": [
+      "chmod +x .managed-agents/setup.sh .managed-agents/start.sh .managed-agents/stop.sh",
+      "shellcheck .managed-agents/setup.sh .managed-agents/start.sh .managed-agents/stop.sh (skipped if shellcheck unavailable)",
+      "MANAGED_AGENTS_BOOT_MODE=fresh .managed-agents/start.sh",
+      "MANAGED_AGENTS_BOOT_MODE=fresh .managed-agents/stop.sh",
+      "MANAGED_AGENTS_BOOT_MODE=build .managed-agents/setup.sh",
+      "python3 -m json.tool .managed-agents/onboarding.json",
+      "python3 -m json.tool .pi/settings.json",
+      "python3 -c 'import yaml; print(\"PyYAML ok\")'",
+      "MANAGED_AGENTS_BOOT_MODE=snapshot_restore .managed-agents/start.sh"
+    ],
+    "passed": true
+  }
+}
